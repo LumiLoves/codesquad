@@ -8,7 +8,6 @@
  * - taskArr를 외부로 노출시키는 메소드를 없애고 싶음
  *
  * 버그
- * - add 횟수대로 메시지늘어남
  * - 업데이트 후 3초 기다리는 거 잘 안됨.
  */
 
@@ -63,15 +62,14 @@ var msg = (function() {
 
     for (var i = 0, item; i < taskArr.length; i++) {
       item = taskArr[i];
-
       if (item.state === STATE.TODO()) { result.todo++; }
       if (item.state === STATE.DOING()) { result.doing++; }
       if (item.state === STATE.DONE()) { result.done++; }
-
-      console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');
-      // setTimeout(function() {
-      // }, 3000);
     }
+
+    // setTimeout(function() {
+    // }, 3000);
+    console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');
   };
 
   // 진행중 (todo, doing) > "1, 그래픽스공부", "4, 블로그쓰기"
