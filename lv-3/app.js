@@ -9,6 +9,7 @@
  *
  * 버그
  * - 업데이트 후 3초 기다리는 거 잘 안됨.
+ * - id 1만 update 안됨
  */
 
 
@@ -98,20 +99,19 @@ var msg = (function() {
         }
         break;
 
-
       case STATE.DONE():
         for (var i = 0, item; i < taskArr.length; i++) {
           item = taskArr[i];
 
           if (item.state === STATE.DONE()) {
-            result.push('> ' + item.title + ', ' + item.duration.hour + '시간 ' + item.duration.min+ '분');
+            result.push(item.title + ', ' + item.duration.hour + '시간 ' + item.duration.min+ '분');
           }
         }
         break;
     }
 
     result = result.join(' / ');
-    console.info(result);
+    console.log('> ' + result);
   };
 
   // 아이템추가안내   > id: 5,  "자바스크립트 공부하기" 항목이 새로 추가됐습니다.
@@ -146,9 +146,8 @@ var task = (function() {
 
   var findItemIndex = function(id) {
     for (var index = 0; index < taskArr.length; index++) {
-      if (taskArr[index].id === id) { return index; }
+      if (taskArr[index].id == id) { return index; }
     }
-
     return false;
   };
 
@@ -158,25 +157,6 @@ var task = (function() {
 
     // console
     msg.byAdd(item);
-    msg.itemCount(taskArr);
-  };
-
-  // todo, doing ==> done
-  var updateItemToDone = function(id) {
-    var index = findItemIndex(id);
-    var item = taskArr[index];
-
-    // validation
-    if (!index) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
-    if (item.state === STATE.DONE()) { console.log('> 이미 done 상태 입니다.'); return false; }
-
-    // update
-    item.state = STATE.DONE();
-    item.endTime = getCurrentTimestamp();
-    if (item.state === STATE.TODO()) { item.startTime = item.endTime; }
-    item.duration = getDurationHourMin();
-
-    // console
     msg.itemCount(taskArr);
   };
 
@@ -190,10 +170,36 @@ var task = (function() {
     if (item.state === STATE.DOING()) { console.log('> 이미 doing 상태 입니다.'); return false; }
 
     // update
-    item.state = STATE.DOING();
     item.startTime = getCurrentTimestamp();
-    item.endTime = null;
-    item.duration = null;
+    if (item.state === STATE.DONE()) {
+      item.endTime = null;
+      item.duration = null;
+    }
+    item.state = STATE.DOING();
+
+    // console
+    msg.itemCount(taskArr);
+  };
+
+  // todo, doing ==> done
+  var updateItemToDone = function(id) {
+    var index = findItemIndex(id);
+    var item = taskArr[index];
+
+    // validation
+    if (!index) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
+    if (item.state === STATE.DONE()) { console.log('> 이미 done 상태 입니다.'); return false; }
+
+    // update
+    if (item.state === STATE.TODO()) {
+      item.startTime = null;
+      item.endTime = null;
+      item.duration = { hour: 0, min: 0 };
+    } else {
+      item.endTime = getCurrentTimestamp();
+      item.duration = getDurationHourMin(item.startTime, item.endTime);
+    }
+    item.state = STATE.DONE();
 
     // console
     msg.itemCount(taskArr);
