@@ -8,8 +8,7 @@
  * - taskArr를 외부로 노출시키는 메소드를 없애고 싶음
  *
  * 버그
- * - 업데이트 후 3초 기다리는 거 잘 안됨.
- * - id 1만 update 안됨
+ * - 업데이트 후 3초 기다리는 거 잘 안됨. prompt명령이랑 엇갈림.
  */
 
 
@@ -110,8 +109,12 @@ var msg = (function() {
         break;
     }
 
-    result = result.join(' / ');
-    console.log('> ' + result);
+    if (result.length) {
+      result = result.join(' / ');
+      console.log('> ' + result);
+    } else {
+      console.log('> 아이템이 없습니다.');
+    }
   };
 
   // 아이템추가안내   > id: 5,  "자바스크립트 공부하기" 항목이 새로 추가됐습니다.
@@ -166,7 +169,7 @@ var task = (function() {
     var item = taskArr[index];
 
     // validation
-    if (!index) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
+    if (index === false) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
     if (item.state === STATE.DOING()) { console.log('> 이미 doing 상태 입니다.'); return false; }
 
     // update
@@ -187,7 +190,7 @@ var task = (function() {
     var item = taskArr[index];
 
     // validation
-    if (!index) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
+    if (index === false) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
     if (item.state === STATE.DONE()) { console.log('> 이미 done 상태 입니다.'); return false; }
 
     // update
