@@ -20,3 +20,25 @@ const obj = (function(value) {
 })('crong');
 obj.print();
 
+
+/**
+ * call 과 prototype
+ */
+
+var util = function() {
+  this.getName = function() {
+    return this.name;
+  };
+  this.setName = function(name) {
+    this.name = name;
+  };
+};
+
+function Name(name) {
+  this.name = name;
+}
+
+util.call(Name.prototype);
+
+var my = new Name('crong');
+my.getName();
