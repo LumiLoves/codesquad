@@ -1,4 +1,8 @@
 
+/**
+ * function call 과 this
+ */
+
 const obj = (function(value) {
   function print() {
     console.log('#', this); // window
