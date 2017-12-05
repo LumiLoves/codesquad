@@ -43,60 +43,22 @@ var STATE = {
  */
 
 var msg = {
-  itemCount: function(taskArr) {
-    var result = { todo: 0, doing: 0, done: 0 };
-
-    for (var i = 0, thisObj; i < taskArr.length; i++) {
-      thisObj = taskArr[i];
-      if (thisObj.state === STATE.TODO) { result.todo++; }
-      if (thisObj.state === STATE.DOING) { result.doing++; }
-      if (thisObj.state === STATE.DONE) { result.done++; }
+  template: {
+    idTitle: function(itemObj) {
+      return itemObj.id + ', ' + itemObj.title;
+    },
+    titleWithDuration: function(itemObj) {
+      return itemObj.title + ', ' + itemObj.duration.hour + '시간 ' + itemObj.duration.min+ '분';
     }
-
-    setTimeout(function() {
-      console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');      
-    }, 3000);
   },
-  state: function(taskArr, state) {
+  runByState: function(taskArr, state, templateFunc) {
     var result = [];
-    var pushTodoItems = function() {
-      for (var i = 0, thisObj; i < taskArr.length; i++) {
-        thisObj = taskArr[i];
-        if (thisObj.state === STATE.TODO) {
-          result.push(thisObj.id + ', ' + thisObj.title);
-        }
-      }
-    };
-    var pushDoingItems = function() {
-      for (var i = 0, thisObj; i < taskArr.length; i++) {
-        thisObj = taskArr[i];
-        if (thisObj.state === STATE.DOING) {
-          result.push(thisObj.id + ', ' + thisObj.title);
-        }
-      }
-    };
-    var pushDoneItems = function() {
-      for (var i = 0, thisObj; i < taskArr.length; i++) {
-        thisObj = taskArr[i];
-        if (thisObj.state === STATE.DONE) {
-          result.push(thisObj.title + ', ' + thisObj.duration.hour + '시간 ' + thisObj.duration.min+ '분');
-        }
-      }
-    };
 
-    switch (state) {
-      case STATE.TODO:
-        pushTodoItems();
-        break;
-
-      case STATE.DOING:
-        pushDoingItems();      
-        break;
-
-      case STATE.DONE:
-        pushDoneItems();
-        break;
-    }
+    taskArr.forEach(function(thisObj) {
+      if (thisObj.state === state) {
+        result.push(templateFunc(thisObj));
+      }
+    });
 
     if (result.length) {
       result = result.join(' / ');
@@ -105,8 +67,30 @@ var msg = {
       console.log('> 아이템이 없습니다.');
     }
   },
+  todo: function(taskArr) {
+    this.runByState(taskArr, STATE.TODO, this.template.idTitle);
+  },
+  doing: function(taskArr) {
+    this.runByState(taskArr, STATE.DOING, this.template.idTitle);
+  },
+  done: function(taskArr) {
+    this.runByState(taskArr, STATE.DONE, this.template.titleWithDuration);    
+  },
   add: function(taskItem) {
     console.log('> id: '+ taskItem.id +',  "'+ taskItem.title +'" 항목이 새로 추가됐습니다.');
+  },
+  itemCount: function(taskArr) {
+    var result = { todo: 0, doing: 0, done: 0 };
+
+    taskArr.forEach(function(thisObj) {
+      if (thisObj.state === STATE.TODO) { result.todo++; }
+      if (thisObj.state === STATE.DOING) { result.doing++; }
+      if (thisObj.state === STATE.DONE) { result.done++; }
+    });
+
+    setTimeout(function() {
+      console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');      
+    }, 3000);
   }
 };
 
@@ -128,20 +112,17 @@ var task = {
   currentId: 1,
   data: [],
   getData: function() {
-    var that = this;
-    return that.data;
+    return this.data;
   },  
   findIndex: function(id) {
-    var that = this;
-    var taskArr = that.data;
-    for (var index = 0; index < taskArr.length; index++) {
-      if (taskArr[index].id == id) { return index; }
-    }
-    return false;
+    var result = this.data.findIndex(function(elem) {
+      return elem.id == id;
+    });
+
+    return (result !== undefined)? result : false;
   },
   add: function(title) {
-    var that = this;    
-    var taskArr = that.data;
+    var taskArr = this.data;
     var taskItem = new TaskItem(title);
 
     if (!title) {
@@ -154,9 +135,8 @@ var task = {
     msg.itemCount(taskArr);
   },
   updateToDoing: function(id) {
-    var that = this;    
-    var taskArr = that.data;    
-    var index = that.findIndex(id);
+    var taskArr = this.data;    
+    var index = this.findIndex(id);
     var taskItem = taskArr[index];
 
     // validation
@@ -174,9 +154,8 @@ var task = {
     msg.itemCount(taskArr);
   },
   updateToDone: function(id) {
-    var that = this;    
-    var taskArr = that.data;    
-    var index = that.findIndex(id);
+    var taskArr = this.data;    
+    var index = this.findIndex(id);
     var taskItem = taskArr[index];
 
     // validation
@@ -200,10 +179,10 @@ var task = {
 
 
 /**
- * consoleOutput (입력처리, 출력메시지)
+ * runCmd
  */
 
-var consoleOutput = {
+var runCmd = {
   add: function(cmdArr) {
     var title = cmdArr[1];
     task.add(title);
@@ -212,15 +191,16 @@ var consoleOutput = {
     var id = cmdArr[1];
     var state = cmdArr[2];
 
-    if (state === 'doing') { task.updateToDoing(id); }
-    if (state === 'done') { task.updateToDone(id); }
+    var methodMap = {
+      doing: task.updateToDoing,
+      done: task.updateToDone
+    }[state].call(task, id);
   },
   show: function(cmdArr) {
     var state = cmdArr[1];
+    var tasks = task.getData();
     
-    if (state === 'todo') { msg.state(task.getData(), STATE.TODO); }
-    if (state === 'doing') { msg.state(task.getData(), STATE.DOING); }
-    if (state === 'done') { msg.state(task.getData(), STATE.DONE); }
+    msg[state](tasks);
   },
   exit: function() {
     r.close();    
@@ -249,21 +229,21 @@ r.on('line', function(cmd) {
   switch (cmd) {
     // > "add$자바스크립트 공부하기"
     case 'add':
-      consoleOutput.add(cmdArr);
+      runCmd.add(cmdArr);
       break;
 
     // > "update$3$done"
     case 'update':
-      consoleOutput.update(cmdArr);    
+      runCmd.update(cmdArr);    
       break;
 
     // > "show$doing"
     case 'show':
-      consoleOutput.show(cmdArr);  
+      runCmd.show(cmdArr);  
       break;
 
     case 'exit':
-      consoleOutput.exit();
+      runCmd.exit();
       break;
 
     default:
