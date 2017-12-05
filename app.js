@@ -28,31 +28,27 @@ var time = {
 
 
 /**
- * STATE
- */
-
-var STATE = {
-  TODO: 'TODO',
-  DOING: 'DOING',
-  DONE: 'DONE'
-};
-
-
-/**
  * Message
  */
 
-var msg = {
+var message = {
   template: {
     idTitle: function(itemObj) {
       return itemObj.id + ', ' + itemObj.title;
     },
-    titleWithDuration: function(itemObj) {
+    titleDuration: function(itemObj) {
       return itemObj.title + ', ' + itemObj.duration.hour + '시간 ' + itemObj.duration.min+ '분';
     }
   },
-  runByState: function(taskArr, state, templateFunc) {
+  printItemsByState: function(state) {
     var result = [];
+    var taskArr = task.getData();
+    var templateName = {
+      todo: 'idTitle',
+      doing: 'idTitle',
+      done: 'titleDuration'
+    }[state];
+    var templateFunc = this.template[templateName];
 
     taskArr.forEach(function(thisObj) {
       if (thisObj.state === state) {
@@ -67,25 +63,16 @@ var msg = {
       console.log('> 아이템이 없습니다.');
     }
   },
-  todo: function(taskArr) {
-    this.runByState(taskArr, STATE.TODO, this.template.idTitle);
-  },
-  doing: function(taskArr) {
-    this.runByState(taskArr, STATE.DOING, this.template.idTitle);
-  },
-  done: function(taskArr) {
-    this.runByState(taskArr, STATE.DONE, this.template.titleWithDuration);    
-  },
   add: function(taskItem) {
     console.log('> id: '+ taskItem.id +',  "'+ taskItem.title +'" 항목이 새로 추가됐습니다.');
   },
-  itemCount: function(taskArr) {
+  countItem: function(taskArr) {
     var result = { todo: 0, doing: 0, done: 0 };
 
     taskArr.forEach(function(thisObj) {
-      if (thisObj.state === STATE.TODO) { result.todo++; }
-      if (thisObj.state === STATE.DOING) { result.doing++; }
-      if (thisObj.state === STATE.DONE) { result.done++; }
+      if (thisObj.state === 'todo') { result.todo++; }
+      if (thisObj.state === 'doing') { result.doing++; }
+      if (thisObj.state === 'done') { result.done++; }
     });
 
     setTimeout(function() {
@@ -102,7 +89,7 @@ var msg = {
 function TaskItem(title) {
   this.id = task.currentId++; // (수정불가)
   this.title = title; // (수정불가)
-  this.state = STATE.TODO;
+  this.state = 'todo';
   this.startTime = null; // timestamp
   this.endTime = null; // timestamp
   this.duration = null; // { hour: 정수, min: 정수 };
@@ -121,7 +108,7 @@ var task = {
 
     return (result !== undefined)? result : false;
   },
-  add: function(title) {
+  addItem: function(title) {
     var taskArr = this.data;
     var taskItem = new TaskItem(title);
 
@@ -131,39 +118,35 @@ var task = {
     }
 
     taskArr.push(taskItem);
-    msg.add(taskItem);
-    msg.itemCount(taskArr);
+    message.add(taskItem);
+    message.countItem(taskArr);
   },
-  updateToDoing: function(id) {
+  updateItem: function(id, state) {
     var taskArr = this.data;    
     var index = this.findIndex(id);
     var taskItem = taskArr[index];
+    var objFunc = {
+      doing: 'makeDoingObj',
+      done: 'makeDoneObj'
+    }[state];
 
-    // validation
     if (index === false) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
-    if (taskItem.state === STATE.DOING) { console.log('> 이미 doing 상태 입니다.'); return false; }
+    if (taskItem.state === state) { console.log('> 이미 '+ state +'상태 입니다.'); return false; }
+    if (!objFunc) { console.log('사용할 수 없는 State를 입력하셨습니다.'); return false; }
 
-    // update
+    this[objFunc](taskItem);
+    message.countItem(taskArr);
+  },
+  makeDoingObj: function(taskItem) {
     taskItem.startTime = time.getNow();
-    if (taskItem.state === STATE.DONE) {
+    if (taskItem.state === 'done') {
       taskItem.endTime = null;
       taskItem.duration = null;
     }
-    taskItem.state = STATE.DOING;
-
-    msg.itemCount(taskArr);
+    taskItem.state = 'doing';
   },
-  updateToDone: function(id) {
-    var taskArr = this.data;    
-    var index = this.findIndex(id);
-    var taskItem = taskArr[index];
-
-    // validation
-    if (index === false) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
-    if (taskItem.state === STATE.DONE) { console.log('> 이미 done 상태 입니다.'); return false; }
-
-    // update
-    if (taskItem.state === STATE.TODO) {
+  makeDoneObj: function(taskItem) {
+    if (taskItem.state === 'todo') {
       taskItem.startTime = null;
       taskItem.endTime = null;
       taskItem.duration = { hour: 0, min: 0 };
@@ -171,39 +154,7 @@ var task = {
       taskItem.endTime = time.getNow();
       taskItem.duration = time.getDuration(taskItem.startTime, taskItem.endTime);
     }
-    taskItem.state = STATE.DONE;
-
-    msg.itemCount(taskArr);
-  }
-};
-
-
-/**
- * runCmd
- */
-
-var runCmd = {
-  add: function(cmdArr) {
-    var title = cmdArr[1];
-    task.add(title);
-  },
-  update: function(cmdArr) {
-    var id = cmdArr[1];
-    var state = cmdArr[2];
-
-    var methodMap = {
-      doing: task.updateToDoing,
-      done: task.updateToDone
-    }[state].call(task, id);
-  },
-  show: function(cmdArr) {
-    var state = cmdArr[1];
-    var tasks = task.getData();
-    
-    msg[state](tasks);
-  },
-  exit: function() {
-    r.close();    
+    taskItem.state = 'done';
   }
 };
 
@@ -217,39 +168,48 @@ r.setPrompt('');
 r.prompt();
 
 // dummy data 생성용 test코드
-task.add('title111');
-task.add('title222');
-task.add('title3333');
-task.add('title4444');
+task.addItem('title111');
+task.addItem('title222');
+task.addItem('title3333');
+task.addItem('title4444');
 
 r.on('line', function(cmd) {
+  /*
+   * 명령어 종류
+   * - add$자바스크립트 공부하기
+   * - update$3$done
+   * - show$doing 
+   */
   var cmdArr = cmd.split('$');
   var cmd = cmdArr[0];
+  var cmdCallback = {    
+    add: function(cmdArr) {
+      var title = cmdArr[1];
 
-  switch (cmd) {
-    // > "add$자바스크립트 공부하기"
-    case 'add':
-      runCmd.add(cmdArr);
-      break;
+      task.addItem(title);
+    },
+    update: function(cmdArr) {
+      var id = cmdArr[1];
+      var state = cmdArr[2];
 
-    // > "update$3$done"
-    case 'update':
-      runCmd.update(cmdArr);    
-      break;
+      task.updateItem(id, state);
+    },
+    show: function(cmdArr) {
+      var state = cmdArr[1];
 
-    // > "show$doing"
-    case 'show':
-      runCmd.show(cmdArr);  
-      break;
+      message.printItemsByState(state);
+    },
+    exit: function() {
+      r.close();    
+    }
+  };
 
-    case 'exit':
-      runCmd.exit();
-      break;
-
-    default:
-      console.log(line);
+  function runCmd(cmd) {
+    var callback = cmdCallback[cmd];
+    (callback)? callback(cmdArr) : console.log(line);
   }
 
+  runCmd(cmd);
   r.prompt();
 });
 
