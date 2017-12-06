@@ -40,20 +40,20 @@ var message = {
       return itemObj.title + ', ' + itemObj.duration.hour + '시간 ' + itemObj.duration.min+ '분';
     }
   },
-  printItemsByState: function(state) {
-    var result = [];
-    var taskArr = task.getData();
-    var templateName = {
+  matchTemplateByState: function(state) {
+    return {
       todo: 'idTitle',
       doing: 'idTitle',
       done: 'titleDuration'
     }[state];
-    var templateFunc = this.template[templateName];
-
-    taskArr.forEach(function(thisObj) {
-      if (thisObj.state === state) {
-        result.push(templateFunc(thisObj));
-      }
+  },
+  renderItemsByState: function(state) {
+    var result = [];
+    var templateFunc = this.template[this.matchTemplateByState(state)];
+    var taskArrByFilter = task.filterByState(state);
+    
+    result = taskArrByFilter.map(function(thisObj) {
+      return templateFunc(thisObj);
     });
 
     if (result.length) {
@@ -67,14 +67,7 @@ var message = {
     console.log('> id: '+ taskItem.id +',  "'+ taskItem.title +'" 항목이 새로 추가됐습니다.');
   },
   countItem: function(taskArr) {
-    var result = { todo: 0, doing: 0, done: 0 };
-
-    taskArr.forEach(function(thisObj) {
-      if (thisObj.state === 'todo') { result.todo++; }
-      if (thisObj.state === 'doing') { result.doing++; }
-      if (thisObj.state === 'done') { result.done++; }
-    });
-
+    var result = task.countItemByState();
     setTimeout(function() {
       console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');      
     }, 3000);
@@ -98,15 +91,18 @@ function TaskItem(title) {
 var task = {
   currentId: 1,
   data: [],
-  getData: function() {
-    return this.data;
-  },  
   findIndex: function(id) {
-    var result = this.data.findIndex(function(elem) {
-      return elem.id == id;
+    var taskArr = this.data;    
+    var result = taskArr.findIndex(function(thisObj) {
+      return thisObj.id == id;
     });
 
-    return (result !== undefined)? result : false;
+    return (result !== undefined)? result : null;
+  },
+  filterByState: function(state) {
+    return this.data.filter(function(thisObj) {
+      return thisObj.state === state;
+    });
   },
   addItem: function(title) {
     var taskArr = this.data;
@@ -119,23 +115,33 @@ var task = {
 
     taskArr.push(taskItem);
     message.addItem(taskItem);
-    message.countItem(taskArr);
+    message.countItem();
   },
   updateItem: function(id, state) {
-    var taskArr = this.data;    
+    var taskArr = this.data;
     var index = this.findIndex(id);
     var taskItem = taskArr[index];
-    var objFunc = {
+    var objMakingFunc = {
       doing: 'makeDoingObj',
       done: 'makeDoneObj'
     }[state];
 
-    if (index === false) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
+    if (index === null) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
     if (taskItem.state === state) { console.log('> 이미 '+ state +'상태 입니다.'); return false; }
-    if (!objFunc) { console.log('사용할 수 없는 State를 입력하셨습니다.'); return false; }
+    if (!objMakingFunc) { console.log('사용할 수 없는 State를 입력하셨습니다.'); return false; }
 
-    this[objFunc](taskItem);
-    message.countItem(taskArr);
+    this[objMakingFunc](taskItem);
+    message.countItem();
+  },
+  countItemByState: function() {
+    var taskArr = this.data;    
+    var result = { todo: 0, doing: 0, done: 0 };
+
+    taskArr.forEach(function(thisObj) {
+      result[thisObj.state]++;      
+    });
+
+    return result;
   },
   makeDoingObj: function(taskItem) {
     taskItem.startTime = time.getNow();
@@ -160,6 +166,43 @@ var task = {
 
 
 /**
+ * Command Callback
+ * 
+ * (명령어종류)
+ * - add$자바스크립트 공부하기
+ * - update$3$done
+ * - show$doing 
+ */
+var cmdCallback = {    
+  add: function(cmdArr) {
+    var title = cmdArr[1];
+
+    task.addItem(title);
+  },
+  update: function(cmdArr) {
+    var id = cmdArr[1];
+    var state = cmdArr[2];
+
+    task.updateItem(id, state);
+  },
+  show: function(cmdArr) {
+    var state = cmdArr[1];
+
+    message.renderItemsByState(state);
+  },
+  exit: function() {
+    r.close();    
+  }
+};
+
+function runCmd(line) {
+  var cmdArr = line.split('$');
+  var callback = cmdCallback[cmdArr[0]];
+  (callback)? callback(cmdArr) : console.log(line);
+}
+
+
+/**
  * 실행영역
  */
 
@@ -173,43 +216,8 @@ task.addItem('title222');
 task.addItem('title3333');
 task.addItem('title4444');
 
-r.on('line', function(cmd) {
-  /*
-   * 명령어 종류
-   * - add$자바스크립트 공부하기
-   * - update$3$done
-   * - show$doing 
-   */
-  var cmdArr = cmd.split('$');
-  var cmd = cmdArr[0];
-  var cmdCallback = {    
-    add: function(cmdArr) {
-      var title = cmdArr[1];
-
-      task.addItem(title);
-    },
-    update: function(cmdArr) {
-      var id = cmdArr[1];
-      var state = cmdArr[2];
-
-      task.updateItem(id, state);
-    },
-    show: function(cmdArr) {
-      var state = cmdArr[1];
-
-      message.printItemsByState(state);
-    },
-    exit: function() {
-      r.close();    
-    }
-  };
-
-  function runCmd(cmd) {
-    var callback = cmdCallback[cmd];
-    (callback)? callback(cmdArr) : console.log(line);
-  }
-
-  runCmd(cmd);
+r.on('line', function(line) {
+  runCmd(line);
   r.prompt();
 });
 
