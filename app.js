@@ -63,7 +63,7 @@ var message = {
       console.log('> 아이템이 없습니다.');
     }
   },
-  add: function(taskItem) {
+  addItem: function(taskItem) {
     console.log('> id: '+ taskItem.id +',  "'+ taskItem.title +'" 항목이 새로 추가됐습니다.');
   },
   countItem: function(taskArr) {
@@ -118,7 +118,7 @@ var task = {
     }
 
     taskArr.push(taskItem);
-    message.add(taskItem);
+    message.addItem(taskItem);
     message.countItem(taskArr);
   },
   updateItem: function(id, state) {
