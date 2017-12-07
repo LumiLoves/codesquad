@@ -6,8 +6,17 @@ var r = readline.createInterface({
 
 
 /**
- * Time
+ * Util
  */
+
+const SYSTEM_MSG = {
+  // For Validation 
+  NULL_ITEM: '> 존재하지 않는 아이템입니다.',
+  NULL_ITEM_IN_STATE: '> 해당 상태에 저장된 아이템이 없습니다.',    
+  NULL_TASK_TITLE: '> 할일 내용을 입력해 주세요.',
+  SAME_TASK_STATE: '> 이미 ${state} 상태 입니다.',
+  UNUSABLE_TASK_STATE: '> 사용할 수 없는 State를 입력하셨습니다.'
+};
 
 var time = {
   getNow: function() {
@@ -15,9 +24,8 @@ var time = {
   },
   getDuration: function(startTime, endTime) {
     var gap = endTime - startTime;
-    // var secGap = gxap / 1000;
-    var minGap = gap / 1000 / 60;
-    var hourGap = gap / 1000 / 60 / 60;
+    var minGap = gap / 60000;
+    var hourGap = gap / 3600000;
   
     return {
       hour: Math.floor(hourGap),
@@ -28,7 +36,7 @@ var time = {
 
 
 /**
- * Message
+ * Message Manager
  */
 
 var message = {
@@ -50,27 +58,26 @@ var message = {
   renderItemsByState: function(state) {
     var result = [];
     var templateFunc = this.template[this.matchTemplateByState(state)];
-    var taskArrByFilter = task.filterByState(state);
-    
-    result = taskArrByFilter.map(function(thisObj) {
-      return templateFunc(thisObj);
+
+    result =  task.filterByState(state).map(function(thisObj) {
+      return templateFunc(thisObj);      
     });
 
     if (result.length) {
       result = result.join(' / ');
       console.log('> ' + result);
     } else {
-      console.log('> 아이템이 없습니다.');
+      console.log(SYSTEM_MSG.NULL_ITEM_IN_STATE);
     }
   },
   addItem: function(taskItem) {
     console.log('> id: '+ taskItem.id +',  "'+ taskItem.title +'" 항목이 새로 추가됐습니다.');
   },
-  countItem: function(taskArr) {
+  countItem: function(delayTime) {
     var result = task.countItemByState();
     setTimeout(function() {
       console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');      
-    }, 3000);
+    }, delayTime);
   }
 };
 
@@ -92,8 +99,7 @@ var task = {
   currentId: 1,
   data: [],
   findIndex: function(id) {
-    var taskArr = this.data;    
-    var result = taskArr.findIndex(function(thisObj) {
+    var result = this.data.findIndex(function(thisObj) {
       return thisObj.id == id;
     });
 
@@ -109,13 +115,13 @@ var task = {
     var taskItem = new TaskItem(title);
 
     if (!title) {
-      console.log('> 할일 내용을 입력해 주세요.');      
-      return false;
+      console.log(SYSTEM_MSG.NULL_TASK_TITLE);
+      return;
     }
 
     taskArr.push(taskItem);
     message.addItem(taskItem);
-    message.countItem();
+    message.countItem(2000);
   },
   updateItem: function(id, state) {
     var taskArr = this.data;
@@ -126,12 +132,21 @@ var task = {
       done: 'makeDoneObj'
     }[state];
 
-    if (index === null) { console.log('> 존재하지 않는 아이템입니다.'); return false; }
-    if (taskItem.state === state) { console.log('> 이미 '+ state +'상태 입니다.'); return false; }
-    if (!objMakingFunc) { console.log('사용할 수 없는 State를 입력하셨습니다.'); return false; }
+    if (index === null) { 
+      console.log(SYSTEM_MSG.NULL_ITEM);
+      return;
+    }
+    if (taskItem.state === state) { 
+      console.log(SYSTEM_MSG.SAME_TASK_STATE.replace('${state}', 'state'));
+      return;
+    }
+    if (!objMakingFunc) {
+      console.log(SYSTEM_MSG.UNUSABLE_TASK_STATE);
+      return;
+    }
 
     this[objMakingFunc](taskItem);
-    message.countItem();
+    message.countItem(2000);
   },
   countItemByState: function() {
     var taskArr = this.data;    
@@ -173,6 +188,7 @@ var task = {
  * - update$3$done
  * - show$doing 
  */
+
 var cmdCallback = {    
   add: function(cmdArr) {
     var title = cmdArr[1];
@@ -198,6 +214,7 @@ var cmdCallback = {
 function runCmd(line) {
   var cmdArr = line.split('$');
   var callback = cmdCallback[cmdArr[0]];
+  
   (callback)? callback(cmdArr) : console.log(line);
 }
 
