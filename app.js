@@ -75,6 +75,7 @@ var message = {
   },
   countItem: function(delayTime) {
     var result = task.countItemByState();
+    
     setTimeout(function() {
       console.log('> [현재상태] todo: '+ result.todo +'개, doing: '+ result.doing +'개, done: '+ result.done +'개');      
     }, delayTime);
@@ -215,7 +216,7 @@ function runCmd(line) {
   var cmdArr = line.split('$');
   var callback = cmdCallback[cmdArr[0]];
   
-  (callback)? callback(cmdArr) : console.log(line);
+  (typeof callback === 'function')? callback(cmdArr) : console.log(line);
 }
 
 
