@@ -34,7 +34,7 @@ var typeChecker = function(tempPiece) {
   var joinedTemp = tempPiece.join('').trim();
 
   // 문자
-  if (tempPiece[0] === '"') { return 'string'; }
+  if ((tempPiece[0] === '"') && (tempPiece[tempPiece.length - 1] === '"')) { return 'string'; }
   
   // 숫자
   if (isNaN(joinedTemp) === false) { return 'number'; }
@@ -88,9 +88,12 @@ var parser = {
 
       if (this.pieceWasCollected(thisStr, tempPiece)) {
         var pieceType = typeChecker(tempPiece);
-        result.total++;        
-        result[pieceType]++;
-        tempPiece = [];
+
+        if (pieceType !== undefined) {
+          result.total++;        
+          result[pieceType]++;
+          tempPiece = [];  
+        }
       }
     }
 
