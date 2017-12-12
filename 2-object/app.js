@@ -39,6 +39,20 @@ var r = readline.createInterface({
 
 
 /**
+ * Util
+ */
+
+var util = {
+  trimArray: function(arr) {
+    if (arr[0] === ' ') { arr.shift(); }
+    if (arr[arr.length - 1] === ' ') { arr.pop(); }
+  
+    return arr;
+  }
+};
+
+
+/**
  * 타입분석기 (결과값 : 문자열, 숫자, 불리언)
  */
 
@@ -71,7 +85,7 @@ var typeChecker = function(tempPiece) {
 var character = {
   isCuttingComma: function(str, tempPiece) {
     str = str.trim();
-    tempPiece = trimArray(tempPiece);
+    tempPiece = util.trimArray(tempPiece);
 
     // 스트링("") 내부에 있는지 체크
     if (tempPiece[0] === '"') {
@@ -92,13 +106,6 @@ var character = {
   isLeftSquareBracket: function(str) { return str === '['; },
   isRightSquareBracket: function(str) { return str === ']'; }
 };
-
-function trimArray(arr) {
-  if (arr[0] === ' ') { arr.shift(); }
-  if (arr[arr.length - 1] === ' ') { arr.pop(); }
-
-  return arr;
-}
 
 
 /**
@@ -168,7 +175,7 @@ var parser = {
       if (this.pieceWasCollected(thisStr, tempPiece)) {
         if (tempPiece.length === 0) { return; }
 
-        pieceType = typeChecker(trimArray(tempPiece));
+        pieceType = typeChecker(util.trimArray(tempPiece));
         if (pieceType === undefined) { return; }
 
         result.total++;        
@@ -205,7 +212,7 @@ var parser = {
       if (this.pieceWasCollected(thisStr, tempPiece)) {
         if (tempPiece.length === 0) { return; }
 
-        pieceType = typeChecker(trimArray(tempPiece));
+        pieceType = typeChecker(util.trimArray(tempPiece));
         if (pieceType === undefined) { return; }
 
         result.total++;        
