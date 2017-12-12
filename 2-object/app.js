@@ -44,19 +44,18 @@ var r = readline.createInterface({
 
 var typeChecker = function(tempPiece) {
   if (tempPiece[0] === ' ') { tempPiece.shift(); }
+
   var joinedTemp = tempPiece.join('').trim();
+  if (joinedTemp === "") { return; }
 
   // 문자
   if ((tempPiece[0] === '"') && (tempPiece[tempPiece.length - 1] === '"')) { return 'string'; }
   
   // 숫자
-  // TODO ( isNaN("") => isNaN은 형변환을 해서 정확하지 않음. 
-  // toString.call(joinTemp)하려고 했으나, join할 때 숫자가 스트링으로 리턴되는 문제가...
-  // 일단은 빈 스트링이 오지 않도록 전단계에서 처리함.
   if (isNaN(joinedTemp) === false) { return 'number'; }
 
   // 불린
-  if (joinedTemp === "true" || joinedTemp === "false") { return 'boolean'; }
+  if ([ 'true', 'false' ].indexOf(joinedTemp) > -1) { return 'boolean'; }
 
   // 오브젝트
   if ((tempPiece[0] === '{') && (tempPiece[tempPiece.length - 1] === '}')) { return 'object'; }
@@ -107,6 +106,7 @@ function trimArray(arr) {
  */
 
 var parser = {
+
   // target
 
   targetType: null,
@@ -124,19 +124,21 @@ var parser = {
   // piece
 
   pieceWillBeCollected: function(str) {
-    var isStartBracket = this.targetMethod[this.targetType].isStartBracket;
+    var isStartBracket = this.targetMethod[this.targetType].isStartBracket(str);
     
-    return isStartBracket(str); 
+    return isStartBracket; 
   },
   pieceIsBeingCollected: function(str, tempPiece) {
-    var isEndBracket = this.targetMethod[this.targetType].isEndBracket;
-    
-    return !character.isCuttingComma(str, tempPiece) && !isEndBracket(str);    
+    var isNotCuttingComma = !character.isCuttingComma(str, tempPiece);
+    var isNotEndBracket = !this.targetMethod[this.targetType].isEndBracket(str);
+
+    return isNotCuttingComma && isNotEndBracket;
   },
   pieceWasCollected: function(str, tempPiece) {
-    var isEndBracket = this.targetMethod[this.targetType].isEndBracket;
-    
-    return character.isCuttingComma(str, tempPiece) || isEndBracket(str);
+    var isCuttingComma = character.isCuttingComma(str, tempPiece);
+    var isEndBracket = this.targetMethod[this.targetType].isEndBracket(str);
+
+    return isCuttingComma || isEndBracket;
   },
 
   // count
@@ -153,32 +155,31 @@ var parser = {
     
     this.targetType = 'array';
 
-    for (var i = 0, thisStr; i < jsonStr.length; i++) {
-      thisStr = jsonStr[i];
-
+    jsonStr.split('').forEach(function(thisStr) {
+      var pieceType = null;
+      
       if (this.pieceWillBeCollected(thisStr)) {
-        continue;
+        // continue;
+        return;
       }
 
       if (this.pieceIsBeingCollected(thisStr, tempPiece)) {
         tempPiece.push(thisStr);
-        continue;
+        // continue;
+        return;
       }
 
       if (this.pieceWasCollected(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) { continue; }
+        if (tempPiece.length === 0) { /*continue;*/ return; }
 
-        var pieceType;
-        tempPiece = trimArray(tempPiece);
-        pieceType = typeChecker(tempPiece);
+        pieceType = typeChecker(trimArray(tempPiece));
+        if (pieceType === undefined) { /*continue;*/ return; }
 
-        if (pieceType !== undefined) {
-          result.total++;        
-          result[pieceType]++;
-          tempPiece = [];  
-        }
+        result.total++;        
+        result[pieceType]++;
+        tempPiece = [];
       }
-    }
+    }.bind(this));
 
     this.showArrayCountMessage(result);
     
@@ -190,37 +191,37 @@ var parser = {
     
     this.targetType = 'object';    
 
-    for (var i = 0, thisStr; i < jsonStr.length; i++) {
-      thisStr = jsonStr[i];
-
+    jsonStr.split('').forEach(function(thisStr) {
+      var pieceType = null;
+      
       if (character.isColon(thisStr)) {
         tempPiece = []; // key:value중 value값만 저장하기 위해..
-        continue;
+        // continue;
+        return;
       }
 
       if (this.pieceWillBeCollected(thisStr)) {
-        continue;
+        // continue;
+        return;
       }
 
       if (this.pieceIsBeingCollected(thisStr, tempPiece)) {
         tempPiece.push(thisStr);
-        continue;
+        // continue;
+        return;
       }
 
       if (this.pieceWasCollected(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) { continue; }
-        
-        var pieceType;
-        tempPiece = trimArray(tempPiece);
-        pieceType = typeChecker(tempPiece);
+        if (tempPiece.length === 0) { /*continue;*/ return; }
 
-        if (pieceType !== undefined) {
-          result.total++;        
-          result[pieceType]++;
-          tempPiece = [];  
-        }
+        pieceType = typeChecker(trimArray(tempPiece));
+        if (pieceType === undefined) { /*continue;*/ return; }
+
+        result.total++;        
+        result[pieceType]++;
+        tempPiece = [];
       }
-    }
+    }.bind(this));
 
     this.showObjectCountMessage(result);
 
