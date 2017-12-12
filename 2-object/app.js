@@ -158,22 +158,18 @@ var parser = {
     jsonStr.split('').forEach(function(thisStr) {
       var pieceType = null;
       
-      if (this.pieceWillBeCollected(thisStr)) {
-        // continue;
-        return;
-      }
+      if (this.pieceWillBeCollected(thisStr)) { return; }
 
       if (this.pieceIsBeingCollected(thisStr, tempPiece)) {
         tempPiece.push(thisStr);
-        // continue;
         return;
       }
 
       if (this.pieceWasCollected(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) { /*continue;*/ return; }
+        if (tempPiece.length === 0) { return; }
 
         pieceType = typeChecker(trimArray(tempPiece));
-        if (pieceType === undefined) { /*continue;*/ return; }
+        if (pieceType === undefined) { return; }
 
         result.total++;        
         result[pieceType]++;
@@ -196,26 +192,21 @@ var parser = {
       
       if (character.isColon(thisStr)) {
         tempPiece = []; // key:value중 value값만 저장하기 위해..
-        // continue;
         return;
       }
 
-      if (this.pieceWillBeCollected(thisStr)) {
-        // continue;
-        return;
-      }
+      if (this.pieceWillBeCollected(thisStr)) { return; }
 
       if (this.pieceIsBeingCollected(thisStr, tempPiece)) {
         tempPiece.push(thisStr);
-        // continue;
         return;
       }
 
       if (this.pieceWasCollected(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) { /*continue;*/ return; }
+        if (tempPiece.length === 0) { return; }
 
         pieceType = typeChecker(trimArray(tempPiece));
-        if (pieceType === undefined) { /*continue;*/ return; }
+        if (pieceType === undefined) { return; }
 
         result.total++;        
         result[pieceType]++;
