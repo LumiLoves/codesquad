@@ -185,14 +185,25 @@ var parser = {
   // count
 
   countByType: function(jsonStr) {
-    var firstJsonStr = jsonStr[0];
+    jsonStr.trim();
 
-    if (firstJsonStr === '[') { this.countArrayByType(jsonStr); return; }
-    if (firstJsonStr === '{') { this.countObjectByType(jsonStr); return; }
+    var firstJsonStr = jsonStr[0];
+    var lastJsonStr = jsonStr[jsonStr.length - 1];
+
+    if (character.isLeftSquareBracket(firstJsonStr) && character.isRightSquareBracket(lastJsonStr)) { 
+      this.countArrayByType(jsonStr);
+      return;
+    }
+    if (character.isLeftCurlyBracket(firstJsonStr) && character.isRightCurlyBracket(lastJsonStr)) { 
+      this.countObjectByType(jsonStr);
+      return;
+    }
+
+    message.showNotSupportType();    
   },
   countArrayByType: function(jsonStr) {
     var tempPiece = [];
-    var hasException = false;    
+    var hasException = false;
     var result = { total: 0, string: 0, number: 0, boolean: 0, object: 0 };
     
     this.targetType = 'array';
@@ -213,7 +224,7 @@ var parser = {
 
         pieceType = typeChecker.getType(util.trimArray(tempPiece));
         if (pieceType === 'nothing') {
-          console.log('자원하지 않는 형식을 포함하고 있습니다. \n');
+          message.showNotSupportType();
           
           return pieceType === 'nothing';
         }
@@ -224,7 +235,7 @@ var parser = {
       }
     }.bind(this));
 
-    (hasException === false) && this.showArrayCountMessage(result);
+    (hasException === false) && message.showArrayCountMessage(result);
     
     return result;
   },
@@ -261,13 +272,13 @@ var parser = {
 
         pieceType = typeChecker.getType(util.trimArray(tempPiece));
         if (pieceType === 'nothing') {
-          console.log('자원하지 않는 형식을 포함하고 있습니다. \n'); 
+          message.showNotSupportType(); 
 
           return pieceType === 'nothing'; // some 조건에 만족하여 반복문 수행을 멈춤
         }
 
         if (hasCuttingColon !== true) {
-          console.log('자원하지 않는 형식을 포함하고 있습니다. \n');       
+          message.showNotSupportType();       
 
           return pieceType === 'nothing';
         }
@@ -279,13 +290,21 @@ var parser = {
       }
     }.bind(this));
 
-    (hasException === false) && this.showObjectCountMessage(result);
+    (hasException === false) && message.showObjectCountMessage(result);
 
     return result;
+  }
+};
+
+
+/**
+ * Message
+ */
+
+var message = {
+  showNotSupportType: function() {
+    console.log('자원하지 않는 형식을 포함하고 있습니다. \n');    
   },
-
-  // message
-
   showArrayCountMessage: function(result) {
     console.log(`총 ${result.total}개의 배열 데이터 중에 객체 ${result.object}개, 문자열 ${result.string}개, 숫자 ${result.number}개, 부울 ${result.boolean}개가 포함되어 있습니다. \n`);
   },
@@ -293,6 +312,7 @@ var parser = {
     console.log(`총 ${result.total}개의 객체 데이터 중에 문자열 ${result.string}개, 숫자 ${result.number}개, 부울 ${result.boolean}개가 포함되어 있습니다. \n`);
   }
 };
+
 
 
 /**
