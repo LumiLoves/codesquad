@@ -53,6 +53,41 @@ var util = {
 
 
 /**
+ *  Character
+ */
+
+var character = {
+  isComma: function(str) { return str === ','; },
+  isDoubleQuotation: function(str) { return str === '"'; },
+  isColon: function(str) { return str === ':'; },
+  isLeftCurlyBracket: function(str) { return str === '{'; },
+  isRightCurlyBracket: function(str) { return str === '}'; },
+  isLeftSquareBracket: function(str) { return str === '['; },
+  isRightSquareBracket: function(str) { return str === ']'; },
+  
+  isCuttingComma: function(str, tempPiece) {
+    str = str.trim();
+    tempPiece = util.trimArray(tempPiece);
+
+    var firstPiece = tempPiece[0];
+    var lastPiece = tempPiece[tempPiece.length - 1];
+
+    // 스트링("") 내부에 있는 Comma인지 체크 (ex : ",")
+    if (this.isDoubleQuotation(firstPiece)) {
+      return this.isComma(str) && this.isDoubleQuotation(lastPiece);
+    }
+
+    // 객체({}) 내부에 있는 Comma인지 체크 (ex : [ {,,,} , { } ])
+    if (this.isLeftCurlyBracket(firstPiece)) {
+      return this.isComma(str) && this.isRightCurlyBracket(lastPiece);
+    }
+
+    return this.isComma(str);
+  }
+};
+
+
+/**
  * 타입분석기 (결과값 : 문자열, 숫자, 불리언)
  */
 
@@ -95,41 +130,6 @@ var typeChecker = {
     if (this.isObject(tempPiece)) { return 'object'; }
 
     return 'nothing';
-  }
-};
-
-
-/**
- *  Character
- */
-
-var character = {
-  isComma: function(str) { return str === ','; },
-  isDoubleQuotation: function(str) { return str === '"'; },
-  isColon: function(str) { return str === ':'; },
-  isLeftCurlyBracket: function(str) { return str === '{'; },
-  isRightCurlyBracket: function(str) { return str === '}'; },
-  isLeftSquareBracket: function(str) { return str === '['; },
-  isRightSquareBracket: function(str) { return str === ']'; },
-  
-  isCuttingComma: function(str, tempPiece) {
-    str = str.trim();
-    tempPiece = util.trimArray(tempPiece);
-
-    var firstPiece = tempPiece[0];
-    var lastPiece = tempPiece[tempPiece.length - 1];
-
-    // 스트링("") 내부에 있는 Comma인지 체크 (ex : ",")
-    if (this.isDoubleQuotation(firstPiece)) {
-      return this.isComma(str) && this.isDoubleQuotation(lastPiece);
-    }
-
-    // 객체({}) 내부에 있는 Comma인지 체크 (ex : [ {,,,} , { } ])
-    if (this.isLeftCurlyBracket(firstPiece)) {
-      return this.isComma(str) && this.isRightCurlyBracket(lastPiece);
-    }
-
-    return this.isComma(str);
   }
 };
 
@@ -312,7 +312,6 @@ var message = {
     console.log(`총 ${result.total}개의 객체 데이터 중에 문자열 ${result.string}개, 숫자 ${result.number}개, 부울 ${result.boolean}개가 포함되어 있습니다. \n`);
   }
 };
-
 
 
 /**
