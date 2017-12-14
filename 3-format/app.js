@@ -303,7 +303,7 @@ var parser = {
 
 var message = {
   showNotSupportType: function() {
-    console.log('자원하지 않는 형식을 포함하고 있습니다. \n');    
+    console.log('지원하지 않는 형식을 포함하고 있습니다. \n');    
   },
   showArrayCountMessage: function(result) {
     console.log(`총 ${result.total}개의 배열 데이터 중에 객체 ${result.object}개, 문자열 ${result.string}개, 숫자 ${result.number}개, 부울 ${result.boolean}개가 포함되어 있습니다. \n`);
