@@ -43,268 +43,465 @@ var r = readline.createInterface({
  */
 
 var util = {
-  trimArray: function(arr) {
-    if (arr[0] === ' ') { arr.shift(); }
-    if (arr[arr.length - 1] === ' ') { arr.pop(); }
-  
-    return arr;
+  array: {
+    trim: function(arr) {
+      if (toString.call(arr) !== '[object Array]') { return false; }
+
+      if (arr[0] === ' ') { arr.shift(); }
+      if (arr[arr.length - 1] === ' ') { arr.pop(); }
+      if (arr[0] === ' ' || arr[arr.length - 1] === ' ') { this.trim(arr); }
+
+      return arr;
+    }
+  },
+  type: {
+    isString: function(data) {
+      return toString.call(data) === '[object String]';
+    },
+    isArray: function(data) {
+      return toString.call(data) === '[object Array]';
+    }
   }
 };
 
 
 /**
- *  Character
+ *  Letter 
  */
 
-var character = {
-  isComma: function(str) { return str === ','; },
-  isDoubleQuotation: function(str) { return str === '"'; },
-  isColon: function(str) { return str === ':'; },
-  isLeftCurlyBracket: function(str) { return str === '{'; },
-  isRightCurlyBracket: function(str) { return str === '}'; },
-  isLeftSquareBracket: function(str) { return str === '['; },
-  isRightSquareBracket: function(str) { return str === ']'; },
-  
-  isCuttingComma: function(str, tempPiece) {
-    str = str.trim();
-    tempPiece = util.trimArray(tempPiece);
+var letter = {
+  isComma: function(thisLetter) { return thisLetter === ','; },
+  isDoubleQuotation: function(thisLetter) { return thisLetter === '"'; },
+  isColon: function(thisLetter) { return thisLetter === ':'; },
 
-    var firstPiece = tempPiece[0];
-    var lastPiece = tempPiece[tempPiece.length - 1];
+  isLeftCurlyBracket: function(thisLetter) { return thisLetter === '{'; },
+  isRightCurlyBracket: function(thisLetter) { return thisLetter === '}'; },
+  isLeftSquareBracket: function(thisLetter) { return thisLetter === '['; },
+  isRightSquareBracket: function(thisLetter) { return thisLetter === ']'; },
+  
+  isBracket: function(thisLetter) { return [ '{', '}', '[', ']' ].indexOf(thisLetter) > -1; },
+  isLeftBracket: function(thisLetter) { return [ '{', '[' ].indexOf(thisLetter) > -1; },
+  isRightBracket: function(thisLetter) { return [ '}', ']' ].indexOf(thisLetter) > -1; },
+  
+  isArrayBrackets: function(leftBracket, rightBracket) {
+    return this.isLeftSquareBracket(leftBracket) && this.isRightSquareBracket(rightBracket);
+  },
+  isObjectBrackets: function(leftBracket, rightBracket) {
+    return this.isLeftCurlyBracket(leftBracket) && this.isRightCurlyBracket(rightBracket);    
+  },
+
+  isCuttingComma: function(thisLetter, token) {
+    thisLetter = thisLetter.trim();
+    token = util.array.trim(token);
+
+    var firstLetter = token[0];
+    var lastLetter = token[token.length - 1];
 
     // 스트링("") 내부에 있는 Comma인지 체크 (ex : ",")
-    if (this.isDoubleQuotation(firstPiece)) {
-      return this.isComma(str) && this.isDoubleQuotation(lastPiece);
+    if (this.isDoubleQuotation(firstLetter)) {
+      return this.isComma(thisLetter) && this.isDoubleQuotation(lastLetter);
     }
 
-    // 객체({}) 내부에 있는 Comma인지 체크 (ex : [ {,,,} , { } ])
-    if (this.isLeftCurlyBracket(firstPiece)) {
-      return this.isComma(str) && this.isRightCurlyBracket(lastPiece);
+    // 객체({}) 내부에 있는 Comma인지 체크 (ex : {,,,} , { } )
+    if (this.isLeftCurlyBracket(firstLetter)) {
+      return this.isComma(thisLetter) && this.isRightCurlyBracket(lastLetter);
     }
 
-    return this.isComma(str);
+    // 배열([]) 내부에 있는 Comma인지 체크 (ex : [,,,] , [ ] )
+    if (this.isLeftSquareBracket(firstLetter)) {
+      return this.isComma(thisLetter) && this.isRightSquareBracket(lastLetter);
+    }
+
+    return this.isComma(thisLetter);
   }
 };
 
 
 /**
- * 타입분석기 (결과값 : 문자열, 숫자, 불리언)
+ * 타입 분석기 (결과값 : 문자열, 숫자, 불린, 객체, 배열)
  */
 
 var typeChecker = {
-  isString: function(tempPiece) {
-    var hasFirstDoubleQuotation = character.isDoubleQuotation(tempPiece[0]);
-    var hasLastDoubleQuotation = character.isDoubleQuotation(tempPiece[tempPiece.length - 1]);
-    var doubleQuotationArr = tempPiece.filter(function(elem) {
-      return character.isDoubleQuotation(elem);      
+  getType: function(token) {
+    var joinedTemp = '';
+
+    token = util.array.trim(token);  
+    joinedTemp = token.join('').trim();
+
+    if (joinedTemp === '') { return 'nothing'; }
+    if (this._isString(token)) { return 'string'; }
+    if (this._isNumber(joinedTemp)) { return 'number'; }
+    if (this._isBoolean(joinedTemp)) { return 'boolean'; }
+    if (this._isObject(token)) { return 'object'; }
+    if (this._isArray(token)) { return 'array'; }
+
+    return 'nothing';
+  },
+
+  _isString: function(token) {
+    var hasFirstDoubleQuotation = letter.isDoubleQuotation(token[0]);
+    var hasLastDoubleQuotation = letter.isDoubleQuotation(token[token.length - 1]);
+    var doubleQuotationArr = token.filter(function(elem) {
+      return letter.isDoubleQuotation(elem);      
     });
 
     return hasFirstDoubleQuotation && hasLastDoubleQuotation && (doubleQuotationArr.length === 2);
   },
-  isNumber: function(joinedTemp) {
+  _isNumber: function(joinedTemp) {
     return !isNaN(joinedTemp);
   },
-  isBoolean: function(joinedTemp) {
+  _isBoolean: function(joinedTemp) {
     return [ 'true', 'false' ].indexOf(joinedTemp) > -1;
   },
-  isObject: function(tempPiece) {
-    var hasFirstCurlyBracket = character.isLeftCurlyBracket(tempPiece[0]);
-    var hasLastCurlyBracket = character.isRightCurlyBracket(tempPiece[tempPiece.length - 1]);
-    var curlyBracketArr = tempPiece.filter(function(elem) {
+  _isObject: function(token) {
+    var hasFirstCurlyBracket = letter.isLeftCurlyBracket(token[0]);
+    var hasLastCurlyBracket = letter.isRightCurlyBracket(token[token.length - 1]);
+    var curlyBracketArr = token.filter(function(elem) {
       return [ '{', '}' ].indexOf(elem) > -1;
     });
 
-    return hasFirstCurlyBracket && hasLastCurlyBracket && (curlyBracketArr.length === 2);
+    return hasFirstCurlyBracket && hasLastCurlyBracket && (curlyBracketArr.length % 2 === 0);
   },
-  isArray: function(tempPiece) {
-    var hasFirstSquareBracket = character.isLeftSquareBracket(tempPiece[0]);
-    var hasLastSquareBracket = character.isRightSquareBracket(tempPiece[tempPiece.length - 1]);
-    var squareBracketArr = tempPiece.filter(function(elem) {
+  _isArray: function(token) {
+    var hasFirstSquareBracket = letter.isLeftSquareBracket(token[0]);
+    var hasLastSquareBracket = letter.isRightSquareBracket(token[token.length - 1]);
+    var squareBracketArr = token.filter(function(elem) {
       return [ '[', ']' ].indexOf(elem) > -1;
     });
 
-    return hasFirstSquareBracket && hasLastSquareBracket && (squareBracketArr.length === 2);    
-  },
-
-  getType: function(tempPiece) {
-    var joinedTemp = '';
-
-    tempPiece = util.trimArray(tempPiece);  
-    joinedTemp = tempPiece.join('').trim();
-
-    if (joinedTemp === '') { return 'nothing'; }
-    if (this.isString(tempPiece)) { return 'string'; }
-    if (this.isNumber(joinedTemp)) { return 'number'; }
-    if (this.isBoolean(joinedTemp)) { return 'boolean'; }
-    if (this.isObject(tempPiece)) { return 'object'; }
-
-    return 'nothing';
+    return hasFirstSquareBracket && hasLastSquareBracket && (squareBracketArr.length % 2 === 0);    
   }
 };
 
 
 /**
- *  사용자 입력값 처리기
+ *  Parser
  */
 
 var parser = {
+  init: function() {
+    this._initProcessData();
+  },
+  run: function(JSONStr, startIndex) {
+    if (util.type.isString(JSONStr)) { JSONStr = JSONStr.trim(); }
 
-  // target
+    var firstJSONStr = JSONStr[0];
+    var lastJSONStr = JSONStr[JSONStr.length - 1];
 
-  targetType: null,
-  targetMethod: {
-    array: {
-      isStartBracket: character.isLeftSquareBracket,
-      isEndBracket: character.isRightSquareBracket
-    },
-    object: {
-      isStartBracket: character.isLeftCurlyBracket,
-      isEndBracket: character.isRightCurlyBracket
+    if (letter.isArrayBrackets(firstJSONStr, lastJSONStr)) {
+      this._initTargetData('array');
+      this._parseJSON(JSONStr, startIndex);      
+      return;
     }
+
+    if (letter.isObjectBrackets(firstJSONStr, lastJSONStr)) { 
+      this._initTargetData('object');      
+      this._parseJSON(JSONStr, startIndex);
+      return;
+    }
+
+    message.showNotSupportType();
   },
 
-  // piece collecting status
-
-  willCollectPiece: function(str, tempPiece) {
-    var isStartBracket = this.targetMethod[this.targetType].isStartBracket(str);
-    var isEmptyPiece = (tempPiece.join('').trim().length === 0);
-
-    return isStartBracket && isEmptyPiece; 
+  /* parser data 조작 */
+  _initProcessData: function() {
+    this.returnStack = [];  // [ { JSONStr: '...', startIndex: 10 }, { ... } ]
+    this.globalDepth = 0;   // 시작 브라켓과 엔드 브라켓만 옮길 수 있음
+    this.currentDepth = 0;  // parse 하는 중간에 옮길 수 있음
+    this.counter = { total: 0, string: 0, number: 0, boolean: 0, object: 0, array: 0 };
   },
-  isCollectingPiece: function(str, tempPiece) {
-    var isNotCuttingComma = !character.isCuttingComma(str, tempPiece);
-    var isNotEndBracket = !this.targetMethod[this.targetType].isEndBracket(str);
-    // var inString = util.trimArray(tempPiece)[0] === '"';
+  _initTargetData: function(targetType) {
+    var bracketMethod = {
+      array: {
+        isStartBracket: letter.isLeftSquareBracket,
+        isEndBracket: letter.isRightSquareBracket
+      },
+      object: {
+        isStartBracket: letter.isLeftCurlyBracket,
+        isEndBracket: letter.isRightCurlyBracket
+      }
+    }[targetType];
 
-    return isNotCuttingComma && isNotEndBracket;
+    this.target = {
+      type: targetType,
+      checkStartBracket: bracketMethod.isStartBracket,
+      checkEndBracket: bracketMethod.isEndBracket
+    };
   },
-  collectedPiece: function(str, tempPiece) {
-    var isCuttingComma = character.isCuttingComma(str, tempPiece);
-    var isEndBracket = this.targetMethod[this.targetType].isEndBracket(str);
+  _moveDepth: function(depthName, direction) {
+    if (direction === 'up') { this[depthName]++; }
+    if (direction === 'down') { this[depthName]--; }
+  },
+  _addCount: function(selectedType) {
+    this.counter.total++;        
+    this.counter[selectedType]++;
+  },
+
+  /* parser 가 돌고 있는 상태 조회. */
+
+  _isInsideObject: function() {
+    return (this.currentDepth - this.globalDepth) >= 1;
+  },
+  _isOutsideObject: function() {
+    return this.currentDepth === this.globalDepth;
+  },
+  _isInsideString: function(token) {
+    var firstLetter = util.array.trim(token)[0];    
+    var doubleQuotationArr = token.filter(function(elem) {
+      return [ '"' ].indexOf(elem) > -1;
+    });
+    
+    return (firstLetter === '"') && (doubleQuotationArr.length === 1);
+  },
+
+  /* parsing 상태 체크 */
+
+  _isStarting: function(thisLetter, token) {
+    var isOutsideObject = this._isOutsideObject();    
+    var isStartBracket = this.target.checkStartBracket(thisLetter);
+    var isEmptyToken = (token.join('').trim().length === 0);
+    
+    return isOutsideObject && isStartBracket && isEmptyToken; 
+  },
+  _isCollectingToken: function(thisLetter, token) {
+    var isInsideObject = this._isInsideObject();
+    var isInsideString = this._isInsideString(token);
+    var isNotCuttingComma = !letter.isCuttingComma(thisLetter, token);
+    var isNotEndBracket = !this.target.checkEndBracket(thisLetter);
+
+    return isInsideObject || isInsideString || (isNotCuttingComma && isNotEndBracket);
+  },
+  _isAnalyzingToken: function(thisLetter, token) {
+    var isCuttingComma = letter.isCuttingComma(thisLetter, token);
+    var isEndBracket = this.target.checkEndBracket(thisLetter);
 
     return isCuttingComma || isEndBracket;
   },
-  pauseCollectingPiece: function(str, tempPiece) {
-    var isColon = character.isColon(str);
-    var keyType = typeChecker.getType(tempPiece);
+  _isCheckingKey: function(thisLetter, token) {
+    var isColon = letter.isColon(thisLetter);
+    var keyType = typeChecker.getType(token);
 
     return isColon && (keyType === 'string');
   },
 
-  // count
+  /* parsing 처리 */
 
-  countByType: function(jsonStr) {
-    jsonStr.trim();
+  _parseJSON: function(JSONStr, startIndex) {
+    var targetIsObject = (this.target.type === 'object');    
+    var tempToken = [];
+    var JSONStrArr = util.type.isString(JSONStr) ? JSONStr.split('') : JSONStr;
 
-    var firstJsonStr = jsonStr[0];
-    var lastJsonStr = jsonStr[jsonStr.length - 1];
+    var isNotSupportType = false;
+    var hasCuttingColon = false;
+    var startIndex = startIndex || 0;
+    var pauseIndex = 0;
 
-    if (character.isLeftSquareBracket(firstJsonStr) && character.isRightSquareBracket(lastJsonStr)) { 
-      this.countArrayByType(jsonStr);
-      return;
-    }
-    if (character.isLeftCurlyBracket(firstJsonStr) && character.isRightCurlyBracket(lastJsonStr)) { 
-      this.countObjectByType(jsonStr);
-      return;
-    }
+    // 배열 시작 처리
+    if (startIndex > 0) {
+      JSONStrArr.splice(0, startIndex);
+      JSONStrArr = util.array.trim(JSONStrArr);
 
-    message.showNotSupportType();    
-  },
-  countArrayByType: function(jsonStr) {
-    var tempPiece = [];
-    var hasException = false;
-    var result = { total: 0, string: 0, number: 0, boolean: 0, object: 0, array: 0 };
+      // 값 ,
+      if (letter.isComma(JSONStrArr[0])) {
+        printer.addOutput(printer.output.pop(), JSONStrArr.shift());
+      }
 
-    this.targetType = 'array';
+      // '      ' ]
+      if (letter.isRightBracket(JSONStrArr[0])) {
+        printer.addTab(this.globalDepth - 1);
+        printer.addOutput(JSONStrArr.shift());
+      }
 
-    hasException = jsonStr.split('').some(function(thisStr) {
-      var pieceType = null;
-      
-      if (this.willCollectPiece(thisStr, tempPiece)) { return; }
-
-      if (this.isCollectingPiece(thisStr, tempPiece)) {
-        tempPiece.push(thisStr);
+    } else {
+      if (! this._isStarting(JSONStrArr[0], tempToken)) {
+        message.showNotSupportType();
 
         return;
       }
 
-      if (this.collectedPiece(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) { return; }
-
-        pieceType = typeChecker.getType(util.trimArray(tempPiece));
-        if (pieceType === 'nothing') {
-          message.showNotSupportType();
-          
-          return pieceType === 'nothing';
-        }
-        
-        result.total++;        
-        result[pieceType]++;
-        tempPiece = [];
-      }
-    }.bind(this));
-
-    (hasException === false) && message.showCountMessage(result, this.targetType);
-
-    return result;
-  },
-  countObjectByType: function(jsonStr) {
-    var tempPiece = [];
-    var hasException = false;
-    var hasCuttingColon = false;
-    var result = { total: 0, string: 0, number: 0, boolean: 0, object: 0, array: 0 };
+      this._moveDepth('globalDepth', 'up');
+      this._moveDepth('currentDepth', 'up');
+      printer.addOutput(JSONStrArr.shift());
+      
+    }
     
-    this.targetType = 'object';    
+    startIndex++;
 
-    hasException = jsonStr.split('').some(function(thisStr) {
-      var pieceType = null;
+    // 배열 Scan
+    JSONStrArr.some(function(thisLetter, thisIndex) {
+      var tempTokenType = null;
+      var isLastLetter = (JSONStrArr.length - 1) === thisIndex;      
 
-      if (this.willCollectPiece(thisStr, tempPiece)) { return; }
+      // 탭 추가
+      if (printer.tempOutputLine.length === 0) {
+        printer.addTab(this.globalDepth);
+      }
 
-      if (this.pauseCollectingPiece(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) {
-          message.showNotSupportType();
+      // depth 변경
+      if (!this._isInsideString(tempToken) && letter.isLeftBracket(thisLetter)) {
+        this._moveDepth('currentDepth', 'up');
+      }
+
+      if (targetIsObject && this._isCheckingKey(thisLetter, tempToken)) {
+        if (tempToken.length === 0) {
+          isNotSupportType = true;
+
           return true;          
         }
 
-        tempPiece = [];
+        printer.addTempOutputLine(tempToken, ' ' , thisLetter, ' ');
+        tempToken = [];
         hasCuttingColon = true;
-        
-        return;
+
+        return false;
       }
 
-      if (this.isCollectingPiece(thisStr, tempPiece)) {
-        tempPiece.push(thisStr);
+      // token 모으기
+      if (!isLastLetter && this._isCollectingToken(thisLetter, tempToken)) {
+        tempToken.push(thisLetter);
 
-        return;
-      }
-
-      if (this.collectedPiece(thisStr, tempPiece)) {
-        if (tempPiece.length === 0) { return; }
-
-        pieceType = typeChecker.getType(util.trimArray(tempPiece));
-        if (pieceType === 'nothing') {
-          message.showNotSupportType(); 
-
-          return pieceType === 'nothing'; // some 조건에 만족하여 반복문 수행을 멈춤
+        if (!this._isInsideString(tempToken) && letter.isRightBracket(thisLetter)) {
+          this._moveDepth('currentDepth', 'down');
         }
 
-        if (hasCuttingColon !== true) {
-          message.showNotSupportType();       
-
-          return pieceType === 'nothing';
-        }
-        
-        hasCuttingColon = false;
-        result.total++;        
-        result[pieceType]++;
-        tempPiece = [];
+        return false;
       }
+
+      // token 분석 및 처리
+      if (this._isAnalyzingToken(thisLetter, tempToken)) {
+        tempTokenType = typeChecker.getType(util.array.trim(tempToken));
+
+        if (tempToken.length === 0) {
+          isNotSupportType = true;
+          return true;
+        }
+
+        if (targetIsObject) {
+          if (hasCuttingColon === true) {
+            hasCuttingColon = false;
+          } else {
+            isNotSupportType = true;
+            return true;
+          }
+        }
+
+        if (tempTokenType === 'nothing') {
+          isNotSupportType = true;
+
+          return true;
+        }
+
+        // token type 으로 count 처리
+        if (this.globalDepth === 1) { this._addCount(tempTokenType); }
+
+        // token 이 객체일 경우 멈춤
+        if ([ 'object', 'array' ].indexOf(tempTokenType) > - 1) {
+          pauseIndex = thisIndex;
+
+          return true;
+        }
+
+        // print 조각모으기 완료.
+        if (letter.isCuttingComma(thisLetter, tempToken)) {
+          //  값 ,
+          printer.addOutput(tempToken, thisLetter);
+        }
+
+        if (letter.isRightBracket(thisLetter)) {
+          //    값
+          //  }
+          printer.addOutput(tempToken);
+          
+          printer.addTab(this.globalDepth - 1);
+          printer.addOutput(thisLetter);
+        }
+
+        tempToken = [];
+      }
+
     }.bind(this));
 
-    (hasException === false) && message.showCountMessage(result, this.targetType);
+    // 지원하지 않는 형식을 만났을 때.
+    if (isNotSupportType === true) {
+      message.showNotSupportType();
 
-    return result;
+      return;
+    }
+
+    // pauseIndex가 있을 경우, 탐색한 객체안에 중첩이 있다는 뜻이므로 저장.
+    if (pauseIndex > 0) {
+      this.returnStack[this.globalDepth - 1] = {
+        JSONStr: JSONStr,
+        startIndex: startIndex + pauseIndex
+      };
+      this.run(tempToken.join(''));
+
+      return;
+    }
+
+    // 재귀일 경우 depth 조절
+    if (this.returnStack.length > 0) {
+      var returnInfo = this.returnStack.pop();
+
+      this._moveDepth('globalDepth', 'down');
+      this._moveDepth('currentDepth', 'down');
+      this.run(returnInfo.JSONStr, returnInfo.startIndex);
+
+      return;      
+    }
+
+    // 출력
+    message.showCountMessage(this.counter, this.target.type);
+    printer.showOutput();
+  }
+};
+
+
+/**
+ * Printer
+ */
+var printer = {
+  init: function() {
+    this._initData();
+  },
+  addTab: function(number) {
+    var tab = this._makeTab(number);
+    this.tempOutputLine.push(tab);
+  },
+  addTempOutputLine: function() {
+    // 모든 arguments 를 하나의 배열로 합쳐줌.
+    Array.from(arguments, function(thisArg) {
+      this.tempOutputLine = [].concat(this.tempOutputLine, thisArg);
+    }.bind(this));
+  },
+  addOutput: function() {
+    arguments.length && this.addTempOutputLine.apply(this, arguments);
+
+    this.output.push(this.tempOutputLine.join(''));
+    this._resetTempOutputLine();
+  },
+  showOutput: function() {
+    this.output.forEach(function(elem) {
+      console.log(elem);
+    });
+    console.log('\n \n');
+  },
+
+  _initData: function() {
+    this._resetTempOutputLine();
+    this._resetOutput();
+  },
+  _makeTab: function(number) {
+    if (number <= 0) { return ''; }
+    for (var i = 1, tabStr = '\t'; i < number; i++) { tabStr += '\t'; }
+
+    return tabStr;
+  },
+  _resetTempOutputLine: function() {
+    this.tempOutputLine = [];
+  },
+  _resetOutput: function() {
+    this.output = [];
   }
 };
 
@@ -317,24 +514,23 @@ var message = {
   showNotSupportType: function() {
     console.log('지원하지 않는 형식을 포함하고 있습니다. \n');    
   },
-  showCountMessage: function(result, type) {
+  showCountMessage: function(counter, type) {
     var type = { array: '배열', object: '객체' }[type];
     var messages = [];
     
-    if (result.total === 0) {
+    if (counter.total === 0) {
       console.log(`총 0개의 ${type} 데이터가 있습니다. \n`);
       return;
     }
 
-    if (result.string > 0) { messages.push(`문자열 ${result.string}개`); }
-    if (result.number > 0) { messages.push(`숫자 ${result.number}개`); }
-    if (result.boolean > 0) { messages.push(`불린 ${result.boolean}개`); }
-    if (result.object > 0) { messages.push(`객체 ${result.object}개`); }
-    if (result.array > 0) { messages.push(`배열 ${result.array}개`); }
+    if (counter.string > 0) { messages.push(`문자열 ${counter.string}개`); }
+    if (counter.number > 0) { messages.push(`숫자 ${counter.number}개`); }
+    if (counter.boolean > 0) { messages.push(`불린 ${counter.boolean}개`); }
+    if (counter.object > 0) { messages.push(`객체 ${counter.object}개`); }
+    if (counter.array > 0) { messages.push(`배열 ${counter.array}개`); }
 
-    messages.join(' , ')
-
-    console.log(`총 ${result.total}개의 ${type} 데이터 중에 ${messages} 가 포함되어 있습니다. \n`);
+    messages.join(' , ');
+    console.log(`총 ${counter.total}개의 ${type} 데이터 중에 ${messages} 가 포함되어 있습니다. \n`);
   }
 };
 
@@ -343,15 +539,23 @@ var message = {
  * 실행영역
  */
 
-function runCmd() {
-  r.question('분석할 JSON 데이터를 입력하세요. \n', function(answer) {
-    parser.countByType(answer);
+var app = {
+  run: function() {
+    r.question('분석할 JSON 데이터를 입력하세요. \n', function(JSONStr) {
+      this._init();
+      parser.run(JSONStr);
 
-    runCmd();
-  });
-}
+      this.run();
+    }.bind(this));
+  },
+  
+  _init: function() {
+    printer.init();    
+    parser.init();
+  }
+};
 
-runCmd();
+app.run();
 
 
 
