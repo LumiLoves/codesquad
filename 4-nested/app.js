@@ -139,13 +139,13 @@ var typeChecker = {
   },
 
   _isString: function(token) {
-    var hasFirstDoubleQuotation = letter.isDoubleQuotation(token[0]);
-    var hasLastDoubleQuotation = letter.isDoubleQuotation(token[token.length - 1]);
+    var haveFirstDoubleQuotation = letter.isDoubleQuotation(token[0]);
+    var haveLastDoubleQuotation = letter.isDoubleQuotation(token[token.length - 1]);
     var doubleQuotationArr = token.filter(function(elem) {
       return letter.isDoubleQuotation(elem);      
     });
 
-    return hasFirstDoubleQuotation && hasLastDoubleQuotation && (doubleQuotationArr.length === 2);
+    return haveFirstDoubleQuotation && haveLastDoubleQuotation && (doubleQuotationArr.length === 2);
   },
   _isNumber: function(joinedTemp) {
     return !isNaN(joinedTemp);
@@ -154,22 +154,22 @@ var typeChecker = {
     return [ 'true', 'false' ].indexOf(joinedTemp) > -1;
   },
   _isObject: function(token) {
-    var hasFirstCurlyBracket = letter.isLeftCurlyBracket(token[0]);
-    var hasLastCurlyBracket = letter.isRightCurlyBracket(token[token.length - 1]);
+    var haveFirstCurlyBracket = letter.isLeftCurlyBracket(token[0]);
+    var haveLastCurlyBracket = letter.isRightCurlyBracket(token[token.length - 1]);
     var curlyBracketArr = token.filter(function(elem) {
       return [ '{', '}' ].indexOf(elem) > -1;
     });
 
-    return hasFirstCurlyBracket && hasLastCurlyBracket && (curlyBracketArr.length % 2 === 0);
+    return haveFirstCurlyBracket && haveLastCurlyBracket && (curlyBracketArr.length % 2 === 0);
   },
   _isArray: function(token) {
-    var hasFirstSquareBracket = letter.isLeftSquareBracket(token[0]);
-    var hasLastSquareBracket = letter.isRightSquareBracket(token[token.length - 1]);
+    var haveFirstSquareBracket = letter.isLeftSquareBracket(token[0]);
+    var haveLastSquareBracket = letter.isRightSquareBracket(token[token.length - 1]);
     var squareBracketArr = token.filter(function(elem) {
       return [ '[', ']' ].indexOf(elem) > -1;
     });
 
-    return hasFirstSquareBracket && hasLastSquareBracket && (squareBracketArr.length % 2 === 0);    
+    return haveFirstSquareBracket && haveLastSquareBracket && (squareBracketArr.length % 2 === 0);    
   }
 };
 
@@ -204,6 +204,7 @@ var parser = {
   },
 
   /* parser data 조작 */
+
   _initProcessData: function() {
     this.returnStack = [];  // [ { JSONStr: '...', startIndex: 10 }, { ... } ]
     this.globalDepth = 0;   // 시작 브라켓과 엔드 브라켓만 옮길 수 있음
@@ -239,13 +240,7 @@ var parser = {
 
   /* parser 가 돌고 있는 상태 조회. */
 
-  _isInsideObject: function() {
-    return (this.currentDepth - this.globalDepth) >= 1;
-  },
-  _isOutsideObject: function() {
-    return this.currentDepth === this.globalDepth;
-  },
-  _isInsideString: function(token) {
+  _isRunningInsideString: function(token) {
     var firstLetter = util.array.trim(token)[0];    
     var doubleQuotationArr = token.filter(function(elem) {
       return [ '"' ].indexOf(elem) > -1;
@@ -253,19 +248,25 @@ var parser = {
     
     return (firstLetter === '"') && (doubleQuotationArr.length === 1);
   },
+  _isRunningInsideObject: function() {
+    return (this.currentDepth - this.globalDepth) >= 1;
+  },
+  _isRunningOutsideObject: function() {
+    return this.currentDepth === this.globalDepth;
+  },
 
   /* parsing 상태 체크 */
 
   _isStarting: function(thisLetter, token) {
-    var isOutsideObject = this._isOutsideObject();    
+    var isOutsideObject = this._isRunningOutsideObject();    
     var isStartBracket = this.target.checkStartBracket(thisLetter);
     var isEmptyToken = (token.join('').trim().length === 0);
     
     return isOutsideObject && isStartBracket && isEmptyToken; 
   },
   _isCollectingToken: function(thisLetter, token) {
-    var isInsideObject = this._isInsideObject();
-    var isInsideString = this._isInsideString(token);
+    var isInsideObject = this._isRunningInsideObject();
+    var isInsideString = this._isRunningInsideString(token);
     var isNotCuttingComma = !letter.isCuttingComma(thisLetter, token);
     var isNotEndBracket = !this.target.checkEndBracket(thisLetter);
 
@@ -292,7 +293,7 @@ var parser = {
     var JSONStrArr = util.type.isString(JSONStr) ? JSONStr.split('') : JSONStr;
 
     var isNotSupportType = false;
-    var hasCuttingColon = false;
+    var haveCuttingColon = false;
     var startIndex = startIndex || 0;
     var pauseIndex = 0;
 
@@ -332,13 +333,13 @@ var parser = {
       var tempTokenType = null;
       var isLastLetter = (JSONStrArr.length - 1) === thisIndex;      
 
-      // 탭 추가
+      // 현재 뎁스 크기의 탭 추가
       if (printer.tempOutputLine.length === 0) {
         printer.addTab(this.globalDepth);
       }
 
       // depth 변경
-      if (!this._isInsideString(tempToken) && letter.isLeftBracket(thisLetter)) {
+      if (!this._isRunningInsideString(tempToken) && letter.isLeftBracket(thisLetter)) {
         this._moveDepth('currentDepth', 'up');
       }
 
@@ -351,7 +352,7 @@ var parser = {
 
         printer.addTempOutputLine(tempToken, ' ' , thisLetter, ' ');
         tempToken = [];
-        hasCuttingColon = true;
+        haveCuttingColon = true;
 
         return false;
       }
@@ -360,7 +361,7 @@ var parser = {
       if (!isLastLetter && this._isCollectingToken(thisLetter, tempToken)) {
         tempToken.push(thisLetter);
 
-        if (!this._isInsideString(tempToken) && letter.isRightBracket(thisLetter)) {
+        if (!this._isRunningInsideString(tempToken) && letter.isRightBracket(thisLetter)) {
           this._moveDepth('currentDepth', 'down');
         }
 
@@ -377,8 +378,8 @@ var parser = {
         }
 
         if (targetIsObject) {
-          if (hasCuttingColon === true) {
-            hasCuttingColon = false;
+          if (haveCuttingColon === true) {
+            haveCuttingColon = false;
           } else {
             isNotSupportType = true;
             return true;
@@ -469,7 +470,7 @@ var printer = {
     this.tempOutputLine.push(tab);
   },
   addTempOutputLine: function() {
-    // 모든 arguments 를 하나의 배열로 합쳐줌.
+    // 모든 arguments 를 1뎁스의 배열로 합침.
     Array.from(arguments, function(thisArg) {
       this.tempOutputLine = [].concat(this.tempOutputLine, thisArg);
     }.bind(this));
