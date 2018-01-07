@@ -59,7 +59,8 @@ var util = {
       return toString.call(data) === '[object String]';
     },
     isArray: function(data) {
-      return toString.call(data) === '[object Array]';
+      return (Array.isArray !== undefined)? 
+        Array.isArray(data) : (toString.call(data) === '[object Array]');
     }
   }
 };
@@ -70,49 +71,51 @@ var util = {
  */
 
 var letter = {
-  isComma: function(thisLetter) { return thisLetter === ','; },
-  isDoubleQuotation: function(thisLetter) { return thisLetter === '"'; },
-  isColon: function(thisLetter) { return thisLetter === ':'; },
+  'COMMA': ',',
+  'COLON': ':',
+  'DOUBLE_QUOTATION': '"',  
+  'LEFT_CURLY_BRACKET': '{',
+  'RIGHT_CURLY_BRACKET': '}',
+  'LEFT_SQUARE_BRACKET': '[',
+  'RIGHT_SQUARE_BRACKET': ']',
+  'LEFT_BRACKET': [ '[', '{' ],
+  'RIGHT_BRACKET': [ ']', '}' ],
 
-  isLeftCurlyBracket: function(thisLetter) { return thisLetter === '{'; },
-  isRightCurlyBracket: function(thisLetter) { return thisLetter === '}'; },
-  isLeftSquareBracket: function(thisLetter) { return thisLetter === '['; },
-  isRightSquareBracket: function(thisLetter) { return thisLetter === ']'; },
-  
-  isBracket: function(thisLetter) { return [ '{', '}', '[', ']' ].indexOf(thisLetter) > -1; },
-  isLeftBracket: function(thisLetter) { return [ '{', '[' ].indexOf(thisLetter) > -1; },
-  isRightBracket: function(thisLetter) { return [ '}', ']' ].indexOf(thisLetter) > -1; },
-  
+  checkLetter: function(gubunKey, currentLetter) {
+    var gubunVal = this[gubunKey];
+    
+    if (util.type.isString(gubunVal)) { return gubunVal === currentLetter; }
+    if (util.type.isArray(gubunVal)) { return gubunVal.indexOf(currentLetter) > -1; }
+  },
   isArrayBrackets: function(leftBracket, rightBracket) {
-    return this.isLeftSquareBracket(leftBracket) && this.isRightSquareBracket(rightBracket);
+    return this.checkLetter('LEFT_SQUARE_BRACKET', leftBracket) && this.checkLetter('RIGHT_SQUARE_BRACKET', rightBracket);
   },
   isObjectBrackets: function(leftBracket, rightBracket) {
-    return this.isLeftCurlyBracket(leftBracket) && this.isRightCurlyBracket(rightBracket);    
+    return this.checkLetter('LEFT_CURLY_BRACKET', leftBracket) && this.checkLetter('RIGHT_CURLY_BRACKET', rightBracket);
   },
-
-  isCuttingComma: function(thisLetter, token) {
-    thisLetter = thisLetter.trim();
+  isCuttingComma: function(currentLetter, token) {
+    currentLetter = currentLetter.trim();
     token = util.array.trim(token);
 
     var firstLetter = token[0];
     var lastLetter = token[token.length - 1];
 
     // 스트링("") 내부에 있는 Comma인지 체크 (ex : ",")
-    if (this.isDoubleQuotation(firstLetter)) {
-      return this.isComma(thisLetter) && this.isDoubleQuotation(lastLetter);
+    if (this.checkLetter('DOUBLE_QUOTATION', firstLetter)) {
+      return this.checkLetter('COMMA', currentLetter) && this.checkLetter('DOUBLE_QUOTATION', lastLetter);
     }
 
     // 객체({}) 내부에 있는 Comma인지 체크 (ex : {,,,} , { } )
-    if (this.isLeftCurlyBracket(firstLetter)) {
-      return this.isComma(thisLetter) && this.isRightCurlyBracket(lastLetter);
+    if (this.checkLetter('LEFT_CURLY_BRACKET', firstLetter)) {
+      return this.checkLetter('COMMA', currentLetter) && this.checkLetter('RIGHT_CURLY_BRACKET', lastLetter);
     }
 
     // 배열([]) 내부에 있는 Comma인지 체크 (ex : [,,,] , [ ] )
-    if (this.isLeftSquareBracket(firstLetter)) {
-      return this.isComma(thisLetter) && this.isRightSquareBracket(lastLetter);
+    if (this.checkLetter('LEFT_SQUARE_BRACKET', firstLetter)) {
+      return this.checkLetter('COMMA', currentLetter) && this.checkLetter('RIGHT_SQUARE_BRACKET', lastLetter);
     }
 
-    return this.isComma(thisLetter);
+    return this.checkLetter('COMMA', currentLetter);
   }
 };
 
@@ -123,39 +126,43 @@ var letter = {
 
 var typeChecker = {
   getType: function(token) {
-    var joinedTemp = '';
+    var token = util.array.trim(token);  
+    var tokenType = null;
 
-    token = util.array.trim(token);  
-    joinedTemp = token.join('').trim();
+    if (token.join('').trim() === '') { return; }
 
-    if (joinedTemp === '') { return 'nothing'; }
-    if (this._isString(token)) { return 'string'; }
-    if (this._isNumber(joinedTemp)) { return 'number'; }
-    if (this._isBoolean(joinedTemp)) { return 'boolean'; }
-    if (this._isObject(token)) { return 'object'; }
-    if (this._isArray(token)) { return 'array'; }
+    [ 'string', 'number', 'boolean', 'object', 'array' ].some(function(elem, i) {
+      var funcName = '_is' + elem[0].toUpperCase() + elem.slice(1);
 
-    return 'nothing';
+      if (this[funcName](token)) {
+        tokenType = elem;    
+        return true;        
+      }
+    }.bind(this));
+
+    return tokenType;
   },
 
   _isString: function(token) {
-    var haveFirstDoubleQuotation = letter.isDoubleQuotation(token[0]);
-    var haveLastDoubleQuotation = letter.isDoubleQuotation(token[token.length - 1]);
+    var haveFirstDoubleQuotation = letter.checkLetter('DOUBLE_QUOTATION', token[0]);
+    var haveLastDoubleQuotation = letter.checkLetter('DOUBLE_QUOTATION', token[token.length - 1]);
     var doubleQuotationArr = token.filter(function(elem) {
-      return letter.isDoubleQuotation(elem);      
+      return letter.checkLetter('DOUBLE_QUOTATION', elem);
     });
 
     return haveFirstDoubleQuotation && haveLastDoubleQuotation && (doubleQuotationArr.length === 2);
   },
-  _isNumber: function(joinedTemp) {
-    return !isNaN(joinedTemp);
+  _isNumber: function(token) {
+    if (util.type.isArray(token)) { token = token.join('').trim(); }
+    return !isNaN(token);
   },
-  _isBoolean: function(joinedTemp) {
-    return [ 'true', 'false' ].indexOf(joinedTemp) > -1;
+  _isBoolean: function(token) {
+    if (util.type.isArray(token)) { token = token.join('').trim(); }
+    return [ 'true', 'false' ].indexOf(token) > -1;
   },
   _isObject: function(token) {
-    var haveFirstCurlyBracket = letter.isLeftCurlyBracket(token[0]);
-    var haveLastCurlyBracket = letter.isRightCurlyBracket(token[token.length - 1]);
+    var haveFirstCurlyBracket = letter.checkLetter('LEFT_CURLY_BRACKET', token[0]);
+    var haveLastCurlyBracket = letter.checkLetter('RIGHT_CURLY_BRACKET', token[token.length - 1]);
     var curlyBracketArr = token.filter(function(elem) {
       return [ '{', '}' ].indexOf(elem) > -1;
     });
@@ -163,8 +170,8 @@ var typeChecker = {
     return haveFirstCurlyBracket && haveLastCurlyBracket && (curlyBracketArr.length % 2 === 0);
   },
   _isArray: function(token) {
-    var haveFirstSquareBracket = letter.isLeftSquareBracket(token[0]);
-    var haveLastSquareBracket = letter.isRightSquareBracket(token[token.length - 1]);
+    var haveFirstSquareBracket = letter.checkLetter('LEFT_SQUARE_BRACKET', token[0]);
+    var haveLastSquareBracket = letter.checkLetter('RIGHT_SQUARE_BRACKET', token[token.length - 1]);
     var squareBracketArr = token.filter(function(elem) {
       return [ '[', ']' ].indexOf(elem) > -1;
     });
@@ -180,7 +187,10 @@ var typeChecker = {
 
 var parser = {
   init: function() {
-    this._initProcessData();
+    this.returnStack = [];  // [ { JSONStr: '...', startIndex: 10 }, { ... } ]
+    this.globalDepth = 0;   // 시작 브라켓과 엔드 브라켓만 옮길 수 있음
+    this.currentDepth = 0;  // parse 하는 중간에 옮길 수 있음
+    this.counter = { total: 0, string: 0, number: 0, boolean: 0, object: 0, array: 0 };
   },
   run: function(JSONStr, startIndex) {
     if (util.type.isString(JSONStr)) { JSONStr = JSONStr.trim(); }
@@ -205,21 +215,15 @@ var parser = {
 
   /* parser data 조작 */
 
-  _initProcessData: function() {
-    this.returnStack = [];  // [ { JSONStr: '...', startIndex: 10 }, { ... } ]
-    this.globalDepth = 0;   // 시작 브라켓과 엔드 브라켓만 옮길 수 있음
-    this.currentDepth = 0;  // parse 하는 중간에 옮길 수 있음
-    this.counter = { total: 0, string: 0, number: 0, boolean: 0, object: 0, array: 0 };
-  },
   _initTargetData: function(targetType) {
     var bracketMethod = {
       array: {
-        isStartBracket: letter.isLeftSquareBracket,
-        isEndBracket: letter.isRightSquareBracket
+        isStartBracket: letter.checkLetter.bind(letter, 'LEFT_SQUARE_BRACKET'),
+        isEndBracket: letter.checkLetter.bind(letter, 'RIGHT_SQUARE_BRACKET')        
       },
       object: {
-        isStartBracket: letter.isLeftCurlyBracket,
-        isEndBracket: letter.isRightCurlyBracket
+        isStartBracket: letter.checkLetter.bind(letter, 'LEFT_CURLY_BRACKET'),
+        isEndBracket: letter.checkLetter.bind(letter, 'RIGHT_CURLY_BRACKET')
       }
     }[targetType];
 
@@ -279,7 +283,7 @@ var parser = {
     return isCuttingComma || isEndBracket;
   },
   _isCheckingKey: function(thisLetter, token) {
-    var isColon = letter.isColon(thisLetter);
+    var isColon = letter.checkLetter('COLON', thisLetter);    
     var keyType = typeChecker.getType(token);
 
     return isColon && (keyType === 'string');
@@ -288,12 +292,12 @@ var parser = {
   /* parsing 처리 */
 
   _parseJSON: function(JSONStr, startIndex) {
-    var targetIsObject = (this.target.type === 'object');    
-    var tempToken = [];
     var JSONStrArr = util.type.isString(JSONStr) ? JSONStr.split('') : JSONStr;
+    var tempToken = [];
 
-    var isNotSupportType = false;
+    var targetIsObject = (this.target.type === 'object');
     var haveCuttingColon = false;
+    var isNotSupportType = false;
     var startIndex = startIndex || 0;
     var pauseIndex = 0;
 
@@ -303,20 +307,19 @@ var parser = {
       JSONStrArr = util.array.trim(JSONStrArr);
 
       // 값 ,
-      if (letter.isComma(JSONStrArr[0])) {
+      if (letter.checkLetter('COMMA', JSONStrArr[0])) {
         printer.addOutput(printer.output.pop(), JSONStrArr.shift());
       }
 
       // '      ' ]
-      if (letter.isRightBracket(JSONStrArr[0])) {
+      if (letter.checkLetter('RIGHT_BRACKET', JSONStrArr[0])) {
         printer.addTab(this.globalDepth - 1);
         printer.addOutput(JSONStrArr.shift());
       }
 
     } else {
-      if (! this._isStarting(JSONStrArr[0], tempToken)) {
+      if (!this._isStarting(JSONStrArr[0], tempToken)) {
         message.showNotSupportType();
-
         return;
       }
 
@@ -339,21 +342,19 @@ var parser = {
       }
 
       // depth 변경
-      if (!this._isRunningInsideString(tempToken) && letter.isLeftBracket(thisLetter)) {
+      if (!this._isRunningInsideString(tempToken) && letter.checkLetter('LEFT_BRACKET', thisLetter)) {
         this._moveDepth('currentDepth', 'up');
       }
 
       if (targetIsObject && this._isCheckingKey(thisLetter, tempToken)) {
         if (tempToken.length === 0) {
           isNotSupportType = true;
-
           return true;          
         }
 
         printer.addTempOutputLine(tempToken, ' ' , thisLetter, ' ');
         tempToken = [];
         haveCuttingColon = true;
-
         return false;
       }
 
@@ -361,8 +362,30 @@ var parser = {
       if (!isLastLetter && this._isCollectingToken(thisLetter, tempToken)) {
         tempToken.push(thisLetter);
 
-        if (!this._isRunningInsideString(tempToken) && letter.isRightBracket(thisLetter)) {
+        if (!this._isRunningInsideString(tempToken) && letter.checkLetter('RIGHT_BRACKET', thisLetter)) {
           this._moveDepth('currentDepth', 'down');
+        }
+        return false;
+      }
+
+      function validateBeforeAnalyzing() {
+        if (tempToken.length === 0) {
+          isNotSupportType = true;
+          return true;
+        }
+
+        if (targetIsObject) {
+          if (haveCuttingColon) {
+            haveCuttingColon = false;
+          } else {
+            isNotSupportType = true;
+            return true;
+          }
+        }
+
+        if (tempTokenType === null) {
+          isNotSupportType = true;
+          return true;
         }
 
         return false;
@@ -372,33 +395,14 @@ var parser = {
       if (this._isAnalyzingToken(thisLetter, tempToken)) {
         tempTokenType = typeChecker.getType(util.array.trim(tempToken));
 
-        if (tempToken.length === 0) {
-          isNotSupportType = true;
-          return true;
-        }
-
-        if (targetIsObject) {
-          if (haveCuttingColon === true) {
-            haveCuttingColon = false;
-          } else {
-            isNotSupportType = true;
-            return true;
-          }
-        }
-
-        if (tempTokenType === 'nothing') {
-          isNotSupportType = true;
-
-          return true;
-        }
-
+        if (validateBeforeAnalyzing()) return true;
+        
         // token type 으로 count 처리
         if (this.globalDepth === 1) { this._addCount(tempTokenType); }
 
         // token 이 객체일 경우 멈춤
         if ([ 'object', 'array' ].indexOf(tempTokenType) > - 1) {
           pauseIndex = thisIndex;
-
           return true;
         }
 
@@ -408,11 +412,10 @@ var parser = {
           printer.addOutput(tempToken, thisLetter);
         }
 
-        if (letter.isRightBracket(thisLetter)) {
+        if (letter.checkLetter('RIGHT_BRACKET', thisLetter)) {
           //    값
           //  }
           printer.addOutput(tempToken);
-          
           printer.addTab(this.globalDepth - 1);
           printer.addOutput(thisLetter);
         }
@@ -423,9 +426,8 @@ var parser = {
     }.bind(this));
 
     // 지원하지 않는 형식을 만났을 때.
-    if (isNotSupportType === true) {
+    if (isNotSupportType) {
       message.showNotSupportType();
-
       return;
     }
 
@@ -435,8 +437,8 @@ var parser = {
         JSONStr: JSONStr,
         startIndex: startIndex + pauseIndex
       };
-      this.run(tempToken.join(''));
 
+      this.run(tempToken.join(''));
       return;
     }
 
@@ -463,7 +465,8 @@ var parser = {
  */
 var printer = {
   init: function() {
-    this._initData();
+    this._resetTempOutputLine();
+    this._resetOutput();
   },
   addTab: function(number) {
     var tab = this._makeTab(number);
@@ -488,10 +491,6 @@ var printer = {
     console.log('\n \n');
   },
 
-  _initData: function() {
-    this._resetTempOutputLine();
-    this._resetOutput();
-  },
   _makeTab: function(number) {
     if (number <= 0) { return ''; }
     for (var i = 1, tabStr = '\t'; i < number; i++) { tabStr += '\t'; }
