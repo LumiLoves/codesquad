@@ -6,39 +6,6 @@ var r = readline.createInterface({
 
 
 /**
- * 설계
- * 
- * 
- * 사용자 입력값 이벤트 발생
- *    {파서할당}실행
- * 
- * 파서 할당
- *    [ 가 나오면 {배열 파서}
- *    { 가 나오면 {오브젝트 파서}
- * 
- * 문자체크
- *    컴마, 더블쿼테이션, 콜론, 브라켓 등을 체크
- * 
- * 타입분석기 (결과값 : 문자열, 숫자, 불리언)
- *    "가 있는지 체크 ==> 문자열
- *    isNaN 체크 ==> 숫자
- *    true, false ===> 불리언
- *
- * 배열 파서
- *    [ 가 나오면 시작
- *    , 또는 ] 가 아닌게 나오면 {temp모으기}
- *    , 또는 ] 가 나오면 그동안 모아놓은 temp배열을 분석기로 보내서 결과값을 얻음. {타입분석기(temp)}
- * 
- * 오브젝트 파서
- *    { 가 나오면 시작
- *    , 또는 } 가 아닌게 나오면 {temp모으기}
- *    : 가 나오면 temp리셋 (key:value중 value값만 저장하기 위해..)
- *    , 또는 } 가 나오면 그동안 모아놓은 temp배열을 분석기로 보내서 결과값을 얻음. {타입분석기(temp)}
- * 
- */
-
-
-/**
  * Util
  */
 
@@ -188,8 +155,8 @@ var typeChecker = {
 var parser = {
   init: function() {
     this.returnStack = [];  // [ { JSONStr: '...', startIndex: 10 }, { ... } ]
-    this.globalDepth = 0;   // 시작 브라켓과 엔드 브라켓만 옮길 수 있음
-    this.currentDepth = 0;  // parse 하는 중간에 옮길 수 있음
+    this.globalDepth = 0;
+    this.currentDepth = 0;
     this.counter = { total: 0, string: 0, number: 0, boolean: 0, object: 0, array: 0 };
   },
   run: function(JSONStr, startIndex) {
@@ -213,7 +180,7 @@ var parser = {
     message.showNotSupportType();
   },
 
-  /* parser data 조작 */
+  /* parser 내부 data 조작 */
 
   _initTargetData: function(targetType) {
     var bracketMethod = {
@@ -242,7 +209,7 @@ var parser = {
     this.counter[selectedType]++;
   },
 
-  /* parser 가 돌고 있는 상태 조회. */
+  /* parser가 탐색중인 문자의 위치가 어디에 있는지 체크 */
 
   _isRunningInsideString: function(token) {
     var firstLetter = util.array.trim(token)[0];    
@@ -259,7 +226,7 @@ var parser = {
     return this.currentDepth === this.globalDepth;
   },
 
-  /* parsing 상태 체크 */
+  /* parser의 분석 기준 체크 */
 
   _isStarting: function(thisLetter, token) {
     var isOutsideObject = this._isRunningOutsideObject();    
@@ -289,7 +256,7 @@ var parser = {
     return isColon && (keyType === 'string');
   },
 
-  /* parsing 처리 */
+  /* JSON 처리 */
 
   _parseJSON: function(JSONStr, startIndex) {
     var JSONStrArr = util.type.isString(JSONStr) ? JSONStr.split('') : JSONStr;
@@ -301,7 +268,7 @@ var parser = {
     var startIndex = startIndex || 0;
     var pauseIndex = 0;
 
-    // 배열 시작 처리
+    // JSON String Array 탐색 시작 처리
     if (startIndex > 0) {
       JSONStrArr.splice(0, startIndex);
       JSONStrArr = util.array.trim(JSONStrArr);
@@ -326,17 +293,16 @@ var parser = {
       this._moveDepth('globalDepth', 'up');
       this._moveDepth('currentDepth', 'up');
       printer.addOutput(JSONStrArr.shift());
-      
     }
     
     startIndex++;
 
-    // 배열 Scan
+    // JSON String Array 탐색 반복처리, 예외가 생기면 반복문 종료
     JSONStrArr.some(function(thisLetter, thisIndex) {
       var tempTokenType = null;
       var isLastLetter = (JSONStrArr.length - 1) === thisIndex;      
 
-      // 현재 뎁스 크기의 탭 추가
+      // 현재 depth 크기만큼 탭 추가
       if (printer.tempOutputLine.length === 0) {
         printer.addTab(this.globalDepth);
       }
@@ -346,6 +312,7 @@ var parser = {
         this._moveDepth('currentDepth', 'up');
       }
 
+      // 오브젝트의 key 처리
       if (targetIsObject && this._isCheckingKey(thisLetter, tempToken)) {
         if (tempToken.length === 0) {
           isNotSupportType = true;
@@ -358,7 +325,7 @@ var parser = {
         return false;
       }
 
-      // token 모으기
+      // token 배열에 한 글자씩 모으기
       if (!isLastLetter && this._isCollectingToken(thisLetter, tempToken)) {
         tempToken.push(thisLetter);
 
@@ -366,6 +333,38 @@ var parser = {
           this._moveDepth('currentDepth', 'down');
         }
         return false;
+      }
+
+      // 모아둔 token 배열의 타입을 분석 및 처리
+      if (this._isAnalyzingToken(thisLetter, tempToken)) {
+        tempTokenType = typeChecker.getType(util.array.trim(tempToken));
+
+        if (validateBeforeAnalyzing()) return true;
+        
+        // token type으로 count 처리
+        if (this.globalDepth === 1) { this._addCount(tempTokenType); }
+
+        // token 이 객체일 경우 중첩구조 처리를 위해 반복문 멈춤
+        if ([ 'object', 'array' ].indexOf(tempTokenType) > - 1) {
+          pauseIndex = thisIndex;
+          return true;
+        }
+
+        // print 조각모으기 완료.
+        if (letter.isCuttingComma(thisLetter, tempToken)) {
+          //  값 ,
+          printer.addOutput(tempToken, thisLetter);
+        }
+
+        if (letter.checkLetter('RIGHT_BRACKET', thisLetter)) {
+          //    값
+          //  }
+          printer.addOutput(tempToken);
+          printer.addTab(this.globalDepth - 1);
+          printer.addOutput(thisLetter);
+        }
+
+        tempToken = [];
       }
 
       function validateBeforeAnalyzing() {
@@ -390,48 +389,15 @@ var parser = {
 
         return false;
       }
-
-      // token 분석 및 처리
-      if (this._isAnalyzingToken(thisLetter, tempToken)) {
-        tempTokenType = typeChecker.getType(util.array.trim(tempToken));
-
-        if (validateBeforeAnalyzing()) return true;
-        
-        // token type 으로 count 처리
-        if (this.globalDepth === 1) { this._addCount(tempTokenType); }
-
-        // token 이 객체일 경우 멈춤
-        if ([ 'object', 'array' ].indexOf(tempTokenType) > - 1) {
-          pauseIndex = thisIndex;
-          return true;
-        }
-
-        // print 조각모으기 완료.
-        if (letter.isCuttingComma(thisLetter, tempToken)) {
-          //  값 ,
-          printer.addOutput(tempToken, thisLetter);
-        }
-
-        if (letter.checkLetter('RIGHT_BRACKET', thisLetter)) {
-          //    값
-          //  }
-          printer.addOutput(tempToken);
-          printer.addTab(this.globalDepth - 1);
-          printer.addOutput(thisLetter);
-        }
-
-        tempToken = [];
-      }
-
     }.bind(this));
 
-    // 지원하지 않는 형식을 만났을 때.
+    // 지원하지 않는 형식을 만났을 때
     if (isNotSupportType) {
       message.showNotSupportType();
       return;
     }
 
-    // pauseIndex가 있을 경우, 탐색한 객체안에 중첩이 있다는 뜻이므로 저장.
+    // pauseIndex가 있을 경우, 탐색한 객체안에 중첩이 있다는 뜻이므로 관련정보를 stack에 저장
     if (pauseIndex > 0) {
       this.returnStack[this.globalDepth - 1] = {
         JSONStr: JSONStr,
@@ -463,6 +429,7 @@ var parser = {
 /**
  * Printer
  */
+
 var printer = {
   init: function() {
     this._resetTempOutputLine();
