@@ -1,7 +1,7 @@
 # JSON 문자열 생성기
 문자열 형태의 JSON 데이터를 받아서, (뎁스1 기준) 데이터 타입별로 갯수를 집계 + 정렬된 객체형태로 출력해주는 프로그램입니다.
 
-[ 입출력 실행 화면 ]
+**[ 입출력 실행 화면 ]**
 
 JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.
 ![output_valid](./img/output_valid.png)
@@ -9,6 +9,7 @@ JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 �
 JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.
 ![output_invalid](./img/output_invalid.png)
 
+<br><br>
 
 ## 가능한 기능들
 * 커맨드라인에서 입출력 제공
@@ -18,19 +19,20 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 * 중첩된 객체의 분석 가능 (Object, Array)
 * Pretty Print : 입력받은 JSON String을 정렬된 모양으로 출력해 줌
 
+<br><br>
 
 ##  구현한 Parser의 JSON String 분석 절차 및 설계
-[ Parser의 JSON String 분석 절차 ]
+**[ Parser의 JSON String 분석 절차 ]**
 
 입력받은 JSON String을 한글자씩 돌면서 아래 4가지 상태를 기준으로 검사하여 처리합니다.
 
-* ⓐ 시작 (parser._isStarting) 
+* ⓐ **시작 (parser._isStarting)** 
 	* JSON String 시작
-* ⓑ 모음 (parser._isCollectingToken) 
+* ⓑ **모음 (parser._isCollectingToken)** 
 	* token 배열에 한 글자씩 모으기
-* ⓒ 멈춤/값분석 (parser._isAnalyzingToken) 
+* ⓒ **멈춤/값분석 (parser._isAnalyzingToken)** 
 	* 콤마(,) 또는 닫는 브라켓 ( ], } )을 만나면, 모아둔 token 배열의 타입을 분석
-* ⓓ 멈춤/key분석 (parser._isCheckingKey) 
+* ⓓ **멈춤/key분석 (parser._isCheckingKey)** 
 	* 콜론(:)을 만나면, 모아둔 token 배열이 string타입인지 분석한 뒤 token을 비움
 
 배열일 경우
@@ -39,12 +41,13 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 오브젝트일 경우
 ![process_array](./img/process_array.png)
 
+<br>
 
-[ 중첩구조 처리 방법 ]
+**[ 중첩구조 처리 방법 ]**
 
 중첩구조를 만나면 스택을 이용하여 정보를 저장합니다. (코드 내의 returnStack)
 
-(예)  [ 1, [ 2, [ 3 ], 4 ] 이라는 3개의 배열이 중첩된 데이터
+**(예)  [ 1, [ 2, [ 3 ], 4 ] 이라는 3개의 배열이 중첩된 데이터**
 
 Depth1 기준으로 문자 하나씩 탐색해 나갑니다. 
 
@@ -69,17 +72,15 @@ Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 
 남은 문자열을 탐색합니다.
 ![process_nested_5](./img/process_nested_5.png)
 
-
 이 과정들을 플로우차트로 그려보면 다음과 같습니다.
 ![json_parser_flow_chart](./img/json_parser_flow_chart.png)
 
+<br>
 
-[ 설계 ]
+**[ 설계 ]**
 
 객체 구성과 참조하는 모습을 아래 플로우차트로 표현했습니다.
 ![json_parser_object_diagram](./img/json_parser_object_diagram.png)
-
-
 
 * util : 유틸리티 모음
 * letter : 문자열 한 개 단위를 letter라 정의하고, 문자의 이름을 체크하는 역할
@@ -89,6 +90,7 @@ Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 
 * message : 출력메시지 관련 기능
 * app : 앱을 초기화하고 구동시킴
 
+<br><br>
 
 ## 앞으로 구현해보고 싶은 기능
 * 현재는 JSON String 돌면서 print기준으로 String조각을 잘라 넣는데,
