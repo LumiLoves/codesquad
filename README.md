@@ -4,10 +4,10 @@
 [ 입출력 실행 화면 ]
 
 JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.
-[image:image/output_valid.png]
+[image:img/output_valid.png]
 
 JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.
-[image:/image/output_invalid.png]
+[image:/img/output_invalid.png]
 
 
 ## 가능한 기능들
