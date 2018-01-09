@@ -6,7 +6,7 @@
 ## 입출력 실행 화면
 
 JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.<br><br>
-![output_valid](./img/output_valid.png)
+<img src="./img/output_valid.png" alt="output_valid" width="750"/>
 
 JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.<br><br>
 <img src="./img/output_invalid.png" alt="output_invalid" width="330"/>
