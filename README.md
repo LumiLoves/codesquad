@@ -9,7 +9,7 @@ JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 �
 ![output_valid](./img/output_valid.png)
 
 JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.<br>
-![output_invalid](./img/output_invalid.png)
+<img src="./img/output_invalid.png" alt="output_invalid" width="330"/>
 
 <br><br>
 
@@ -39,10 +39,10 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 <br>
 
 배열일 경우<br>
-<img src="./img/process_array.png" alt="process_array" style="width: 350px;"/>
+<img src="./img/process_array.png" alt="process_array" width="400"/>
 
 오브젝트일 경우<br>
-<img src="./img/process_object.png" alt="process_object" style="width: 350px;"/>
+<img src="./img/process_object.png" alt="process_object" width="450"/>
 
 <br>
 
