@@ -53,7 +53,8 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 <br><br>
 
 Depth1 기준으로 문자 하나씩 탐색해 나갑니다.  
-두번째 값인 [2,[3]]의 type이 array이므로 Return Stack에 { JSONStr: “ 현재 JSON 스트링값” , startIndex: “array를 만나 멈춘 인덱스 위치” } 를 저장한 뒤,  
+두번째 값인 [2,[3]]의 type이 array이므로  
+Return Stack에 { JSONStr: “ 현재 JSON 스트링값” , startIndex: “array를 만나 멈춘 인덱스 위치” } 를 저장한 뒤,  
 반복문을 멈추고 밖으로 나가서<br>
 ![process_nested_1](./img/process_nested_1.png)
 <br><br>
