@@ -47,35 +47,34 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 ### [ 중첩구조 처리 방법 ]
 
 중첩구조를 만나면 스택을 이용하여 정보를 저장합니다. (코드 내의 returnStack)
-<br>
+<br><br>
 
 **(예)  [ 1, [ 2, [ 3 ], 4 ] 이라는 3개의 배열이 중첩된 데이터**
-
+<br>
 Depth1 기준으로 문자 하나씩 탐색해 나갑니다.  
 두번째 값인 [2,[3]]의 type이 array이므로 Return Stack에 { JSONStr: “ 현재 JSON 스트링값” , startIndex: “array를 만나 멈춘 인덱스 위치” } 를 저장한 뒤,  
 반복문을 멈추고 밖으로 나가서<br>
 ![process_nested_1](./img/process_nested_1.png)
-<br>
+<br><br>
 Depth2 기준으로  
 두번째 값인 array를 기준으로 다시 탐색을 시작합니다.  
 또 [3]이라는 array를 만났으므로 Stack에 정보를 저장하고, 반복문을 멈춘 뒤<br>
 ![process_nested_2](./img/process_nested_2.png)
-<br>
+<br><br>
 Depth3 기준으로 다시 탐색을 시작합니다.  
 이번에는 멈추지않고 모두 통과했으므로 Return Stack에 값이 있는지 체크합니다.  
 있으면 [return stack].pop() 하여 마지막으로 들어온 데이터를 뽑아와<br>
 ![process_nested_3](./img/process_nested_3.png)
- <br>
+<br><br>
 Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 탐색시작합니다.  
 이번에도 모두 통과했으므로 마지막 Return Stack 데이터를 뽑아와<br>
 ![process_nested_4](./img/process_nested_4.png)
-<br>
+<br><br>
 남은 문자열을 탐색합니다.<br>
 ![process_nested_5](./img/process_nested_5.png)
-<br>
+<br><br>
 이 과정들을 플로우차트로 그려보면 다음과 같습니다.<br><br>
 ![json_parser_flow_chart](./img/json_parser_flow_chart.png)
-
 <br>
 
 ### [ 설계 ]
