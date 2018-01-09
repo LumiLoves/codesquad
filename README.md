@@ -87,7 +87,7 @@ Depth3 기준으로 다시 탐색을 시작합니다.
 <br>
 
 #### `step 4`
-Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 탐색시작합니다.  
+Depth2 기준으로 returnStack.JSONStr을 returnStack.startIndex부터 다시 탐색을 시작합니다.  
 이번에도 모두 통과했으므로 마지막 Return Stack 데이터를 뽑아와<br>
 ![process_nested_4](./img/process_nested_4.png)
 <br>
