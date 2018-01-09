@@ -5,10 +5,10 @@
 
 **[ 입출력 실행 화면 ]**
 
-JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.
+JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.<br>
 ![output_valid](./img/output_valid.png)
 
-JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.
+JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.<br>
 ![output_invalid](./img/output_invalid.png)
 
 <br><br>
@@ -40,10 +40,10 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 * ⓓ **멈춤/key분석 (parser._isCheckingKey)** 
 	* 콜론(:)을 만나면, 모아둔 token 배열이 string타입인지 분석한 뒤 token을 비움
 
-배열일 경우
+배열일 경우<br>
 ![process_object](./img/process_object.png)
 
-오브젝트일 경우
+오브젝트일 경우<br>
 ![process_array](./img/process_array.png)
 
 <br>
@@ -57,34 +57,34 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 Depth1 기준으로 문자 하나씩 탐색해 나갑니다. 
 
 두번째 값인 [2,[3]]의 type이 array이므로 Return Stack에 { JSONStr: “ 현재 JSON 스트링값” , startIndex: “array를 만나 멈춘 인덱스 위치” } 를 저장한 뒤,  
-반복문을 멈추고 밖으로 나가서
+반복문을 멈추고 밖으로 나가서<br>
 ![process_nested_1](./img/process_nested_1.png)
 
 Depth2 기준으로  
 두번째 값인 array를 기준으로 다시 탐색을 시작합니다.  
-또 [3]이라는 array를 만났으므로 Stack에 정보를 저장하고, 반복문을 멈춘 뒤 
+또 [3]이라는 array를 만났으므로 Stack에 정보를 저장하고, 반복문을 멈춘 뒤<br>
 ![process_nested_2](./img/process_nested_2.png)
 
 Depth3 기준으로 다시 탐색을 시작합니다.  
 이번에는 멈추지않고 모두 통과했으므로 Return Stack에 값이 있는지 체크합니다.  
-있으면 [return stack].pop() 하여 마지막으로 들어온 데이터를 뽑아와  
+있으면 [return stack].pop() 하여 마지막으로 들어온 데이터를 뽑아와<br>
 ![process_nested_3](./img/process_nested_3.png)
  
 Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 탐색시작합니다.  
-이번에도 모두 통과했으므로 마지막 Return Stack 데이터를 뽑아와  
+이번에도 모두 통과했으므로 마지막 Return Stack 데이터를 뽑아와<br>
 ![process_nested_4](./img/process_nested_4.png)
 
-남은 문자열을 탐색합니다.
+남은 문자열을 탐색합니다.<br>
 ![process_nested_5](./img/process_nested_5.png)
 
-이 과정들을 플로우차트로 그려보면 다음과 같습니다.
+이 과정들을 플로우차트로 그려보면 다음과 같습니다.<br>
 ![json_parser_flow_chart](./img/json_parser_flow_chart.png)
 
 <br>
 
 **[ 설계 ]**
 
-객체 구성과 참조하는 모습을 아래 플로우차트로 표현했습니다.
+객체 구성과 참조하는 모습을 아래 플로우차트로 표현했습니다.<br>
 ![json_parser_object_diagram](./img/json_parser_object_diagram.png)
 
 * util : 유틸리티 모음
