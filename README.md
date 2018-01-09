@@ -5,10 +5,10 @@
 
 ## 입출력 실행 화면
 
-JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.<br>
+JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.<br><br>
 ![output_valid](./img/output_valid.png)
 
-JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.<br>
+JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.<br><br>
 <img src="./img/output_invalid.png" alt="output_invalid" width="330"/>
 
 <br><br>
@@ -25,8 +25,6 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 
 ## 구현한 Parser의 JSON String 분석 절차 및 설계
 
-<br>
-
 ### [ Parser의 JSON String 분석 절차 ]
 
 입력받은 JSON String을 한글자씩 돌면서 아래 4가지 상태를 기준으로 검사하여 처리합니다.
@@ -38,10 +36,10 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 
 <br>
 
-배열일 경우<br>
+배열일 경우<br><br>
 <img src="./img/process_array.png" alt="process_array" width="400"/>
 
-오브젝트일 경우<br>
+오브젝트일 경우<br><br>
 <img src="./img/process_object.png" alt="process_object" width="450"/>
 
 <br>
@@ -75,14 +73,14 @@ Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 
 남은 문자열을 탐색합니다.<br>
 ![process_nested_5](./img/process_nested_5.png)
 
-이 과정들을 플로우차트로 그려보면 다음과 같습니다.<br>
+이 과정들을 플로우차트로 그려보면 다음과 같습니다.<br><br>
 ![json_parser_flow_chart](./img/json_parser_flow_chart.png)
 
 <br>
 
 ### [ 설계 ]
 
-객체 구성과 참조하는 모습을 아래 플로우차트로 표현했습니다.<br>
+객체 구성과 참조하는 모습을 아래 플로우차트로 표현했습니다.<br><br>
 ![json_parser_object_diagram](./img/json_parser_object_diagram.png)
 
 * util : 유틸리티 모음
