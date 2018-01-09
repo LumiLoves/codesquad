@@ -39,10 +39,10 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 <br>
 
 배열일 경우<br>
-![process_array](./img/process_array.png =350x)
+![process_array](./img/process_array.png =350px)
 
 오브젝트일 경우<br>
-![process_object](./img/process_object.png =350x)
+![process_object](./img/process_object.png =350px)
 
 <br>
 
