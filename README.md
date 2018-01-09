@@ -31,17 +31,15 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 
 입력받은 JSON String을 한글자씩 돌면서 아래 4가지 상태를 기준으로 검사하여 처리합니다.
 
-* ⓐ **시작 (parser._isStarting)** 
-	* JSON String 시작
-* ⓑ **모음 (parser._isCollectingToken)** 
-	* token 배열에 한 글자씩 모으기
-* ⓒ **멈춤/값분석 (parser._isAnalyzingToken)** 
-	* 콤마(,) 또는 닫는 브라켓 ( ], } )을 만나면, 모아둔 token 배열의 타입을 분석
-* ⓓ **멈춤/key분석 (parser._isCheckingKey)** 
-	* 콜론(:)을 만나면, 모아둔 token 배열이 string타입인지 분석한 뒤 token을 비움
+* ⓐ **시작 (parser._isStarting)** : JSON String 시작
+* ⓑ **모음 (parser._isCollectingToken)** : token 배열에 한 글자씩 모으기
+* ⓒ **멈춤/값분석 (parser._isAnalyzingToken)** : 콤마(,) 또는 닫는 브라켓 ( ], } )을 만나면, 모아둔 token 배열의 타입을 분석
+* ⓓ **멈춤/key분석 (parser._isCheckingKey)** : 콜론(:)을 만나면, 모아둔 token 배열이 string타입인지 분석한 뒤 token을 비움
+
+<br>
 
 배열일 경우<br>
-![process_object](./img/process_object.png)
+![process_object](./img/process_object.png){: width="300" }{: .center}
 
 오브젝트일 경우<br>
 ![process_array](./img/process_array.png)
