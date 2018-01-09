@@ -34,10 +34,10 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 	* 콜론(:)을 만나면, 모아둔 token 배열이 string타입인지 분석한 뒤 token을 비움
 
 배열일 경우
-[image:277A959E-4C0C-4F95-9478-F00C5C085E5D-54606-000064703C44B616/process_object.png]
+![process_object](./img/process_object.png)
 
 오브젝트일 경우
-[image:2C7AE3DE-0675-461D-954A-7A05CEE01C25-54606-000064703B9974FF/process_array.png]
+![process_array](./img/process_array.png)
 
 
 [ 중첩구조 처리 방법 ]
@@ -48,35 +48,38 @@ JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니�
 
 Depth1 기준으로 문자 하나씩 탐색해 나갑니다. 
 
-두번째 값인 [2,[3]]의 type이 array이므로 Return Stack에 { JSONStr: “ 현재 JSON 스트링값” , startIndex: “array를 만나 멈춘 인덱스 위치” } 를 저장한 뒤, 
+두번째 값인 [2,[3]]의 type이 array이므로 Return Stack에 { JSONStr: “ 현재 JSON 스트링값” , startIndex: “array를 만나 멈춘 인덱스 위치” } 를 저장한 뒤,  
 반복문을 멈추고 밖으로 나가서
-[image:B5484438-AA79-4BB6-AAAF-5DB657B5568E-54606-0000667F189C1D81/process_nested_1.png]
+![process_nested_1](./img/process_nested_1.png)
 
-Depth2 기준으로 
-두번째 값인 array를 기준으로 다시 탐색을 시작합니다. 
-또 [3]이라는 array를 만났으므로 Stack에 정보를 저장하고, 반복문을 멈춘 뒤
-[image:063B86B5-A6E7-47AD-88F7-A73056F6B569-54606-0000667F18F7EDFA/process_nested_2.png]
+Depth2 기준으로  
+두번째 값인 array를 기준으로 다시 탐색을 시작합니다.  
+또 [3]이라는 array를 만났으므로 Stack에 정보를 저장하고, 반복문을 멈춘 뒤 
+![process_nested_2](./img/process_nested_2.png)
 
-Depth3 기준으로 다시 탐색을 시작합니다.
-이번에는 멈추지않고 모두 통과했으므로 Return Stack에 값이 있는지 체크합니다.
-있으면 [return stack].pop() 하여 마지막으로 들어온 데이터를 뽑아와
-[image:96E3F808-3ADC-4879-966B-5297AA86D34E-54606-0000667F193B5046/process_nested_3.png]
+Depth3 기준으로 다시 탐색을 시작합니다.  
+이번에는 멈추지않고 모두 통과했으므로 Return Stack에 값이 있는지 체크합니다.  
+있으면 [return stack].pop() 하여 마지막으로 들어온 데이터를 뽑아와  
+![process_nested_3](./img/process_nested_3.png)
  
-Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 탐색시작합니다. 
-이번에도 모두 통과했으므로 마지막 Return Stack 데이터를 뽑아와 
-[image:6B102E84-0AF4-4F72-AA2F-2E9D434609D1-54606-0000667F19AFB947/process_nested_4.png]
+Depth2 기준으로 returnStack.JSONStr 을 returnStack.startIndex부터 다시 탐색시작합니다.  
+이번에도 모두 통과했으므로 마지막 Return Stack 데이터를 뽑아와  
+![process_nested_4](./img/process_nested_4.png)
 
 남은 문자열을 탐색합니다.
-[image:FF1ABB57-FBBC-4372-AC6C-C3F3EF626F63-54606-0000667F19741775/process_nested_5.png]
+![process_nested_5](./img/process_nested_5.png)
 
 
 이 과정들을 플로우차트로 그려보면 다음과 같습니다.
-[image:FC5A38A1-C457-4A71-B57A-4574BC99C7D3-54606-0000649187D05F21/json_parser_flow_chart.png]
+![json_parser_flow_chart](./img/json_parser_flow_chart.png)
+
 
 [ 설계 ]
 
 객체 구성과 참조하는 모습을 아래 플로우차트로 표현했습니다.
-[image:654D7AC7-D3ED-454A-912F-E21D1250E6BC-54606-000064935EB12C8E/json_parser_object_diagram.png]
+![json_parser_object_diagram](./img/json_parser_object_diagram.png)
+
+
 
 * util : 유틸리티 모음
 * letter : 문자열 한 개 단위를 letter라 정의하고, 문자의 이름을 체크하는 역할
