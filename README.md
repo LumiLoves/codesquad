@@ -4,16 +4,16 @@
 [ 입출력 실행 화면 ]
 
 JSON 데이터 규격에 맞는 입력값이 들어왔을 경우, 결과값을 보여줍니다.
-[image:5AC415BE-2894-4620-8DED-F24C47686652-54606-000064669B9FBFD2/output_valid.png]
+[image:image/output_valid.png]
 
 JSON 데이터 규격에 맞지 않을 경우, 에러메시지를 보여줍니다.
-[image:A8F0D0AC-F777-4C98-B7DC-CE88731ACC32-54606-000064676CFA787A/output_invalid.png]
+[image:/image/output_invalid.png]
 
 
 ## 가능한 기능들
 * 커맨드라인에서 입출력 제공
 * JSON 데이터 규격에 맞지 않는 케이스 체크
-* 데이터 종류별 카운팅 : JSON의 1뎁스 기준으로 데이터타입별로 갯수 집계 
+* 데이터 종류별 카운팅 : JSON의 1뎁스 기준으로 데이터타입별로 갯수 집계  
 (지원하는 데이터 타입: String, Number, true/false, Object, Array)
 * 중첩된 객체의 분석 가능 (Object, Array)
 * Pretty Print : 입력받은 JSON String을 정렬된 모양으로 출력해 줌
