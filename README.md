@@ -127,6 +127,11 @@ Depth2 기준으로 returnStack.JSONStr을 returnStack.startIndex부터 다시 �
 	`(어휘분석기로부터 새 토큰을 받아서 구문규칙과 일치하는지 확인 > 규칙에 맞으면 토큰에 해당하는 노드가 파싱트리에 추가 > 파서는 또다른 토큰을 요청)`
 	* `"어휘 분석기는 공백과 줄 바꿈 같은 의미 없는 문자를 제거한다."`라는 내용이 있었는데, 내 코드에서는 이걸 제거하는 방법을 토큰을 추출할때는 그대로 놔두고, 문법체크하는 제어문을 만나면 그때 잠시 trim을 이용하여 의미없는 문자를 제거하는 전처리를 한뒤 검사하여 결과를 반환해주기만 했음. 
 	* 이걸 다음에는 token을 추출하는 과정에서 의미없는 문자를 제거하고, 문법체크하는 부분에서는 관여하지 않게 바꾸면 좋겠다 생각함.
+	* 메소드명 구상? analyzeLexicon (어휘분석,낱말분석,token추출), analyzeSyntax (문법체크), 
+	* ![낱말 분석 위키](https://ko.wikipedia.org/wiki/%EB%82%B1%EB%A7%90_%EB%B6%84%EC%84%9D)
+	* 참고
+		* https://www.google.co.kr/imgres?imgurl=https://image.slidesharecdn.com/lexicalanalysis-160516142825/95/lexical-analysis-compiler-design-8-638.jpg?cb%3D1463408991&imgrefurl=https://www.slideshare.net/afsalashyana/lexical-analysis-compiler-design&h=479&w=638&tbnid=UdrDosrK1_OOQM:&tbnh=150&tbnw=200&usg=__rrStfBpO1vAKAbr-VVgfSCVxrmE%3D&vet=10ahUKEwiD6aXUhM3YAhXJnZQKHe1aBE4Q_B0IjQEwCg..i&docid=ZKYNTgw9yd-tCM&itg=1&sa=X&ved=0ahUKEwiD6aXUhM3YAhXJnZQKHe1aBE4Q_B0IjQEwCg#h=479&imgdii=zcyjc2I990b6xM:&tbnh=150&tbnw=200&vet=10ahUKEwiD6aXUhM3YAhXJnZQKHe1aBE4Q_B0IjQEwCg..i&w=638
+		* https://www.google.co.kr/imgres?imgurl=https://image.slidesharecdn.com/lexicalanalysis-160516142825/95/lexical-analysis-compiler-design-8-638.jpg?cb%3D1463408991&imgrefurl=https://www.slideshare.net/afsalashyana/lexical-analysis-compiler-design&h=479&w=638&tbnid=UdrDosrK1_OOQM:&tbnh=150&tbnw=200&usg=__rrStfBpO1vAKAbr-VVgfSCVxrmE%3D&vet=10ahUKEwiD6aXUhM3YAhXJnZQKHe1aBE4Q_B0IjQEwCg..i&docid=ZKYNTgw9yd-tCM&itg=1&sa=X&ved=0ahUKEwiD6aXUhM3YAhXJnZQKHe1aBE4Q_B0IjQEwCg#h=479&imgdii=UdrDosrK1_OOQM:&tbnh=150&tbnw=200&vet=10ahUKEwiD6aXUhM3YAhXJnZQKHe1aBE4Q_B0IjQEwCg..i&w=638
 
 
 
