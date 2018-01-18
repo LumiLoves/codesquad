@@ -1,0 +1,215 @@
+@charset "utf-8";
+
+/** ================================================
+  base style
+================================================ */
+
+/**
+ *  Font Setting
+ */
+
+
+
+/**
+ *  Style
+ */
+
+
+
+/**
+ *  Help Class
+ */
+
+.blind {
+  visibility: hidden; overflow: hidden;
+  position: absolute; top: 0; left: 0;
+  width: 1px; height: 1px;
+  font-size: 0; line-height: 0;
+}
+
+/** ================================================
+  layout
+================================================ */
+
+/**
+ *  Header
+ */
+
+.header-box {
+  display: grid;
+  grid-template-columns: auto 980px auto;
+  grid-template-rows: 36px 98px 52px;
+  grid-template-areas:
+    ". snb ."
+    ". header ."
+    ". gnb .";
+  
+  // 개발용
+  background: rgba(234,32,123, 0.3);
+  nav, header { box-shadow: 0 0 10px rgba(234,32,123, 1); }
+}
+
+#snb {
+  grid-area: snb;
+}
+
+#header {
+  grid-area: header;
+}
+
+#gnb {
+  grid-area: gnb;
+}
+
+
+/**
+ *  Main
+ */
+
+#main {
+  display: grid;
+  grid-template-columns: auto 980px auto; 
+  grid-template-rows: 420px 680px 670px 140px 670px 140px 670px;
+  grid-template-areas:
+    ". main-visual ."
+    ". best-seller ."
+    ". sub-dishes ."
+    ". banner-1 ."
+    ". main-dishes ."
+    ". banner-2 ."
+    ". dessert .";
+
+  // 개발용
+  background: rgba(15, 188, 200, 0.3);
+  > section, > .banner { 
+    box-shadow: 0 0 10px rgba(15, 188, 200, 1);
+  }
+}
+
+#main-visual {
+  grid-area: main-visual;
+}
+
+#best-seller {
+  grid-area: best-seller;
+}
+
+#sub-dishes {
+  grid-area: sub-dishes;
+}
+
+.banner-1 {
+  grid-area: banner-1;
+}
+
+#main-dishes { 
+  grid-area: main-dishes;
+}
+
+.banner-2 {
+  grid-area: banner-2;
+}
+
+#dessert {
+  grid-area: dessert;
+}
+
+
+/**
+ *  Footer
+ */
+
+#footer {
+  // 개발용
+  background: rgba(235, 255, 122, 0.3);
+
+  .cs-services {
+    display: grid;
+    grid-template-columns: auto 300px 404px 220px auto;
+    grid-template-rows: 140px;
+    grid-template-areas:
+      ". quick-menu notice contact .";
+
+    // 개발용
+    > * { box-shadow : 0 0 10px rgba(235, 255, 122, 1); }
+  }
+  .quick-menu { grid-area: quick-menu; }
+  .notice { grid-area: notice; }
+  .contact { grid-area: contact; }
+
+  .company {
+    display: grid;
+    grid-template-columns: auto 980px auto;
+    grid-template-rows: auto;
+    position: relative;
+
+    > * { grid-column: 2; }
+
+    // 개발용
+    > * { box-shadow : 0 0 10px rgba(235, 255, 122, 1); }
+  }
+  .menu {  }
+  .information {  }
+  .social { position: absolute; right: 0; top: 0; }
+}
+
+#scroll-btns { 
+  position: fixed; right: 40px; bottom: 60px;
+  button { font-size: 2em; }
+}
+
+/** ================================================
+  ui template
+================================================ */
+
+/**
+ *  아이콘류
+ */
+
+// 뱃지 - 이벤트특가, 베스트
+// bullet-down-icon
+
+
+/**
+ *  탭
+ */
+
+
+// 이미지 헤더
+
+
+// 슬라이딩 리스트 섹션 (화살표, 메뉴아이템 레이아웃, 슬라이딩구조)
+
+
+// 메뉴아이템 (사진, 사진호버오버레이, 타이틀, 디스크, (말줄임) 원래가격, 할인가격)
+
+
+// 탭 (디테일한 스타일은 밑에서 하고 구조같은 바뀌어도 변하지 않는 거만 쓰기)
+
+
+
+/** ================================================
+  page - main
+================================================ */
+
+
+#main {
+  text-align: center;
+}
+
+.sliding-list-section {
+  
+  header {
+    text-align: center; font-size: 11px;
+  }
+  
+  .sliding-list-box {
+    
+  }
+
+  .more {
+    display: block; padding: 10px;
+    border: 1px solid black; text-align: center;
+  }
+}
+
