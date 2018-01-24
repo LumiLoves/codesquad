@@ -231,7 +231,7 @@ a {
       a {
         padding: 4px 25px; line-height: 1.4em;
         font-family: "Nanum", sans-serif; color: #555;
-        font-size: 14px; text-align: left;
+        font-size: 14px; text-align: left; white-space: nowrap;
 
         &:hover {
           font-weight: bold;
