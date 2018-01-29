@@ -8,11 +8,11 @@
   <h1 class="blind">배민찬 - 메인 페이지</h1>
 
   <div id="scroll-btns">
-    <button class="up">
-      <span class="blind">페이지 맨 위로 이동하기</span>업
+    <button class="up" title="페이지 맨 위로 이동하기">
+      업
     </button>
-    <button class="down">
-        <span class="blind">페이지 맨 아래로 이동하기</span>다운
+    <button class="down" title="페이지 맨 아래로 이동하기">
+      다운
     </button>
   </div>
 
@@ -182,7 +182,12 @@
   <!-- main-container -->
   <main role="main" id="main">
     <section id="main-visual" class="main-visual-section">
-      <h2>주요 프로모션</h2>
+      <h2 class="blind">주요 프로모션</h2>
+
+      <div class="slide-btn-wrapper">
+        <a class="bm-icon spr-btn-arrow-main-slide prev" href="#" title="이전 슬라이드 보기"></a>
+        <a class="bm-icon spr-btn-arrow-main-slide next" href="#" title="다음 슬라이드 보기"></a>
+      </div>
     </section>
 
     <section id="best-seller" class="main-item">
@@ -193,7 +198,7 @@
         </header>
   
         <div class="tab-box">
-          <ul class="tab-button-box">
+          <ul class="tab-btn-box">
             <li><a data-category-id="17011200" href="#">할인특가 세트상품</a></li>
             <li class="on"><a data-category-id="17011000" href="#">풍성한 고기반찬</a></li>
             <li><a data-category-id="17011100" href="#">바다향가득 반찬</a></li>
@@ -802,7 +807,7 @@
 
   <script src="/js/util.js"></script>
   <script src="/js/ajax.js"></script>
-  <script src="/js/html.js"></script>
+  <script src="/js/template.js"></script>
   <script src="/js/ui.js"></script>
   <script src="/js/app.js"></script>
 </body>
