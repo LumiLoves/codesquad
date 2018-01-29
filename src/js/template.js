@@ -4,9 +4,7 @@
  * Template
  */
 
-function Template() {
-  this.totalHtml = '';
-}
+function Template() {}
 
 Template.prototype = {
   getTemplate(templateId) {
