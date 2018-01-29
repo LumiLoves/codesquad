@@ -4,117 +4,93 @@
  * Ajax
  */
 
- function Ajax() {
-  // something ...
-}
+function Ajax() {}
 
 Ajax.prototype = {
-  isSuccess(readyState, status) {
-    return (readyState === 4 && status === 200);
-  },
-  getData(option) {
-    // 사용하는 입장에서 고민해보기.
-    // option : url, data, callback
-    // contentType(json, form) or isForm (default: JSON)
+  request({ url, method, data, reqContentType, success, error, isAsync }) {
     const xhr = new XMLHttpRequest();
+    method = method.toUpperCase();
+    data = util.type.isObject(data)? JSON.stringify(data): null; 
+    isAsync = (isAsync)? isAsync : true;
 
-    xhr.open('GET', option.url);
+    xhr.open(method, url, isAsync);
+    reqContentType && xhr.setRequestHeader('Content-Type', reqContentType);
+
     xhr.onreadystatechange = () => {
-      if (this.isSuccess(xhr.readyState, xhr.status)) {
-        option.callback && option.callback(xhr);
+      const type = xhr.getResponseHeader('Content-Type');
+      let resData = null;
+
+      // 예외 처리
+      if (xhr.readyState !== 4) { return; }
+      if (xhr.status !== 200) {
+        error && error(xhr);
+        return;
       }
-    };
-    xhr.send(null);
-  },
-  postJSON(url, data, callback) {
-    const xhr = new XMLHttpRequest();
-    const data = JSON.stringify(data);
 
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = () => {
+      // 응답데이터 처리
+      if (type.match(/^text/)) {
+        resData = xhr.responseText;
+      } else if (type.match(/^application\/json/)) {
+        resData = JSON.parse(xhr.responseText);
+      } else {
+        throw new Error('응답은 텍스트 또는 JSON 형태여야 합니다. 현재 상태: ' + type);
+        return;
+      }
 
+      // 성공 콜백
+      success && success(resData);      
     };
+
     xhr.send(data);
   },
-  makeData() {
-
+  getData({ url, data, success, error, isAsync }) {
+    this.request({
+      url, // 필수
+      method: 'GET',
+      data,
+      success, // 필수
+      error,
+      isAsync
+    });
   },
-  encodeFormData() {
-
-  },
-  handleDefaultSuccess() {
-
-  },
-  handleDefaultError() {
-    // 디폴트 응답 콜백 핸들러 모음?!
-  },
-  getData() {
-    // 자바스크립트의 비동기 종류? : 사용자이벤트, xhr이벤트, promise, async, injection??
-
-    // 동기로 작동하려면? 
-    // request를 onreadystatechange 같은 걸 안쓰면 동기로 동작하므로 안좋다?
-    // 이게 아니라 플래그로 작동하는 듯. false동기로 하면 
-    // 이때는 이벤트 핸들러를 사용할 필요 없이, send()메서드 실행이 종료된 후 xhr프로퍼티 확인.
-    // 가능하면 사용하지 말것. 이유?
-    // - 클라이언트 측 자바스크립트는 싱글스래드(single thread)이기 때문에
-    // - send()메서드는 보통 요청을 완료할 때까지 전체적인 브라우저의 UI를 중단시켜 잠시 사용불가상태로 만듦.
-    // - 요청이 연결된 서버의 응답속도가 느릴수록, 사용자의 브라우저는 자주 얼어버릴(freeze) 것이다.
-
-
-    const xhr = new XMLHttpRequest();
-    // 순서 : 요청 방식 + url, 요청헤더, 요청 본문    
-
-    // xhr.addEventListener('load', () => {
-    //   console.log(arguments, this.responseText);
-    // });
-
-    xhr.open('GET', 'url'); // xhr.open('GET', 'url', false); 3번째인자. 비동기처리 여부.
-    // get + form일 경우, url + '?' + encodeFormData(data)
-    xhr.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
-    // MIME-TYPE. 보내는 데이터 타입
-    //  'text/plain', 'text/html', 'text/css', 'text/javascript'
-    //  'application/json'
-    //  'application/x-www-form-urlencoded': (q=pizza&startDate=190380&endDate=930290)
-    xhr.onreadystatechange = () => {
-      // if (xhr.readyState === 4 && xhr.status === 200)
-      if (xhr.readyState !== 4) { return; } // 완료되지 않은 요청결과는 무시.
-      if (xhr.status === 200) {
-        // xhr.readyState
-        // 0 : UNSENT . open()메서드가 아직 호출되지 않았다.
-        // 1 : OPENED . open()메서드가 호출되었다.
-        // 2 : HEADERS_RECEIVED . HTTP헤더를 전송받았다.
-        // 3 : LOADING . 응답본문을 전송받는 중이다.
-        // 4 : DONE . 응답이 완료되었다.
-
-        // 응답 헤더 정보
-        // xhr.getAllResponseHeader();
-        const type = xhr.getResponseHeader('Content-Type');
-        const size = xhr.getResponseHeader('Content-Length');
-        const date = xhr.getResponseHeader('Last-Modified');
-   
-        // 응답 데이터
-        if (type.match(/^text/)) { // 응답이 텍스트형태인지 확인후, 콜백으로 전달한다.
-          callback && callback(xhr.responseText);
-        } else if (type === 'application/json') {
-          callback && callback(JSON.parse(xhr.responseText));
-        } else {
-          throw new Error('응답은 텍스트 또는 제이슨 형태여야 합니다. 현재 상태: ' + type);
-        }
-
-        // return xhr.responseText;
-
-      } else {
-        // 에러정보
-        // xhr.status
-        // xhr.statusText
-      }
-
-      // 에러 핸들링 다른 방법
-      if (xhr.status !== 200) { throw new Error(xhr.statusText); }
-    };
-    xhr.send(null); // get 요청은 본문을 가질 수 없으므로, send() 메서드의 인자를 null로 지정하거나 생략해야 한다.
-    // 대부분의 post 요청은 본문을 포함하며, 해당 본문은 Content-Type 형식과 같아야 한다.
-    // xhr.send(encodeFormData(data));
+  postJSON({ url, data, success, error, isAsync }) {
+    this.request({
+      url,  // 필수
+      method: 'POST',
+      data,
+      reqContentType: 'application/json',
+      success, // 필수
+      error,
+      isAsync
+    });
   }
+  // encodeFormData() {},
+  // 디폴트 응답 콜백 핸들러 모음?!
+  // handleDefaultSuccess() {},
+  // handleDefaultError() {},
 };
+
+
+
+/**
+
+사용측 코드
+
+oAjax.getData({
+	url: actionUrl.bestDish,
+	// data: {
+  //   "a": 1,
+  //   "b": 2
+  // },
+	success: () => {
+    // .....
+  }
+});
+
+or
+
+oAjax.getData(actionUrl.bestDish, { "a": 1, "b": 2 }, () => {
+  // .....
+});
+
+ */

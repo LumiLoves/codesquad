@@ -425,7 +425,11 @@ a {
     position: relative;
 
     img { width: 100%; }
-    .badge-wrapper { position: absolute; left: 10px; bottom: 13px; }
+    .badge-wrapper { 
+      position: absolute; left: 10px; bottom: 13px;
+      
+      .bm-icon { margin-right: 5px; }
+    }
     .overlay {
       opacity: 0;
       display: flex; flex-direction: column; align-items: center;
@@ -522,13 +526,18 @@ a {
     }
   }
 
-  .tab-list-box {
-    display: flex;
+  .tab-content-group-box {
+    position: relative; display: flex;
+    width: 100%; height: 433px;
 
-    > li {  }
+    > li {
+      position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+      opacity: 0; visibility: hidden;
+      &.on { opacity: 1; visibility: visible; }
+    }
   }
 
-  .tab-list {
+  .tab-content-box {
     display: grid;
     grid-template-columns: 304px 304px 304px;
     grid-column-gap: 24px;

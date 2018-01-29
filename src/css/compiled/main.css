@@ -611,6 +611,10 @@ a:hover, a:focus {
   bottom: 13px;
 }
 
+.thumbnail-box .thumbnail .badge-wrapper .bm-icon {
+  margin-right: 5px;
+}
+
 .thumbnail-box .thumbnail .overlay {
   opacity: 0;
   display: flex;
@@ -756,17 +760,35 @@ a:hover, a:focus {
   color: #fff;
 }
 
-.tab-box .tab-list-box {
+.tab-box .tab-content-group-box {
+  position: relative;
   display: flex;
+  width: 100%;
+  height: 433px;
 }
 
-.tab-box .tab-list {
+.tab-box .tab-content-group-box > li {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tab-box .tab-content-group-box > li.on {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tab-box .tab-content-box {
   display: grid;
   grid-template-columns: 304px 304px 304px;
   grid-column-gap: 24px;
 }
 
-.tab-box .tab-list > li {
+.tab-box .tab-content-box > li {
   overflow: hidden;
   text-overflow: ellipsis;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);

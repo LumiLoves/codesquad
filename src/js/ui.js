@@ -3,12 +3,11 @@
 /**
  * Gnb
  */
-// TODO Gnb 이름 더 구체적으로?!
+
 function Gnb($menuArr) {
   this.$menuArr = $menuArr;
 }
 
-// TODO 델리게이션으로 구현
 Gnb.prototype = {
   init() {
     this.registerEvent();
@@ -34,87 +33,129 @@ Gnb.prototype = {
 
 
 /**
- * Asynchronous Tab
+ * Tab (use async)
  */
-/** [설계]
- *- init 시 랜덤으로 메뉴 선택되어져 보여진다. @
- *- showTab
- *  - ajax로 json 가져와 저장
- *  - json을 돌면서 html 만듦
- *    - 버튼박스 만듦
- *    - 리스트박스 만듦
- *  - appendHtml
- * 
- *- getHtmlButtonItem
- *- getHtmlListItem
- *- getHtmlThumbnail
- *
- *- registerEvent
- *  - 리스트버튼 클릭 시
- *    - 이미 불러온 적이 있는지 확인
- *    - showTab(index) 실행
- */
-function AsynchronousTab($tabBox) {
-  // this.$tabBox = $tabBox;
-  this.$tabButtonBox = $tabBox.querySelector('.tab-button-box');
-  this.$tabListBox = $tabBox.querySelector('.tab-list-box');
-  this.template = {
-    buttonItem: '',
-    listItem: '',
-    thumbnail: ''
-  };
+
+/** [ component 구조 ]
+  .tab-box
+    .tab-button-box
+      li > a (button-items)
+      li > a (button-items)
+      ....
+
+    .tab-content-group-box
+      li (tab-content-group-item)
+        .tab-content-box
+          li > a.thumbnail-box (tab-content-item)
+          li > a.thumbnail-box (tab-content-item)
+          ...
+      li (tab-content-group-item)
+        .tab-content-box
+          li > a.thumbnail-box (tab-content-item)
+          ...
+      ....
+*/
+
+function Tab({ $tabBox, reqUrl, templateId }) {
+  this.$buttonBox = $tabBox.querySelector('.tab-button-box');
+  this.$buttonItemArr = $tabBox.querySelectorAll('.tab-button-box > li');
+  this.$contentGroupItemArr = $tabBox.querySelectorAll('.tab-content-group-box > li');
+
+  this.reqUrl = reqUrl;
+  this.data = null;
+
+  this.templateId = templateId;
+  this.templateHtml = '';
 }
 
-AsynchronousTab.prototype = {
+Tab.prototype = {
   init() {
-    const randomIndex = getRandomMenuIndex();
+    const totalLength = this.$buttonItemArr.length;
+    const randomIndex = util.number.random(0, totalLength - 1);
 
-    this.showTab(randomIndex);
-    this.registerEvent();
+    this.getData(() => {
+      this.handleContentGroupItemToActive(randomIndex);
+    });
+    this.setButtonIndex();
+    this.handleButtonItemToActive(randomIndex);
+    this.registerButtonEvent(randomIndex);
   },
-  registerEvent() {
-    this.$tabButtonBox.addEventListener('click', ({ target }) => {
-      // target
+
+  /* instance data */
+
+  getData(callback) {
+    oAjax.getData({
+      url: this.reqUrl,
+      success: (resJSON) => {
+        this.data = resJSON; 
+        callback && callback();
+      }
     });
   },
-  getRandomMenuIndex() {
-    const menuLength = this.$tabButtonBox.length;
-    return Math.floor(Math.random() * (menuLength - 1));
-  },
-  showTab(index) {
-    const resJSON = oAjax.getData();
-    const html = this.makeHtml(resJSON);
-    // ajax
-    // makeHtml
-    // appendHtml
+
+  /* rendering */
+
+  renderContentGroupItem(index) {
+    if (this.templateHtml === '') {
+      this.templateHtml = oTemplate.getTemplate(this.templateId);
+    }
+
+    const $contentBoxItem = this.$contentGroupItemArr.item(index).querySelector('.tab-content-box');
+    const contentItemsData = this.data[index]['items'];
+    const resultHtml = oTemplate.makeHtml(this.templateHtml, contentItemsData);
+  
+    $contentBoxItem.innerHTML = resultHtml;
   },
 
-  // Html
-  makeHtml(json) {
-    const html = '';
-    // getHtmlButtonItem 반복
-    // getHtmlListItem 반복
-    return html;
-  },
-  getHtmlButtonItem() {
+  /* dom */
 
+  setButtonIndex() {
+    util.dom.setIndex(this.$buttonItemArr, 'a');  
   },
-  getHtmlListItem() {
+  registerButtonEvent() {
+    this.$buttonBox.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = e.target;
 
+      if (target || target.nodeName === 'A') {
+        this.handleButtonItemToActive(target.index || 0);
+        this.handleContentGroupItemToActive(target.index || 0);
+      }
+    });
   },
-  appendHtml(insertTarget) {
+  handleButtonItemToActive(i) {
+    const index = i || 0;
 
+    this.$buttonItemArr.forEach((elem) => {
+      elem.classList.remove('on');    
+    });
+    this.$buttonItemArr.item(index).classList.add('on');
+  },
+  handleContentGroupItemToActive(i) {
+    const index = i || 0;
+    const $targetWrapper = this.$contentGroupItemArr.item(index).querySelector('.tab-content-box');  
+    const notYetRendering = ($targetWrapper.innerHTML === '');
+
+    if (notYetRendering) {
+      this.renderContentGroupItem(index);
+    }
+
+    this.$contentGroupItemArr.forEach((elem) => {
+      elem.classList.remove('on');    
+    });
+    this.$contentGroupItemArr.item(index).classList.add('on');
   }
 };
 
 
 /**
- * Asynchronous Sliding List
+ * Sliding List (use async)
  */
+
 function SlidingList($slidingListBox) {
 
 }
 
 SlidingList.prototype = {
-
+  //
 };

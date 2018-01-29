@@ -1,17 +1,7 @@
 'use strict';
 
-
-// es6 문법 쓰기.
-// let, const 
-// () => { }
-// object shorthands
-// prototype 으로 패턴 써보기
-
-
-// DOM
-const $gnbMenuArr = document.querySelectorAll('#gnb .menu > li');
-
 // Data
+const apiDomain = 'http://crong.codesquad.kr:8080';
 const actionUrl = {
   bestDish: '/woowa/best',
   mainDish: '/woowa/main',
@@ -20,21 +10,37 @@ const actionUrl = {
   sideDish: '/woowa/side'
 };
 
-// Class
-const oGnb = new Gnb($gnbMenuArr); // TODO 생각해보기. 전역변수로 빼도 괜찮다고 하심.
-const oAjax = new Ajax();
+// DOM
+const $gnbMenus = document.querySelectorAll('#gnb .menu > li');
+const $tabBoxArr = document.querySelectorAll('.tab-box');
+const $slidingListBoxArr = document.querySelectorAll('.sliding-list-box');
 
+// Functional Class
+const oAjax = new Ajax();
+const oTemplate = new Template();
+
+// UI Class
+const oGnb = new Gnb($gnbMenus);
+const oTabBestDish = new Tab({
+  $tabBox: $tabBoxArr[0],
+  reqUrl: apiDomain + actionUrl.bestDish,
+  templateId: 'best-seller__tab-content-item'
+});
+const oSlidingListSideDish = new SlidingList($slidingListBoxArr[0]);
 
 /**
- * BMC (배민찬)
+ * bmc (배민찬)
  */
-const BMC = {
+
+const bmc = {
   init() {
     oGnb.init();
+    oTabBestDish.init();
+    // oSlidingListSideDish.init();
   }
 };
 
-BMC.init();
+bmc.init();
 
 
 

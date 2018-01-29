@@ -178,7 +178,7 @@
     </nav>
   </section>
   <!-- // header -->
-  
+
   <!-- main-container -->
   <main role="main" id="main">
     <section id="main-visual" class="main-visual-section">
@@ -194,17 +194,18 @@
   
         <div class="tab-box">
           <ul class="tab-button-box">
-            <!-- <li class="on"><a href="#">ajax data - menu</a></li> -->
-            <li><a data-category-id="17011200" href="#">menu</a></li>
-            <li><a data-category-id="17011000" href="#">menu</a></li>
-            <li><a data-category-id="17010200" href="#">menu</a></li>
-            <li><a data-category-id="17010300" href="#">menu</a></li>
-            <li><a data-category-id="17011400" href="#">menu</a></li>
+            <li><a data-category-id="17011200" href="#">할인특가 세트상품</a></li>
+            <li class="on"><a data-category-id="17011000" href="#">풍성한 고기반찬</a></li>
+            <li><a data-category-id="17011100" href="#">바다향가득 반찬</a></li>
+            <li><a data-category-id="17010200" href="#">편리한 반찬세트</a></li>
+            <li><a data-category-id="17010300" href="#">간편한 덮밥요리</a></li>
+            <li><a data-category-id="17011400" href="#">우리아이영양반찬</a></li>
           </ul>
   
-          <ul class="tab-list-box">
-            <li>
-              <ul class="tab-list">
+          <ul class="tab-content-group-box">
+            <!--
+            <li class="on">
+              <ul class="tab-content-box">
                 <li>
                   <a class="thumbnail-box" href="#">
                     <div class="thumbnail">
@@ -287,9 +288,9 @@
                 </li>  
               </ul>
             </li>
-  
+
             <li>
-              <ul class="tab-list">
+              <ul class="tab-content-box">
                 <li>
                   <a class="thumbnail-box" href="#">
                     <div class="thumbnail">
@@ -372,7 +373,64 @@
                 </li>  
               </ul>
             </li>
-          </ul><!-- .tab-list-box -->
+            -->
+
+            <li data-category-id="17011200">
+              <ul class="tab-content-box"></ul>
+            </li>
+            <li data-category-id="17011000">
+              <ul class="tab-content-box"></ul>
+            </li>
+            <li data-category-id="17011100">
+              <ul class="tab-content-box"></ul>
+            </li>
+            <li data-category-id="17010200">
+              <ul class="tab-content-box"></ul>
+            </li>
+            <li data-category-id="17010300">
+              <ul class="tab-content-box"></ul>
+            </li>
+            <li data-category-id="17011400">
+              <ul class="tab-content-box"></ul>
+            </li>
+
+            <script type="bmc-template" data-template-html="best-seller__tab-content-item">
+              <li class="tab-content-item">
+                <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
+                  <div class="thumbnail">
+                    <img src="{{image}}" alt="{{alt}}" />
+
+                    <div class="overlay">
+                      {{#each delivery_type}}
+                        <p class="txt">{{this}}</p>
+                      {{/each}}
+                    </div>
+
+                    <div class="badge-wrapper">
+                      {{#each badge}}
+                        <i class="bm-icon badge-event">{{this}}</i>
+                      {{/each}}
+                    </div>
+                  </div>
+
+                  <dl class="content">
+                    <dt class="title">{{title}}</dt>
+                    <dd class="desc">{{description}}</dd>
+
+                    <dd class="price-wrapper">
+                      {{#if n_price}}
+                        <span class="original-price">{{this}}</span>
+                      {{/if}}
+                      <span class="final-price">
+                        <span class="number">{{s_price}}</span>
+                        <span class="unit">원</span>
+                      </span>
+                    </dd>
+                  </dl>
+                </a>
+              </li>
+            </script>
+          </ul><!-- .tab-content-group-box -->
         </div><!-- .tab-box -->
       </div>
     </section>
@@ -742,6 +800,7 @@
   </footer>
   <!-- // footer -->
 
+  <script src="/js/util.js"></script>
   <script src="/js/ajax.js"></script>
   <script src="/js/html.js"></script>
   <script src="/js/ui.js"></script>
