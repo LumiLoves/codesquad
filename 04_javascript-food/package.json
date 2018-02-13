@@ -1,0 +1,22 @@
+{
+  "name": "javascript-food",
+  "version": "1.0.0",
+  "description": "javascript level3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimally/javascript-food.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kimally/javascript-food/issues"
+  },
+  "homepage": "https://github.com/kimally/javascript-food#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
