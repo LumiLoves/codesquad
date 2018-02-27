@@ -9,6 +9,9 @@ app.get('/', function(req, res) {
 app.get('/template', function(req, res) {
   res.sendfile('template.html');
 });
+app.get('/outline', function(req, res) {
+  res.sendfile('index_outline.html');
+});
 
 
 http.listen(3000, function() {

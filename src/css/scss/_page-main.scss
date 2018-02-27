@@ -57,17 +57,17 @@
   src: url("https://cdn.bmf.kr/font/notosans/notokr-bold.woff2") format("woff2"),url("https://cdn.bmf.kr/font/notosans/notokr-bold.woff") format("woff"),url("https://cdn.bmf.kr/font/notosans/notokr-bold.otf") format("opentype")
 }
 
+
+/**
+ *  Style
+ */
+
 body {
   font-family: 'Nanum', 'Apple Gothic', 'Malgun Gothic', 'Nanum Gothic', 'Dotum', Arial, sans-serif;
   font-size: 13px; font-weight: normal;
   background: #fff;
   color: #333
 }
-
-
-/**
- *  Style
- */
 
 a {
   color: #666; text-decoration: none;
@@ -94,17 +94,16 @@ a {
   layout
 ================================================ */
 
-.inner-wrapper { 
-  margin: 0 auto; width: $main-width;
-}
+.inner-wrapper { margin: 0 auto; width: $main-width; }
+
 
 /**
  *  Header
  */
 
 .header-box {
-  display: grid;
-  grid-template-columns: auto $main-width auto;
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: auto $main-width auto;
   grid-template-rows: $snb-height $header-height $gnb-height;
   grid-template-areas:
     "snb snb snb"
@@ -112,7 +111,7 @@ a {
     "gnb gnb gnb";
 
   a { display: block; }
-  
+
   // 개발용
   // background: rgba(234,32,123, 0.3);
   // header,
@@ -124,9 +123,7 @@ a {
 #snb {
   grid-area: snb; border-bottom: 1px solid #e9e9e9;
 
-  .inner-wrapper {
-    display: flex;
-  }
+  .inner-wrapper { display: flex; }
 
   a { 
     padding: 0 10px; height: 100%; line-height: ($snb-height - 1px);
@@ -137,9 +134,9 @@ a {
       .spr-bullet-arrow-down { background-position: -4px -18px; }
     }
   }
-
-  .app-download { margin: 0 auto 0 0; }
   
+  .app-download { margin: 0 auto 0 0; }
+
   .menu { 
     display: flex;
 
@@ -173,7 +170,7 @@ a {
     }
     button[type="submit"] {
       position: absolute; top: 1px; right: 1px;
-      background: url(/img/spr-search-icon.png) no-repeat center 0;
+      background: url(/img/spr-icon-search.png) no-repeat center 0;
       width: 38px; height: 38px; border: none;
       text-indent: -3000px; cursor: pointer;
 
@@ -289,34 +286,13 @@ a {
   }
 }
 
-#main-visual {
-  grid-area: main-visual;
-}
-
-#best-seller {
-  grid-area: best-seller;
-  background: #eee;
-}
-
-#side-dish {
-  grid-area: side-dish;
-}
-
-.banner-1 {
-  grid-area: banner-1;
-}
-
-#main-dish { 
-  grid-area: main-dish;
-}
-
-.banner-2 {
-  grid-area: banner-2;
-}
-
-#soup {
-  grid-area: soup;
-}
+#main-visual { grid-area: main-visual; }
+#best-seller { grid-area: best-seller; background: #eee; }
+#side-dish { grid-area: side-dish; }
+.banner-1 { grid-area: banner-1; }
+#main-dish { grid-area: main-dish;}
+.banner-2 { grid-area: banner-2; }
+#soup { grid-area: soup; }
 
 
 /**
@@ -372,14 +348,13 @@ a {
  *  아이콘류
  */
 
-// 뱃지 - 이벤트특가, 베스트
-// bullet-down-icon
 .bm-icon {
   display: inline-block !important; margin: 0; padding: 0;
   // width: 10px; height: 10px;
   background-repeat: no-repeat; background-position: 0 0;
   font-style: normal; vertical-align: middle;
 
+  // 메뉴링크 옆 삼각형 불릿 아이콘
   &[class*="spr-bullet-arrow-down"] {
     background-image: url(/img/spr-bullet-arrow-down.png);
     width: 10px; height: 6px;
@@ -389,6 +364,40 @@ a {
     &.white { background-position: -4px -32px; }
   }
   
+  // 메인슬라이드 삼각형 버튼
+  &[class*="spr-btn-arrow-main-slide"] {
+    background-image: url(/img/spr-btn-arrow-main-slide.png);
+    width: 55px; height: 90px;
+
+    &.prev { background-position: 0 0; }
+    &.next { background-position: -67px 0; }
+  }
+
+  // 슬라이딩리스트 삼각형 버튼 
+  &[class*="spr-btn-arrow-sliding-list"] {
+    background-image: url(/img/spr-btn-arrow-sliding-list.png);
+    width: 30px; height: 50px;
+
+    &.prev {
+      background-position: 0 0;
+
+      &:hover,
+      &:focus {
+        background-position: 0 -52px;      
+      }
+    }
+    &.next {
+      background-position: -50px 0;
+
+      &:hover,
+      &:focus {
+        background-position: -50px -52px;      
+      }
+    }
+  }
+
+
+  // 섬네일 뱃지
   &[class*="badge-"] {
     padding: 0.4em 0.55em 0.3em;
     color: #fff; font-size: 11px;
@@ -397,17 +406,17 @@ a {
     &.badge-best { background: #fa6565; }
   }
   
+  // 더보기 버튼
   &.btn-arrow-more {
     width: 6px; height: 12px;
     background-image: url(/img/btn-arrow-more.png);
     background-position: 0 0;
   }
-
   &.btn-txt-more {
     width: 48px; height: 22px;  
     background-image: url(/img/btn-txt-more.gif);
     background-position: 0 0;  
-  }  
+  }
 }
 
 /**
@@ -502,7 +511,7 @@ a {
 .tab-box {
   overflow: hidden;
   
-  .tab-button-box {
+  .tab-btn-box {
     display: flex;
     margin-bottom: 23px;
 
@@ -612,13 +621,13 @@ a {
 }
 
 .sliding-list-section {
-  
+
   header {
     text-align: center; font-size: 11px;
   }
-  
+
   .sliding-list-box-wrapper {
-    
+    // 
   }
 
   .more {
@@ -627,9 +636,74 @@ a {
   }
 }
 
+#main-visual {
+  position: relative;
+
+  .img-box {
+    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+
+    a { display: block; width: 100%; height: 100%; }
+    .img-item {
+      position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+      background-repeat: no-repeat; background-size: cover;
+      background-position: center center; z-index: -3;
+      transform: translateX(100%); opacity: 0;
+
+      display: none;
+    }
+    .img-1 { background-image: url(/img/img-main-visual-slide_1.jpg); }
+    .img-2 { background-image: url(/img/img-main-visual-slide_2.jpg); }
+    .img-3 { background-image: url(/img/img-main-visual-slide_3.jpg); }
+    .img-4 { background-image: url(/img/img-main-visual-slide_4.jpg); }
+    .img-5 { background-image: url(/img/img-main-visual-slide_5.jpg); }
+
+    // .prev { transform: translateX(-100%); opacity: 0; }
+    // .current { transform: translateX(0); opacity: 1; }
+    // .next {  }
+    .old {
+      transform: translateX(0); opacity: 1;
+      transition: opacity 0.4s;
+      z-index: -1;
+    }
+    .now {
+      transform: translateX(0); opacity: 1;
+      transition: opacity 0.6s;
+      z-index: 0;
+    }
+
+    .current { display: block; }
+  }
+
+  .arrow-btn-box {
+    position: absolute; left: 50%; top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 0;
+
+    .prev { position: absolute; left: -580px; transform: translateY(-50%); }
+    .next { position: absolute; right: -580px; transform: translateY(-50%); }
+  }
+
+  .dot-btn-box {
+    position: absolute; left: 50%; bottom: 15px;
+    transform: translateX(-50%);
+    z-index: 0;
+
+    .dot {
+      margin: 0 4px; display: inline-block; width: 10px; height: 10px;
+      border-radius: 100px; box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+      background: rgba(255,255,255,0.6);
+
+      &.on { background: rgba(255,255,255,1); }
+    }
+  }
+}
+
 #best-seller { 
   // background: #eee;
 }
+
+
+
 
 
 
