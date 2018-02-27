@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <title>lv3. 배민푸드 메인페이지</title>
   <link rel="stylesheet" href="/css/compiled/main.css" />
 </head>
@@ -57,7 +58,7 @@
       
       <form class="search-form" action="/" method="get">
         <label for="searching_text" class="blind">검색</label>
-        <input type="text" name="searching_text" />
+        <input type="text" name="searching_text" id="searching_text" />
         <button type="submit"><span>검색</span></button>
       </form>
 
@@ -180,7 +181,7 @@
   <!-- // header -->
 
   <!-- main-container -->
-  <main role="main" id="main">
+  <main id="main">
     <section id="main-visual" class="main-visual-section">
       <h2 class="blind">주요 프로모션</h2>
 
@@ -435,7 +436,7 @@
               <ul class="tab-content-box"></ul>
             </li>
 
-            <script type="bmc-template" data-template-html="best-seller__tab-content-item">
+            <script type="text/template" data-template-html="best-seller__tab-content-item">
               <li class="tab-content-item">
                 <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
                   <div class="thumbnail">
