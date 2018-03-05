@@ -1,0 +1,91 @@
+@charset "utf-8";
+
+/** ================================================
+  base style
+================================================ */
+
+/**
+ *  Font Setting
+ */
+ @import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+ @font-face {
+   font-family: 'Nanum';
+   font-weight: 400;
+   src: url("https://cdn.bmf.kr/font/NanumGothic.eot");
+   src: url("https://cdn.bmf.kr/font/NanumGothic.eot?#iefix") format("embedded-opentype"),url("https://cdn.bmf.kr/font/NanumGothic.woff") format("woff"),url("https://cdn.bmf.kr/font/NanumGothic.ttf") format("truetype")
+ }
+ 
+ @font-face {
+   font-family: 'NanumBold';
+   font-weight: 600;
+   src: url("https://cdn.bmf.kr/font/NanumGothicBold.eot");
+   src: url("https://cdn.bmf.kr/font/NanumGothicBold.eot?#iefix") format("embedded-opentype"),url("https://cdn.bmf.kr/font/NanumGothicBold.woff") format("woff"),url("https://cdn.bmf.kr/font/NanumGothicBold.ttf") format("truetype")
+ }
+ 
+ @font-face {
+   font-family: 'NanumEB';
+   font-weight: 900;
+   src: url("https://cdn.bmf.kr/font/NanumGothicExtraBold.eot");
+   src: url("https://cdn.bmf.kr/font/NanumGothicExtraBold.eot?#iefix") format("embedded-opentype"),url("https://cdn.bmf.kr/font/NanumGothicExtraBold.woff") format("woff"),url("https://cdn.bmf.kr/font/NanumGothicExtraBold.ttf") format("truetype")
+ }
+ 
+ @font-face {
+   font-family: 'Noto Sans KR Light';
+   font-style: normal;
+   font-weight: 300;
+   src: url("https://cdn.bmf.kr/font/notosans/notokr-light.woff2") format("woff2"),url("https://cdn.bmf.kr/font/notosans/notokr-light.woff") format("woff"),url("https://cdn.bmf.kr/font/notosans/notokr-light.otf") format("opentype")
+ }
+ 
+ @font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 400;
+   src: url("https://cdn.bmf.kr/font/notosans/notokr-regular.woff2") format("woff2"),url("https://cdn.bmf.kr/font/notosans/notokr-regular.woff") format("woff"),url("https://cdn.bmf.kr/font/notosans/notokr-regular.otf") format("opentype")
+ }
+ 
+ @font-face {
+   font-family: 'Noto Sans KR Medium';
+   font-style: normal;
+   font-weight: 400;
+   src: url("https://cdn.bmf.kr/font/notosans/notokr-medium.woff2") format("woff2"),url("https://cdn.bmf.kr/font/notosans/notokr-medium.woff") format("woff"),url("https://cdn.bmf.kr/font/notosans/notokr-medium.otf") format("opentype")
+ }
+ 
+ @font-face {
+   font-family: 'Noto Sans KR Bold';
+   font-style: normal;
+   font-weight: 400;
+   src: url("https://cdn.bmf.kr/font/notosans/notokr-bold.woff2") format("woff2"),url("https://cdn.bmf.kr/font/notosans/notokr-bold.woff") format("woff"),url("https://cdn.bmf.kr/font/notosans/notokr-bold.otf") format("opentype")
+ }
+ 
+ 
+ /**
+  *  Style
+  */
+ 
+ body {
+   font-family: 'Nanum', 'Apple Gothic', 'Malgun Gothic', 'Nanum Gothic', 'Dotum', Arial, sans-serif;
+   font-size: 13px; font-weight: normal;
+   background: #fff;
+   color: #333
+ }
+ 
+ a {
+   color: #666; text-decoration: none;
+ 
+   &:hover,
+   &:focus { 
+     color: $color-bm-green;
+   }
+ }
+ 
+ 
+ /**
+  *  Help Class
+  */
+ 
+ .blind {
+   visibility: hidden; overflow: hidden;
+   position: absolute; top: 0; left: 0;
+   width: 1px; height: 1px;
+   font-size: 0; line-height: 0;
+ }
