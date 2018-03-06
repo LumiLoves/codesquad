@@ -1,16 +1,16 @@
 'use strict';
 
 /**
- * Ajax
+ * ajax
  */
 
-function Ajax() {}
+if (!window.LUMI) window.LUMI = {};
 
-Ajax.prototype = {
+LUMI.ajax = {
   request({ url, method, data, reqContentType, success, error, isAsync }) {
     const xhr = new XMLHttpRequest();
     method = method.toUpperCase();
-    data = util.type.isObject(data)? JSON.stringify(data): null; 
+    data = LUMI.util.type.isObject(data)? JSON.stringify(data): null; 
     isAsync = (isAsync)? isAsync : true;
 
     xhr.open(method, url, isAsync);
@@ -23,7 +23,7 @@ Ajax.prototype = {
       // 예외 처리
       if (xhr.readyState !== 4) { return; }
       if (xhr.status !== 200) {
-        error && error(xhr);
+        (typeof error === 'function') && error(xhr);
         return;
       }
 
@@ -38,30 +38,19 @@ Ajax.prototype = {
       }
 
       // 성공 콜백
-      success && success(resData);      
+      (typeof success === 'function') && success(resData);      
     };
 
     xhr.send(data);
   },
   getData({ url, data, success, error, isAsync }) {
     this.request({
-      url, // 필수
-      method: 'GET',
-      data,
-      success, // 필수
-      error,
-      isAsync
+      url, data, success, error, isAsync, method: 'GET'
     });
   },
   postJSON({ url, data, success, error, isAsync }) {
     this.request({
-      url,  // 필수
-      method: 'POST',
-      data,
-      reqContentType: 'application/json',
-      success, // 필수
-      error,
-      isAsync
+      url, data, success, error, isAsync, method: 'POST', reqContentType: 'application/json'
     });
   }
   // encodeFormData() {},
@@ -70,6 +59,15 @@ Ajax.prototype = {
   // handleDefaultError() {},
 };
 
+/*
+const request = (arg) => console.log(arg);
+const postJSON = () => {
+  const method = "POST";
+  return ({ url, data, success, error, isAsync }) => request({url,data,success,error,isAsync,method:'POST'});
+}
+
+postJSON()({ url:"xx", data:"data", success:()=>console.log(1), error:"none", isAsync:"ok" });
+*/
 
 
 /**

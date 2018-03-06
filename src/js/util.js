@@ -4,10 +4,12 @@
  * Util
  */
 
-const util = {
+if (!window.LUMI) window.LUMI = {};
+
+LUMI.util = {
   array: {
-    trim: function(arr) {
-      if (toString.call(arr) !== '[object Array]') { return false; }
+    trim(arr) {
+      if (!util.type.isArray(arr)) { return false; }
 
       if (arr[0] === ' ') { arr.shift(); }
       if (arr[arr.length - 1] === ' ') { arr.pop(); }

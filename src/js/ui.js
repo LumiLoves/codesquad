@@ -1,39 +1,7 @@
 'use strict';
 
 /**
- * Gnb
- */
-
-function Gnb($menuArr) {
-  this.$menuArr = $menuArr;
-}
-
-Gnb.prototype = {
-  init() {
-    this.registerEvent();
-  },
-  registerEvent() {
-    this.$menuArr.forEach((elem) => {
-      elem.addEventListener('mouseenter', ({ target }) => {
-        this.handleActiveMenu(target);
-      });
-
-      elem.addEventListener('mouseleave', ({ target }) => {
-        this.handleInactiveMenu(target);
-      });
-    });
-  },
-  handleActiveMenu(target) {
-    target.classList.add('on');
-  },
-  handleInactiveMenu(target) {
-    target.classList.remove('on');    
-  }
-};
-
-
-/**
- * Tab (use async)
+ * BmcTab (use async)
  */
 
 /** [ component 구조 ]
@@ -56,7 +24,7 @@ Gnb.prototype = {
       ....
 */
 
-function Tab({ $tabBox, reqUrl, templateId }) {
+function BmcTab({ $tabBox, reqUrl, templateId }) {
   this.$buttonBox = $tabBox.querySelector('.tab-btn-box');
   this.$buttonItemArr = $tabBox.querySelectorAll('.tab-btn-box > li');
   this.$contentGroupItemArr = $tabBox.querySelectorAll('.tab-content-group-box > li');
@@ -68,12 +36,12 @@ function Tab({ $tabBox, reqUrl, templateId }) {
   this.templateHtml = '';
 }
 
-Tab.prototype = {
+BmcTab.prototype = {
   init() {
     const totalLength = this.$buttonItemArr.length;
-    const randomIndex = util.number.random(0, totalLength - 1);
+    const randomIndex = LUMI.util.number.random(0, totalLength - 1);
 
-    oAjax.getData({
+    LUMI.ajax.getData({
       url: this.reqUrl,
       success: (resJSON) => {
         this.data = resJSON; 
@@ -89,12 +57,12 @@ Tab.prototype = {
 
   renderContentGroupItem(index) {
     if (this.templateHtml === '') {
-      this.templateHtml = oTemplate.getTemplate(this.templateId);
+      this.templateHtml = LUMI.template.getTemplate(this.templateId);
     }
 
     const $contentBoxItem = this.$contentGroupItemArr.item(index).querySelector('.tab-content-box');
     const contentItemsData = this.data[index]['items'];
-    const resultHtml = oTemplate.makeHtml(this.templateHtml, contentItemsData);
+    const resultHtml = LUMI.template.makeHtml(this.templateHtml, contentItemsData);
   
     $contentBoxItem.innerHTML = resultHtml;
   },
@@ -102,12 +70,11 @@ Tab.prototype = {
   /* dom */
 
   setButtonIndex() {
-    util.dom.setIndex(this.$buttonItemArr, 'a');  
+    LUMI.util.dom.setIndex(this.$buttonItemArr, 'a');  
   },
   registerButtonEvent() {
     this.$buttonBox.addEventListener('click', (e) => {
       e.preventDefault();
-
       const target = e.target;
 
       if (target && target.nodeName === 'A') {
@@ -142,10 +109,10 @@ Tab.prototype = {
 
 
 /**
- * Visual Slide
+ * BmcVisualSlide
  */
 
-function VisualSlide($imgBox, $arrowBtnBox, $dotBtnBox) {
+function BmcVisualSlide($imgBox, $arrowBtnBox, $dotBtnBox) {
   this.$imgBox = $imgBox;
   this.$imgArr = $imgBox.querySelectorAll('.img-item');
   this.totalLength = this.$imgArr.length;
@@ -154,7 +121,7 @@ function VisualSlide($imgBox, $arrowBtnBox, $dotBtnBox) {
   this.$dotBtnBox = $dotBtnBox;
 }
 
-VisualSlide.prototype = {
+BmcVisualSlide.prototype = {
   init() {
     this.setImgIndex();
     this.setDotBtnIndex();
@@ -168,11 +135,11 @@ VisualSlide.prototype = {
   /* dom */
 
   setImgIndex() {
-    util.dom.setIndex(this.$imgArr);    
+    LUMI.util.dom.setIndex(this.$imgArr);    
   },
   setDotBtnIndex() {
     const $dotBtnArr = this.$dotBtnBox.querySelectorAll('a');
-    util.dom.setIndex($dotBtnArr);
+    LUMI.util.dom.setIndex($dotBtnArr);
   },
 
   /*
@@ -303,13 +270,15 @@ VisualSlide.prototype = {
 
 
 /**
- * Sliding List (use async)
+ * BmcSlidingList (use async)
  */
 
-function SlidingList($slidingListBox) {
+function BmcSlidingList($slidingListBox) {
 
 }
 
-SlidingList.prototype = {
-  //
+BmcSlidingList.prototype = {
+  init() {
+
+  }
 };

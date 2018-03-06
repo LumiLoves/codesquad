@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * Template
+ * template
  */
 
-function Template() {}
-
-Template.prototype = {
+if (!window.LUMI) window.LUMI = {};
+  
+LUMI.template = {
   getTemplate(templateId) {
     const selector = `[data-template-html = "${templateId}"]`;
     return document.querySelector(selector).innerHTML;
