@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * ajax
+ * Ajax
  */
 
-if (!window.LUMI) window.LUMI = {};
+window.LUMI = window.LUMI || {};
 
 LUMI.ajax = {
   request({ url, method, data, reqContentType, success, error, isAsync }) {

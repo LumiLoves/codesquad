@@ -137,8 +137,8 @@ html {
   src: url("https://cdn.bmf.kr/font/notosans/notokr-bold.woff2") format("woff2"), url("https://cdn.bmf.kr/font/notosans/notokr-bold.woff") format("woff"), url("https://cdn.bmf.kr/font/notosans/notokr-bold.otf") format("opentype"); }
 
 /**
- *  Style
- */
+  *  Style
+  */
 body {
   font-family: 'Nanum', 'Apple Gothic', 'Malgun Gothic', 'Nanum Gothic', 'Dotum', Arial, sans-serif;
   font-size: 13px;
@@ -153,8 +153,8 @@ a {
     color: #2ac1bc; }
 
 /**
- *  Help Class
- */
+  *  Help Class
+  */
 .blind {
   visibility: hidden;
   overflow: hidden;
@@ -665,11 +665,7 @@ a {
       bottom: 0;
       background-repeat: no-repeat;
       background-size: cover;
-      background-position: center center;
-      z-index: -3;
-      transform: translateX(100%);
-      opacity: 0;
-      display: none; }
+      background-position: center center; }
     #main-visual .img-box .img-1 {
       background-image: url(/img/img-main-visual-slide_1.jpg); }
     #main-visual .img-box .img-2 {
@@ -680,18 +676,19 @@ a {
       background-image: url(/img/img-main-visual-slide_4.jpg); }
     #main-visual .img-box .img-5 {
       background-image: url(/img/img-main-visual-slide_5.jpg); }
-    #main-visual .img-box .old {
-      transform: translateX(0);
-      opacity: 1;
-      transition: opacity 0.4s;
+    #main-visual .img-box[data-use-request-animation-frame="false"] .img-item {
+      transform: translateX(100%);
+      opacity: 0;
       z-index: -1; }
-    #main-visual .img-box .now {
+    #main-visual .img-box[data-use-request-animation-frame="false"] .prev,
+    #main-visual .img-box[data-use-request-animation-frame="false"] .next {
+      transform: translateX(0);
+      transition: opacity 0.6s; }
+    #main-visual .img-box[data-use-request-animation-frame="false"] .current {
       transform: translateX(0);
       opacity: 1;
-      transition: opacity 0.6s;
-      z-index: 0; }
-    #main-visual .img-box .current {
-      display: block; }
+      z-index: 0;
+      transition: opacity 0.8s; }
   #main-visual .arrow-btn-box {
     position: absolute;
     left: 50%;

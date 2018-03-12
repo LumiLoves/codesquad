@@ -19,7 +19,12 @@ const $arrowBtnBox = document.querySelector('#main-visual .arrow-btn-box');
 const $dotBtnBox = document.querySelector('#main-visual .dot-btn-box');
 
 // UI Class
-const oMainVisualSlide = new BmcVisualSlide($imgBox, $arrowBtnBox, $dotBtnBox);
+const oMainVisualSlide = new BmcVisualSlide({
+  $imgBox,
+  $arrowBtnBox,
+  $dotBtnBox,
+  useRAF: true
+});
 const oTabBestDish = new BmcTab({
   $tabBox: $tabBoxArr[0],
   reqUrl: apiDomain + actionUrl.bestDish,

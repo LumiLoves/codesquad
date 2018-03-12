@@ -35,10 +35,7 @@
     .img-item {
       position: absolute; left: 0; right: 0; top: 0; bottom: 0;
       background-repeat: no-repeat; background-size: cover;
-      background-position: center center; z-index: -3;
-      transform: translateX(100%); opacity: 0;
-
-      display: none;
+      background-position: center center;
     }
     .img-1 { background-image: url(/img/img-main-visual-slide_1.jpg); }
     .img-2 { background-image: url(/img/img-main-visual-slide_2.jpg); }
@@ -46,21 +43,21 @@
     .img-4 { background-image: url(/img/img-main-visual-slide_4.jpg); }
     .img-5 { background-image: url(/img/img-main-visual-slide_5.jpg); }
 
-    // .prev { transform: translateX(-100%); opacity: 0; }
-    // .current { transform: translateX(0); opacity: 1; }
-    // .next {  }
-    .old {
-      transform: translateX(0); opacity: 1;
-      transition: opacity 0.4s;
-      z-index: -1;
-    }
-    .now {
-      transform: translateX(0); opacity: 1;
-      transition: opacity 0.6s;
-      z-index: 0;
-    }
+    &[data-use-request-animation-frame="false"] {
+      .img-item {
+        transform: translateX(100%); opacity: 0; z-index: -1;
+      }
 
-    .current { display: block; }
+      .prev,
+      .next { // fade out
+        transform: translateX(0);
+        transition: opacity 0.6s; 
+      }
+      .current { // fade in
+        transform: translateX(0); opacity: 1; z-index: 0;
+        transition: opacity 0.8s;
+      }
+    }
   }
 
   .arrow-btn-box {

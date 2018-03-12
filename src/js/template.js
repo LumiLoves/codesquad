@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * template
+ * Template
  */
 
-if (!window.LUMI) window.LUMI = {};
+window.LUMI = window.LUMI || {};
   
 LUMI.template = {
   getTemplate(templateId) {

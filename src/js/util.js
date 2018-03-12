@@ -4,7 +4,7 @@
  * Util
  */
 
-if (!window.LUMI) window.LUMI = {};
+window.LUMI = window.LUMI || {};
 
 LUMI.util = {
   array: {

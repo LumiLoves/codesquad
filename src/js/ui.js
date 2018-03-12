@@ -112,162 +112,140 @@ BmcTab.prototype = {
  * BmcVisualSlide
  */
 
-function BmcVisualSlide($imgBox, $arrowBtnBox, $dotBtnBox) {
+function BmcVisualSlide({ $imgBox, $arrowBtnBox, $dotBtnBox, useRAF }) {
   this.$imgBox = $imgBox;
   this.$imgArr = $imgBox.querySelectorAll('.img-item');
-  this.totalLength = this.$imgArr.length;
-
   this.$arrowBtnBox = $arrowBtnBox;
   this.$dotBtnBox = $dotBtnBox;
+  this.$dotBtnArr = $dotBtnBox.querySelectorAll('a');
+
+  this.totalLength = this.$imgArr.length;  
+  this.useRAF = useRAF || false;
+  useRAF && (this.currentIndex = 3);
 }
 
 BmcVisualSlide.prototype = {
   init() {
     this.setImgIndex();
     this.setDotBtnIndex();
+    this.$imgBox.dataset.useRequestAnimationFrame = this.useRAF;
+    if (this.useRAF) {
+      this.handleSlideActive(this.currentIndex);
+      this.handleDotBtnActive(this.currentIndex);
+    }
 
     this.registerArrowBtnEvent();
-    // this.registerArrowBtnEventWithRequestAnimationFrame();
-    
     this.registerDotBtnEvent();
   },
 
   /* dom */
-
   setImgIndex() {
     LUMI.util.dom.setIndex(this.$imgArr);    
   },
   setDotBtnIndex() {
-    const $dotBtnArr = this.$dotBtnBox.querySelectorAll('a');
-    LUMI.util.dom.setIndex($dotBtnArr);
+    LUMI.util.dom.setIndex(this.$dotBtnArr);
   },
-
-  /*
-  registerArrowBtnEvent() {
-    this.$arrowBtnBox.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const target = e.target;
-      const $imgArr = this.$imgArr;
-      const totalLength = this.totalLength;
-      const $currentImg = this.$imgBox.querySelector('.current');
-      const currentIndex = $currentImg.index;
-
-      if (target && target.classList.contains('prev')) {
-        
-        return;
-      }
-
-      if (target && target.classList.contains('next')) {
-        $imgArr.item((totalLength + currentIndex - 1) % totalLength).classList.remove('prev');
-        $imgArr.item((totalLength + currentIndex) % totalLength).classList.remove('current');
-        $imgArr.item((totalLength + currentIndex + 1) % totalLength).classList.remove('next');
-
-        $imgArr.item((totalLength + currentIndex) % totalLength).classList.add('prev');
-        $imgArr.item((totalLength + currentIndex + 1) % totalLength).classList.add('current');
-        $imgArr.item((totalLength + currentIndex + 2) % totalLength).classList.add('next');
-        return;
-      }
-    });
-  },
-  */
 
   registerArrowBtnEvent() {
     this.$arrowBtnBox.addEventListener('click', (e) => {
       e.preventDefault();
+      const $thisBtn = e.target;
+      if (!$thisBtn) { return; }
 
-      const targetBtn = e.target;
-      const totalLength = this.totalLength;
-      const $imgArr = this.$imgArr;
+      const isPrev = $thisBtn.classList.contains('prev');
+      const isNext = $thisBtn.classList.contains('next');
+      const currentIndex = this.currentIndex || this.$imgBox.querySelector('.current').index;
+      let newIndex;
 
-      const $currentImg = this.$imgBox.querySelector('.now');
-      const $oldImg = this.$imgBox.querySelector('.old');
+      isPrev && (newIndex = this.calcSlideIndex(currentIndex - 1));
+      isNext && (newIndex = this.calcSlideIndex(currentIndex + 1));
 
-      const currentIndex = $currentImg.index;
-      const newIndex = (totalLength + currentIndex - 1) % 5;
-
-      $currentImg.classList.remove('now');
-      $oldImg.classList.remove('old');
-
-      if (targetBtn && targetBtn.classList.contains('prev')) {
-        $imgArr.item((totalLength + currentIndex - 1) % totalLength).classList.add('now');
-        $imgArr.item((totalLength + currentIndex) % totalLength).classList.add('old');
-        return;
-      }
-
-      if (targetBtn && targetBtn.classList.contains('next')) {
-        $imgArr.item((totalLength + currentIndex + 1) % totalLength).classList.add('now');
-        $imgArr.item((totalLength + currentIndex) % totalLength).classList.add('old');
-        return;
-      }
+      this.handleSlideActive(newIndex, currentIndex);
+      this.handleDotBtnActive(newIndex, currentIndex);
     });
   },
-  registerArrowBtnEventWithRequestAnimationFrame() {
-    this.$arrowBtnBox.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const targetBtn = e.target;
-      const $imgArr = this.$imgArr;
-      const totalLength = this.totalLength;
-
-      const $currentImg = this.$imgBox.querySelector('.current');
-      const currentIndex = $currentImg.index;
-      let willIndex = null;
-
-      $currentImg.classList.remove('current');
-      fadeOut($currentImg);
-
-      if (targetBtn && targetBtn.classList.contains('prev')) {
-        willIndex = (totalLength + currentIndex - 1) % totalLength;
-      }
-
-      if (targetBtn && targetBtn.classList.contains('next')) {
-        willIndex = (totalLength + currentIndex + 1) % totalLength;           
-      }
-
-      $imgArr.item(willIndex).classList.add('current');
-      fadeIn($imgArr.item(willIndex));
-    });
-
-    function fadeIn(el) {
-      el.style.opacity = 1;
-
-      (function fade() {
-        if ((el.style.opacity -= .01) < 0) {
-          // el.style.display = 'none';
-        } else {
-          requestAnimationFrame(fade);
-        }
-      })();
-    }
-
-    function fadeOut(el) {
-      el.style.opacity = 0;
-      // el.style.display = 'block';
-      
-      (function fade() {
-        var val = parseFloat(el.style.opacity);
-        if (!((val += .01) > 1)) {
-          el.style.opacity = val;
-          requestAnimationFrame(fade);
-        }
-      })();
-    }
-  },
-
-
-
   registerDotBtnEvent() {
+    this.$dotBtnBox.addEventListener('click', (e) => {
+      e.preventDefault();
+      const $thisBtn = e.target;
+      if (!$thisBtn) { return; }
 
+      const currentIndex = this.currentIndex || this.$imgBox.querySelector('.current').index;
+      const newIndex = $thisBtn.index;
+
+      this.handleSlideActive(newIndex, currentIndex);
+      this.handleDotBtnActive(newIndex, currentIndex);
+    });
   },
-  handleSlideToPrev(currentIndex) {
-    //
+
+  calcSlideIndex(index) {
+    const max = this.totalLength;
+    return (max + index) % max;
   },
-  handleSlideToNext(currentIndex) {
-    //
+  handleDotBtnActive(activeIndex, resetIndex) {
+    this.$dotBtnArr.item(resetIndex).classList.remove('on');
+    this.$dotBtnArr.item(activeIndex).classList.add('on');
+  },
+  handleSlideActive(activeIndex, resetIndex) {
+    if (this.useRAF) { // requestAnimationFrame 사용
+      const noAnimation = (resetIndex)? false : true;
+      this.currentIndex = activeIndex;
+      this.handleSlideResetCSS();
+      this.handleSlideFadeOut(resetIndex, noAnimation);
+      this.handleSlideFadeIn(activeIndex, noAnimation);
+
+    } else { // transition 사용
+      this.handleSlideToRemoveClass(resetIndex);
+      this.handleSlideToAddClass(activeIndex);
+    }
+  },
+  handleSlideToRemoveClass(currentIndex) {
+    const $imgArr = this.$imgArr;
+    const prevIndex = this.calcSlideIndex(currentIndex - 1);
+    const nextIndex = this.calcSlideIndex(currentIndex + 1);
+
+    $imgArr.item(prevIndex).classList.remove('prev');
+    $imgArr.item(currentIndex).classList.remove('current');
+    $imgArr.item(nextIndex).classList.remove('next');
+  },
+  handleSlideToAddClass(currentIndex) {
+    const $imgArr = this.$imgArr;
+    const prevIndex = this.calcSlideIndex(currentIndex - 1);
+    const nextIndex = this.calcSlideIndex(currentIndex + 1);
+
+    $imgArr.item(prevIndex).classList.add('prev');
+    $imgArr.item(currentIndex).classList.add('current');
+    $imgArr.item(nextIndex).classList.add('next');
+  },
+  handleSlideResetCSS() {
+    this.$imgArr.forEach((elem) => {
+      elem.style.transform = 'translateX(100%)';
+      elem.style.opacity = 0;
+      elem.style.zIndex = -1;
+    });
+  },
+  handleSlideFadeOut(index, noAnimation) {
+    const SPEED = 0.11;
+    const $target = this.$imgArr.item(index);
+    $target.style.transform = 'translateX(0)';
+    if (noAnimation) {
+      $target.style.opacity = 0;
+    } else {
+      LUMI.animation.fadeOut($target, SPEED);
+    }
+  },
+  handleSlideFadeIn(index, noAnimation) {
+    const SPEED = 0.08;
+    const $target = this.$imgArr.item(index);
+    $target.style.transform = 'translateX(0)';
+    $target.style.zIndex = 0;
+    if (noAnimation) {
+      $target.style.opacity = 1;
+    } else {
+      LUMI.animation.fadeIn($target, SPEED);
+    }
   }
 };
-
 
 /**
  * BmcSlidingList (use async)
