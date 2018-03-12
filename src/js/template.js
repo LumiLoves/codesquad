@@ -83,20 +83,4 @@ LUMI.template = {
 
     return html;
   }
-  // renderView(templateId, data, appendFunc) {
-  //   const template = this.getTemplate(templateId);
-  //   const html = this.makeHtml(template, data);
-  //   appendFunc(html);
-  // }
 };
-
-
-/**
-
-사용측 코드
-
-template.renderView('#gnb', {}, (html) => {
-  $parent.appendHtml(html);
-});
-
- */

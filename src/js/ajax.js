@@ -54,41 +54,6 @@ LUMI.ajax = {
     });
   }
   // encodeFormData() {},
-  // 디폴트 응답 콜백 핸들러 모음?!
   // handleDefaultSuccess() {},
   // handleDefaultError() {},
 };
-
-/*
-const request = (arg) => console.log(arg);
-const postJSON = () => {
-  const method = "POST";
-  return ({ url, data, success, error, isAsync }) => request({url,data,success,error,isAsync,method:'POST'});
-}
-
-postJSON()({ url:"xx", data:"data", success:()=>console.log(1), error:"none", isAsync:"ok" });
-*/
-
-
-/**
-
-사용측 코드
-
-oAjax.getData({
-	url: actionUrl.bestDish,
-	// data: {
-  //   "a": 1,
-  //   "b": 2
-  // },
-	success: () => {
-    // .....
-  }
-});
-
-or
-
-oAjax.getData(actionUrl.bestDish, { "a": 1, "b": 2 }, () => {
-  // .....
-});
-
- */
