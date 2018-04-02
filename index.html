@@ -182,10 +182,10 @@
 
   <!-- main-container -->
   <main id="main">
-    <section id="main-visual" class="main-visual-section">
+    <section id="main-visual" class="main-visual-section visual-slider-box">
       <h2 class="blind">주요 프로모션</h2>
 
-      <ul class="img-box">
+      <ul class="img-box" data-animation-type="css">
         <li class="img-item img-1 current">
           <a href="#">
             <span class="blind">장윤주 식단 대공개! 그녀의 건강 반찬을 소개합니다.</span>
@@ -193,7 +193,7 @@
         </li>
         <li class="img-item img-2 next">
           <a href="#">
-            <span class="blind">스페인 그 식당이 안 부러운 비빔밥&한식요리 기획전</span>          
+            <span class="blind">스페인 그 식당이 안 부러운 비빔밥&apm;한식요리 기획전</span>          
           </a>          
         </li>
         <li class="img-item img-3">
@@ -213,7 +213,7 @@
         </li>
       </ul>
 
-      <div class="arrow-btn-box">
+      <div class="direction-btn-box">
         <a class="bm-icon spr-btn-arrow-main-slide prev" href="#" title="이전 슬라이드 보기"></a>
         <a class="bm-icon spr-btn-arrow-main-slide next" href="#" title="다음 슬라이드 보기"></a>
       </div>
@@ -237,7 +237,7 @@
         <div class="tab-box">
           <ul class="tab-btn-box">
             <li><a data-category-id="17011200" href="#">할인특가 세트상품</a></li>
-            <li class="on"><a data-category-id="17011000" href="#">풍성한 고기반찬</a></li>
+            <li><a data-category-id="17011000" href="#">풍성한 고기반찬</a></li>
             <li><a data-category-id="17011100" href="#">바다향가득 반찬</a></li>
             <li><a data-category-id="17010200" href="#">편리한 반찬세트</a></li>
             <li><a data-category-id="17010300" href="#">간편한 덮밥요리</a></li>
@@ -417,61 +417,53 @@
             </li>
             -->
 
-            <li data-category-id="17011200">
-              <ul class="tab-content-box"></ul>
-            </li>
-            <li data-category-id="17011000">
-              <ul class="tab-content-box"></ul>
-            </li>
-            <li data-category-id="17011100">
-              <ul class="tab-content-box"></ul>
-            </li>
-            <li data-category-id="17010200">
-              <ul class="tab-content-box"></ul>
-            </li>
-            <li data-category-id="17010300">
-              <ul class="tab-content-box"></ul>
-            </li>
-            <li data-category-id="17011400">
-              <ul class="tab-content-box"></ul>
-            </li>
-
             <script type="text/template" data-template-html="best-seller__tab-content-item">
-              <li class="tab-content-item">
-                <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
-                  <div class="thumbnail">
-                    <img src="{{image}}" alt="{{alt}}" />
+              {{#if isGroupStart}}
+              <li>
+                <ul class="tab-content-box">
+                {{/if}}
+              
+                  <li class="tab-content-item">
+                    <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
+                      <div class="thumbnail">
+                        <img src="{{image}}" alt="{{alt}}" />
 
-                    <div class="overlay">
-                      {{#each delivery_type}}
-                        <p class="txt">{{this}}</p>
-                      {{/each}}
-                    </div>
+                        <div class="badge-wrapper">
+                          {{#each badge}}
+                            <i class="bm-icon badge-event">{{this}}</i>
+                          {{/each}}
+                        </div>
 
-                    <div class="badge-wrapper">
-                      {{#each badge}}
-                        <i class="bm-icon badge-event">{{this}}</i>
-                      {{/each}}
-                    </div>
-                  </div>
+                        <div class="overlay">
+                          {{#each delivery_type}}
+                            <p class="txt">{{this}}</p>
+                          {{/each}}
+                        </div>  
+                      </div>
 
-                  <dl class="content">
-                    <dt class="title">{{title}}</dt>
-                    <dd class="desc">{{description}}</dd>
+                      <dl class="content">
+                        <dt class="title">{{title}}</dt>
+                        <dd class="desc">{{description}}</dd>
 
-                    <dd class="price-wrapper">
-                      {{#if n_price}}
-                        <span class="original-price">{{this}}</span>
-                      {{/if}}
-                      <span class="final-price">
-                        <span class="number">{{s_price}}</span>
-                        <span class="unit">원</span>
-                      </span>
-                    </dd>
-                  </dl>
-                </a>
+                        <dd class="price-wrapper">
+                          {{#if n_price}}
+                            <span class="original-price">{{this}}</span>
+                          {{/if}}
+                          <span class="final-price">
+                            <span class="number">{{s_price}}</span>
+                            <!-- <span class="unit">원</span> -->
+                          </span>
+                        </dd>
+                      </dl>
+                    </a>
+                  </li>
+            
+                {{#if isGroupEnd}}
+                </ul>
               </li>
+              {{/if}}
             </script>
+
           </ul><!-- .tab-content-group-box -->
         </div><!-- .tab-box -->
       </div>
@@ -483,10 +475,73 @@
         <img src="/img/txt-header-side.png" alt="밑반찬 - 언제 먹어도 든든한 밑반찬">                       
       </header>
 
-      <div class="sliding-list-box-wrapper">
-        <ul class="sliding-list-box">
+      <div class="sliding-list-box">
+        <div class="direction-btn-box">
+          <a class="btn prev" href="#" title="이전 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
+          </a>          
+          <a class="btn next" href="#" title="다음 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
+          </a>
+        </div>
+
+
+        <ul class="content-group">
+
+
+
+
+          <script type="text/template" data-template-html="side-dish__content-box">
+            {{#if isGroupStart}}        
+            <li>
+              <ul class="content-box">
+              {{/if}}
+                
+                <li>
+                  <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
+                    <div class="thumbnail">
+                      <img src="{{image}}" alt="{{alt}}" />
+                      <div class="overlay">
+                        {{#each delivery_type}}
+                          <p class="txt">{{this}}</p>
+                        {{/each}}
+                      </div>
+                    </div>
+  
+                    <dl class="content">
+                      <dt class="title">{{title}}</dt>
+                      <dd class="desc">{{description}}</dd>
+                      <dd class="price-wrapper">
+                        {{#if n_price}}
+                          <span class="original-price">{{this}}</span>
+                        {{/if}}
+                        <span class="final-price">
+                          <span class="number">{{s_price}}</span>
+                          <!-- <span class="unit">원</span> -->
+                        </span>
+                      </dd>
+                      <dd class="badge-wrapper">
+                        {{#each badge}}
+                          <i class="bm-icon badge-event">{{this}}</i>
+                        {{/each}}
+                      </dd>                   
+                    </dl>
+                  </a>
+                </li>
+        
+              {{#if isGroupEnd}}
+              </ul>
+            </li>
+            {{/if}}
+          </script>
+
+
+
+
+
+<!--
           <li>
-            <ul class="sliding-list">
+            <ul class="content-box">
               <li>
                 <a class="thumbnail-box" href="#">
                   <div class="thumbnail">
@@ -528,33 +583,6 @@
                     <dt class="title">[집밥의완성] 1월 제철박스</dt>
                     <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
                     <dd class="price-wrapper">
-                      <!-- <span class="original-price">22,900</span> -->
-                      <span class="final-price">
-                        <span class="number">20,500</span>
-                        <span class="unit">원</span>
-                      </span>
-                    </dd>
-                    <!-- <dd class="badge-wrapper">
-                      <i class="bm-icon badge-event">이벤트특가</i>
-                    </dd> -->
-                  </dl>
-                </a>
-              </li>
-
-              <li>
-                <a class="thumbnail-box" href="#">
-                  <div class="thumbnail">
-                    <img src="/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
-                    <div class="overlay">
-                      <p class="txt">새벽배송</p>
-                      <p class="txt">전국택배</p>
-                    </div>
-                  </div>
-
-                  <dl class="content">
-                    <dt class="title">[집밥의완성] 1월 제철박스</dt>
-                    <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
-                    <dd class="price-wrapper">
                       <span class="original-price">22,900</span>
                       <span class="final-price">
                         <span class="number">20,500</span>
@@ -594,11 +622,38 @@
                   </dl>
                 </a>
               </li>
-            </ul><!-- .sliding-list -->
+
+              <li>
+                <a class="thumbnail-box" href="#">
+                  <div class="thumbnail">
+                    <img src="/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+                    <div class="overlay">
+                      <p class="txt">새벽배송</p>
+                      <p class="txt">전국택배</p>
+                    </div>
+                  </div>
+
+                  <dl class="content">
+                    <dt class="title">[집밥의완성] 1월 제철박스</dt>
+                    <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+                    <dd class="price-wrapper">
+                      <span class="original-price">22,900</span>
+                      <span class="final-price">
+                        <span class="number">20,500</span>
+                        <span class="unit">원</span>
+                      </span>
+                    </dd>
+                    <dd class="badge-wrapper">
+                      <i class="bm-icon badge-event">이벤트특가</i>
+                    </dd>
+                  </dl>
+                </a>
+              </li>
+            </ul>
           </li>
 
           <li>
-            <ul class="sliding-list">
+            <ul class="content-box">
               <li>
                 <a class="thumbnail-box" href="#">
                   <div class="thumbnail">
@@ -706,16 +761,17 @@
                   </dl>
                 </a>
               </li>
-            </ul><!-- .sliding-list -->
+            </ul>
           </li>
-        </ul><!-- .sliding-list-box -->
-      </div><!-- .sliding-list-box-wrapper -->
+        -->
+        </ul><!-- .content-group -->
+      </div><!-- .sliding-list-box -->
 
-      <a href="#" class="more">밑반찬 전체보기 <span class=""></span></a>
+      <a href="#" class="more">밑반찬 전체보기 <i class="bm-icon btn-arrow-more"></i></a>
     </section>
 
     <div class="banner banner-1">
-      <span>맛있고 간편한 반찬을 찾으신다면? 배민찬이 만드는 집밥의 완성</span>
+      <a href="#">맛있고 간편한 반찬을 찾으신다면? 배민찬이 만드는 집밥의 완성</a>
     </div>
 
     <section id="main-dish" class="main-item sliding-list-section">
@@ -725,14 +781,23 @@
       </header>
 
       <div class="sliding-list-box">
+        <div class="direction-btn-box">
+          <a class="btn prev" href="#" title="이전 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
+          </a>          
+          <a class="btn next" href="#" title="다음 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
+          </a>
+        </div>
 
-      </div>
+        <ul class="content-group"></ul>
+      </div><!-- .sliding-list-box -->
 
-      <a href="#" class="more">메인반찬 전체보기 <span class=""></span></a>
+      <a href="#" class="more">메인반찬 전체보기 <i class="bm-icon btn-arrow-more"></i></a>
     </section>
 
     <div class="banner banner-2">
-      <span>판교에서 가장 핫한 반찬가게! 대접하는 마음으로, 소중한 식사</span>
+      <a href="#">판교에서 가장 핫한 반찬가게! 대접하는 마음으로, 소중한 식사</a>
     </div>
 
     <section id="soup" class="main-item sliding-list-section">
@@ -742,10 +807,19 @@
       </header>
 
       <div class="sliding-list-box">
+        <div class="direction-btn-box">
+          <a class="btn prev" href="#" title="이전 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
+          </a>          
+          <a class="btn next" href="#" title="다음 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
+          </a>
+        </div>
 
-      </div>
+        <ul class="content-group"></ul>
+      </div><!-- .sliding-list-box -->
 
-      <a href="#" class="more">국,찌개 전체보기 <span class=""></span></a>      
+      <a href="#" class="more">국,찌개 전체보기 <i class="bm-icon btn-arrow-more"></i></a>      
     </section>
   </main>
   <!-- // main-container -->
@@ -842,12 +916,9 @@
   </footer>
   <!-- // footer -->
 
-  <script src="/js/util.js"></script>
-  <script src="/js/ajax.js"></script>
-  <script src="/js/template.js"></script>
-  <script src="/js/animation.js"></script>
-  
-  <script src="/js/ui.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/lumi-util.js"></script>
+  <script src="/js/bmc-ui.js"></script>
+  <script src="/js/bmc-page-main.js"></script>
+  <script src="/js/bmc-page-global.js"></script>  
 </body>
 </html>

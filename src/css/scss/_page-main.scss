@@ -4,26 +4,49 @@
   page - main
 ================================================ */
 
+// 메인페이지 공통
 
 #main {
-  text-align: center;
+  text-align: center; overflow: hidden;
+
+
+  .sliding-list-section {
+    header { text-align: center; font-size: 11px; }
+
+    .more {
+      display: block; margin: 38px auto 0; padding: 16px 10px 17px;
+      border: 1px solid #d7d7d7;
+      font-size: 15px; text-align: center; color: #444;
+      
+      i { margin-left: 0.2em; }
+      &:hover, &:focus { border-color: #b4b4b4; color: #000; }
+    }
+  } 
+  
+  
+  /* 배너 */
+
+  .banner {
+    background-repeat: no-repeat;
+    background-position: center center;
+    
+    a {
+      display: block; margin: 0 auto; width: $main-width; height: 100%;
+      font-size: 0;
+    }
+  }
+  .banner-1 { 
+    background-image: url(/img/img-banner-01.jpg);
+    background-color: #e6dcd2;
+  }
+  
+  .banner-2 { 
+    background-image: url(/img/img-banner-02.jpg);
+    background-color: #dad8d3;
+  }
 }
 
-.sliding-list-section {
-
-  header {
-    text-align: center; font-size: 11px;
-  }
-
-  .sliding-list-box-wrapper {
-    // 
-  }
-
-  .more {
-    display: block; padding: 10px;
-    border: 1px solid black; text-align: center;
-  }
-}
+// 비주얼 슬라이드 섹션
 
 #main-visual {
   position: relative;
@@ -31,7 +54,7 @@
   .img-box {
     position: absolute; left: 0; right: 0; top: 0; bottom: 0;
 
-    a { display: block; width: 100%; height: 100%; }
+    a { display: block; margin: 0 auto; width: $main-width; height: 100%; }
     .img-item {
       position: absolute; left: 0; right: 0; top: 0; bottom: 0;
       background-repeat: no-repeat; background-size: cover;
@@ -43,7 +66,7 @@
     .img-4 { background-image: url(/img/img-main-visual-slide_4.jpg); }
     .img-5 { background-image: url(/img/img-main-visual-slide_5.jpg); }
 
-    &[data-use-request-animation-frame="false"] {
+    &[data-animation-type="css"] {
       .img-item {
         transform: translateX(100%); opacity: 0; z-index: -1;
       }
@@ -60,13 +83,12 @@
     }
   }
 
-  .arrow-btn-box {
-    position: absolute; left: 50%; top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    z-index: 0;
+  .direction-btn-box {
+    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+    margin: 0 auto; width: $main-width; height: 100%;
 
-    .prev { position: absolute; left: -580px; transform: translateY(-50%); }
-    .next { position: absolute; right: -580px; transform: translateY(-50%); }
+    .prev { position: absolute; left: -80px; top: 50%; transform: translateY(-50%); }
+    .next { position: absolute; right: -80px; top: 50%; transform: translateY(-50%); }
   }
 
   .dot-btn-box {
@@ -83,13 +105,5 @@
     }
   }
 }
-
-#best-seller { 
-  // background: #eee;
-}
-
-
-
-
 
 
