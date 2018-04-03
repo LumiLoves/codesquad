@@ -5,9 +5,11 @@
 2. 좀 더 범용성있게 사용할 수 있도록 수정
 
 ## 사용범위 (코드 사용 범위를 가정함)
+
 	* 배민찬 사이트 전체
 
 ## 파일별 정의 (호출순서대로)
+
 	* 라이브러리
 		* **polyfill.js** : 브라우저별 지원하지 않는 기능을 보충하는 코드 조각 모음
 	* 객체정의
@@ -18,6 +20,7 @@
 		* **bmc-page-global.js** : page별 코드 호출
 
 ## 클래스역할 및 메서드 구성
+
 	* 클래스 공통 (all)
 		* constructor :  this바인딩 변수, init()호출
 		* init : 인스턴스 생성과 동시에 무조건 한번 호출되야하는 메서드들
@@ -33,6 +36,7 @@
 		* ajax없이 단순 render시에는 util의 template을 사용.
 
 ## 주요 변경 내용
+
 	* Util
 		* 배민찬 사이트에서 쓰는 util만 정리하고 나머지는 제거
 		* util의 의존성을 낮추기 위해 간단한 메서드는 중복되더라도 직접 사용 (ex. number.random)
@@ -53,4 +57,4 @@
 		- 변경후) .img-box a { width: $main-width; margin: 0 auto; } 로 하여 화살표 버튼과 클릭영역이 구분됨
 
 ## 객체 관계도
-[image:object-diagram.png]
+![image:object-diagram.png]
