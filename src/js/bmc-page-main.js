@@ -1,7 +1,6 @@
 'use strict';
 
-const mainPage = (function(lumiUtil, BmcUI) {
-  const { Renderer, Tab, VisualSlider, ListSlider } = BmcUI;
+const mainPage = (function(lumiUtil, Renderer, Tab, VisualSlider, ListSlider) {
   const url = {
     domain: 'http://crong.codesquad.kr:8080',
     bestDish: '/woowa/best',
@@ -55,4 +54,4 @@ const mainPage = (function(lumiUtil, BmcUI) {
   return {
     init: initMainPage
   }
-})(lumiUtil, BmcUI);
+})(lumiUtil, Renderer, Tab, VisualSlider, ListSlider);
