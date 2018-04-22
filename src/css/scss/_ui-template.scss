@@ -73,10 +73,27 @@
     background-position: 0 0;
   }
   &.btn-txt-more {
-    width: 48px; height: 22px;  
+    width: 48px; height: 23px;  
     background-image: url(/img/btn-txt-more.gif);
     background-position: 0 0;  
   }
+}
+
+/**
+ *  리스트
+ */
+.bm-list {
+  li {
+    position: relative; padding-left: 10px;
+
+    &::after {
+      position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      content: ""; display: block; width: 5px; height: 5px;
+      background: url(/img/spr-bullet-square.png) no-repeat -5px -5px;
+    }
+  }
+  
+  &.green li::after { background-position: -5px -36px; }
 }
 
 /**
@@ -253,34 +270,33 @@
 
     > li {
       position: absolute; left: 0; right: 0; top: 0; bottom: 0;
-      transform: translateX(100%);
-      opacity: 0;
-      // transition: opacity 0.0s, transform 0.0s ease 0.1s;
+      transform: translateX(100%); opacity: 0;
     }
-    .prev, .current, .next { opacity: 1; transition: transform 0.6s; }
-    .prev {
-      transform: translateX(-100%);
-      opacity: 1;
-      // transition: opacity 0.0s, transform 0.6s linear 0.6s;
+    .prev,
+    .current,
+    .next { 
+      transition: transform 0.6s; opacity: 1;
     }
-    .current {
-      transform: translateX(0); 
-      opacity: 1;
-      // transition: opacity 0.0s, transform 0.6s linear 0.6s;
-    }
-    .next {
-      transform: translateX(100%);
-      opacity: 1;
-      // transition: opacity 0.0s, transform 0.6s linear 0.6s;
-    }
+    .prev { transform: translateX(-100%); }
+    .current { transform: translateX(0); }
+    .next { transform: translateX(100%); }
+
+    // 그룹이 3개 이상
+    &[data-direction="prev"] .prev { transition: unset; }    
+    &[data-direction="next"] .next { transition: unset; }
+
+    // 그룹이 2개일 때
+    &[data-direction="prev"] .prev.next { transform: translateX(100%); transition: transform 0.6s; }
+    &[data-direction="next"] .prev.next { transform: translateX(-100%); transition: transform 0.6s; }
+
+    // 그룹이 1개일 때
+    .prev.current.next { transition: unset; transform: translateX(0); } 
   }
   .content-box {
     display: grid;
     grid-template-columns: 215px 215px 215px 215px;
     grid-column-gap: 30px;
     padding: 0 5px;
-
-    // > li {  }
   }
   .thumbnail { // .thumbnail-box 커스텀
     border-radius: 500px;
