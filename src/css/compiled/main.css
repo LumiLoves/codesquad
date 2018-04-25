@@ -566,6 +566,7 @@ a {
   bottom: 60px;
   z-index: 1; }
   #scroll-btns button {
+    position: relative;
     display: block;
     width: 45px;
     height: 45px;
@@ -577,6 +578,9 @@ a {
     #scroll-btns button:hover, #scroll-btns button:focus {
       background-color: #efefef; }
     #scroll-btns button::before, #scroll-btns button::after {
+      position: absolute;
+      left: 50%;
+      top: 50%;
       content: "";
       display: block;
       width: 15px;
@@ -585,13 +589,13 @@ a {
       background-color: #999;
       transform-origin: center center; }
     #scroll-btns button.up::before {
-      transform: translateX(2px) translateY(2px) rotateZ(-45deg); }
+      transform: translate(-84%, -100%) rotateZ(-45deg); }
     #scroll-btns button.up::after {
-      transform: translateX(12px) rotateZ(45deg); }
+      transform: translate(-14%, -100%) rotateZ(45deg); }
     #scroll-btns button.down::before {
-      transform: translateX(2px) translateY(2px) rotateZ(45deg); }
+      transform: translate(-84%, -100%) rotateZ(45deg); }
     #scroll-btns button.down::after {
-      transform: translateX(12px) rotateZ(-45deg); }
+      transform: translate(-14%, -100%) rotateZ(-45deg); }
 
 /** ================================================
   ui template

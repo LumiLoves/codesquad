@@ -396,7 +396,7 @@
   position: fixed; right: 30px; bottom: 60px; z-index: 1;
 
   button {
-    display: block; width: 45px; height: 45px;
+    position: relative; display: block; width: 45px; height: 45px;
     border: 2px solid #e3e3e3; border-radius: 3px;
     cursor: pointer;
 
@@ -404,17 +404,18 @@
     &:hover, &:focus { background-color: #efefef; }
 
     &::before, &::after {
+      position: absolute; left: 50%; top: 50%;
       content: ""; display: block; width: 15px; height: 2px;
       border-radius: 10px; background-color: #999;
       transform-origin: center center;
     }
     &.up {
-      &::before { transform: translateX(2px) translateY(2px) rotateZ(-45deg) }
-      &::after { transform: translateX(12px) rotateZ(45deg); }
+      &::before { transform: translate(-84%, -100%) rotateZ(-45deg); }
+      &::after { transform: translate(-14%, -100%) rotateZ(45deg); }
     }
     &.down {
-      &::before { transform: translateX(2px) translateY(2px) rotateZ(45deg) }
-      &::after { transform: translateX(12px) rotateZ(-45deg); }  
+      &::before { transform: translate(-84%, -100%) rotateZ(45deg); }
+      &::after { transform: translate(-14%, -100%) rotateZ(-45deg); }  
     }
   }
 }
