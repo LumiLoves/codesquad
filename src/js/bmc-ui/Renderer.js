@@ -4,33 +4,20 @@
  * Renderer
  */
 
-class Renderer {
-  constructor({ ajax, template, reqUrl, templateHTML }) {
-    this.ajax = ajax;
-    this.template = template;
-
-    this.url = reqUrl;
+class ClientRenderer {
+  constructor({ getData, template, templateHTML }) {
     this.data = null;
+    this.getData = getData; // 예) ajax, localStorage, cache 등등...
+    this.template = template;
     this.templateHTML = templateHTML;
   }
-  renderUI({ wrapper, handleData, callback }) {
-    this._requestData((res) => {
-      if (typeof handleData === 'function') {
-        const resultData = handleData(this.data);
-        this._saveResData(resultData);
-      }
-      this._makeHTML(wrapper);
-      callback && callback();
-    });
-  }
-  _requestData(success) {
-    this.ajax.getData({
-      url: this.url,
-      success: (res) => {
-        this._saveResData(res);
-        (typeof success === 'function') && success(res);
-      }
-    });
+  async renderUI({ remodelData, wrapper }) {
+    let resJSON = await this.getData();
+    if (typeof remodelData === 'function') { 
+      resJSON = remodelData(resJSON);
+    }
+    this._saveResData(resJSON);
+    this._makeHTML(wrapper);
   }
   _saveResData(data) {
     this.data = data;
@@ -43,3 +30,6 @@ class Renderer {
     });
   }
 }
+
+
+

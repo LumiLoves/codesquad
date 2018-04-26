@@ -292,12 +292,18 @@
     // 그룹이 1개일 때
     .prev.current.next { transition: unset; transform: translateX(0); } 
   }
+
   .content-box {
-    display: grid;
-    grid-template-columns: 215px 215px 215px 215px;
-    grid-column-gap: 30px;
+    display: flex; justify-content: center;
     padding: 0 5px;
+
+    > li {  
+      margin: 0 15px; width: 217px;
+      &:first-child { margin-left: 0; }
+      &:last-child { margin-right: 0; }
+    }
   }
+
   .thumbnail { // .thumbnail-box 커스텀
     border-radius: 500px;
     overflow: hidden;

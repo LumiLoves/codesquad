@@ -138,12 +138,11 @@ const lumiUtil = (function() {
 
   const animation = {
     OPACITY_INTERVAL_VALUE: 0.01,
-    fadeOut(elem, oiv) {
+    fadeOut(elem, OIV = this.OPACITY_INTERVAL_VALUE) {
       elem.style.opacity = 1;
-      const OPACITY_INTERVAL_VALUE = oiv || this.OPACITY_INTERVAL_VALUE;
   
       function decrease() {
-        if ((elem.style.opacity -= OPACITY_INTERVAL_VALUE) <= 0) {
+        if ((elem.style.opacity -= OIV) <= 0) {
           elem.style.opacity = 0;
         } else {
           requestAnimationFrame(decrease);
@@ -151,13 +150,12 @@ const lumiUtil = (function() {
       }
       decrease();
     },
-    fadeIn(elem, oiv) {
+    fadeIn(elem, OIV = this.OPACITY_INTERVAL_VALUE) {
       elem.style.opacity = 0;
-      const OPACITY_INTERVAL_VALUE = oiv || this.OPACITY_INTERVAL_VALUE;
   
       function increase() {
         let opacityVal = parseFloat(elem.style.opacity);
-        if (!((opacityVal += OPACITY_INTERVAL_VALUE) >= 1)) {
+        if (!((opacityVal += OIV) >= 1)) {
           elem.style.opacity = opacityVal;
           requestAnimationFrame(increase);        
         }

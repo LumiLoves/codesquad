@@ -897,10 +897,16 @@ a {
       transition: unset;
       transform: translateX(0); }
   .sliding-list-box .content-box {
-    display: grid;
-    grid-template-columns: 215px 215px 215px 215px;
-    grid-column-gap: 30px;
+    display: flex;
+    justify-content: center;
     padding: 0 5px; }
+    .sliding-list-box .content-box > li {
+      margin: 0 15px;
+      width: 217px; }
+      .sliding-list-box .content-box > li:first-child {
+        margin-left: 0; }
+      .sliding-list-box .content-box > li:last-child {
+        margin-right: 0; }
   .sliding-list-box .thumbnail {
     border-radius: 500px;
     overflow: hidden; }

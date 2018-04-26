@@ -71,4 +71,3 @@
       DOMTokenList.prototype.replace = ClassList.prototype.replace;
   }
 })();
- No newline at end of file
