@@ -5,13 +5,14 @@
  */
 
 class Tab {
-  constructor({ wrapperElem, renderer, dom }) {
+  constructor({ wrapperElem, dom, reqUrlItemAll }) {
     this.dom = dom;
-    this.renderer = renderer;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
+    this.reqUrlItemAll = reqUrlItemAll;
+    this.resJSON = null;
 
-    this.init();
+    // this.init();
   }
 
   /* data */
@@ -50,21 +51,41 @@ class Tab {
   /* init */
 
   async init() { // 생성 시 호출할 내부 메서드를 모아놓는 곳
-    const needClientSideRendering = !this.contentItems.length;
+    const needTemplateRendering = !this.contentItems.length;
+    const hasTemplateRenderer = (typeof this.renderer === 'object');
     const randomIndex = this._getRandomIndex();
 
-    if (needClientSideRendering) {
-      await this._render();
+    if (needTemplateRendering && hasTemplateRenderer) {
+      this.resJSON = await this._getRequestData(this.reqUrlItemAll);
+      this._renderItemAll();
       this._bindPropsAfterRender();
     }
     this.activeElements(randomIndex, true);
     this.registerEvents();
   }
-  async _render() {
-    await this.renderer.renderUI({
-      wrapper: this.contentBox,
-      remodelData: this._remodelRenderData.bind(this)
+  _renderItemAll() {
+    const data = this.resJSON;
+    
+    this.renderer.renderDOM({
+      data: data,
+      appendFn: (resultHTML) => { this.contentBox.innerHTML = resultHTML; }
     });
+  }
+  // 공통
+  async _getRequestData(reqUrl) {
+    const res = await fetch(reqUrl);
+    let resJSON = await res.json();
+    if (typeof this._remodelRenderData === 'function') {
+      resJSON = this._remodelRenderData(resJSON);
+    }
+    return resJSON;
+  }
+  // 공통
+  addModule(name, value) {
+    const hasModule = !!this[name];
+    if (hasModule) { return false; }
+    this[name] = value;
+    return true;
   }
 
   /* ui */
