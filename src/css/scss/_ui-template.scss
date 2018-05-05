@@ -16,7 +16,7 @@
 
   // 메뉴링크 옆 삼각형 불릿 아이콘
   &[class*="spr-bullet-arrow-down"] {
-    background-image: url(/img/spr-bullet-arrow-down.png);
+    background-image: url(../../img/spr-bullet-arrow-down.png);
     width: 10px; height: 6px;
   
     &.black { background-position: -4px -4px; }
@@ -26,7 +26,7 @@
   
   // 메인슬라이드 삼각형 버튼
   &[class*="spr-btn-arrow-main-slide"] {
-    background-image: url(/img/spr-btn-arrow-main-slide.png);
+    background-image: url(../../img/spr-btn-arrow-main-slide.png);
     width: 55px; height: 90px;
 
     &.prev { background-position: 0 0; }
@@ -35,7 +35,7 @@
 
   // 슬라이딩리스트 삼각형 버튼 
   &[class*="spr-btn-arrow-sliding-list"] {
-    background-image: url(/img/spr-btn-arrow-sliding-list.png);
+    background-image: url(../../img/spr-btn-arrow-sliding-list.png);
     width: 30px; height: 50px;
 
     &.prev {
@@ -69,12 +69,12 @@
   // 더보기 버튼
   &.btn-arrow-more {
     width: 6px; height: 12px;
-    background-image: url(/img/btn-arrow-more.png);
+    background-image: url(../../img/btn-arrow-more.png);
     background-position: 0 0;
   }
   &.btn-txt-more {
     width: 48px; height: 23px;  
-    background-image: url(/img/btn-txt-more.gif);
+    background-image: url(../../img/btn-txt-more.gif);
     background-position: 0 0;  
   }
 }
@@ -89,7 +89,7 @@
     &::after {
       position: absolute; left: 0; top: 50%; transform: translateY(-50%);
       content: ""; display: block; width: 5px; height: 5px;
-      background: url(/img/spr-bullet-square.png) no-repeat -5px -5px;
+      background: url(../../img/spr-bullet-square.png) no-repeat -5px -5px;
     }
   }
   

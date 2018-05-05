@@ -1,6 +1,8 @@
 'use strict';
 
-const mainPage = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider) {
+window.bmcPage || (window.bmcPage = {});
+
+bmcPage.main = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider) {
 
   /* data */
 
@@ -11,6 +13,7 @@ const mainPage = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSl
     mainDish: '/woowa/main',
     soup: '/woowa/soup'
   };
+
 
   /* UI instance */
 
@@ -47,6 +50,7 @@ const mainPage = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSl
     templateHTML: document.querySelector('[data-template-html="side-dish__content-box"]').innerHTML
   });
 
+  
   /* initMainPage */
 
   function initMainPage() {

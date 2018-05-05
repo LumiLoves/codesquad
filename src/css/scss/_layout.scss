@@ -80,7 +80,7 @@
     }
     button[type="submit"] {
       position: absolute; top: 1px; right: 1px;
-      background: url(/img/spr-icon-search.png) no-repeat center 0;
+      background: url(../../img/spr-icon-search.png) no-repeat center 0;
       width: 38px; height: 38px; border: none;
       text-indent: -3000px; cursor: pointer;
 
@@ -238,7 +238,7 @@
         }
         .icon {
           display: block; margin: 0 auto -3px; width: 50px; height: 50px;
-          background-image: url(/img/spr-quick-menu.png); background-repeat: no-repeat;
+          background-image: url(../../img/spr-quick-menu.png); background-repeat: no-repeat;
         }
 
         &.early-delivery {
@@ -382,8 +382,8 @@
     ul { display: flex; }
     li { margin-left: 10px; border: 100px; overflow: hidden; }
     a { display: block; width: 50px; height: 50px; }
-    .naver-blog { background: url(/img/icon-sns-blog.png) no-repeat 0 0; }
-    .facebook { background: url(/img/icon-sns-facebook.png) no-repeat 0 0; }
+    .naver-blog { background: url(../../img/icon-sns-blog.png) no-repeat 0 0; }
+    .facebook { background: url(../../img/icon-sns-facebook.png) no-repeat 0 0; }
   }
 }
 

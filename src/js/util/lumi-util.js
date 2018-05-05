@@ -119,7 +119,6 @@ const lumiUtil = (function() {
 
   return {
     ajax,
-    template,
     animation,
     dom
   }
