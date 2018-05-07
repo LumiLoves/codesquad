@@ -65,7 +65,7 @@ class Tab {
   }
   _renderItemAll() {
     const data = this.resJSON;
-    
+
     this.renderer.renderDOM({
       data: data,
       appendFn: (resultHTML) => { this.contentBox.innerHTML = resultHTML; }
@@ -73,7 +73,7 @@ class Tab {
   }
   // 공통
   async _getRequestData(reqUrl) {
-    const res = await fetch(reqUrl);
+    const res = await fetch(reqUrl, { type : "cors" });
     let resJSON = await res.json();
     if (typeof this._remodelRenderData === 'function') {
       resJSON = this._remodelRenderData(resJSON);

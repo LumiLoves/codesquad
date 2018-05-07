@@ -2,7 +2,7 @@
 
 window.bmcPage || (window.bmcPage = {});
 
-bmcPage.main = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider) {
+bmcPage.index = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider) {
 
   /* data */
 
@@ -51,9 +51,9 @@ bmcPage.main = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlid
   });
 
   
-  /* initMainPage */
+  /* initIndexPage */
 
-  function initMainPage() {
+  function initIndexPage() {
     oVisualSlider_promotion.init();
 
     oTab_bestDish.addModule('renderer', oTabRenderer_bestDish);
@@ -66,6 +66,6 @@ bmcPage.main = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlid
   }
 
   return {
-    init: initMainPage
+    init: initIndexPage
   }
 })(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider);
