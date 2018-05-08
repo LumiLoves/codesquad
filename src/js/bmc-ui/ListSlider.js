@@ -5,17 +5,15 @@
  */
 
 class ListSlider extends Slider {
-  constructor({ wrapperElem, dom, itemCountPerGroup, reqUrlItemAll }) {
+  constructor({ wrapperElem, helpers, itemCountPerGroup, reqUrlItemAll }) {
     super();
 
-    this.dom = dom;
+    this.helpers = helpers;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
     this.itemCountPerGroup = itemCountPerGroup;
     this.reqUrlItemAll = reqUrlItemAll;
     this.resJSON = null;
-
-    // this.init();
   }
 
   /* data */
@@ -109,7 +107,7 @@ class ListSlider extends Slider {
   /* event */
   
   registerEvents() {
-    this.dom.setIndex(this.contentItems);    
+    this.helpers.setIndexToDom(this.contentItems);    
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
     this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
   }

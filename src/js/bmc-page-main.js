@@ -2,7 +2,7 @@
 
 window.bmcPage || (window.bmcPage = {});
 
-bmcPage.index = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider) {
+bmcPage.index = (function(ajax, animation, helpers, TemplateRenderer, Tab, VisualSlider, ListSlider) {
 
   /* data */
 
@@ -19,15 +19,15 @@ bmcPage.index = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSli
 
   const oVisualSlider_promotion = new VisualSlider({
     wrapperElem: document.querySelector('#main-visual'),
-    dom: lumiUtil.dom,
-    animation: lumiUtil.animation,
+    helpers: helpers,
+    animation: animation,
     OPACITY_INTERVAL_VALUE: [ 0.11, 0.08 ],
     useJsAnimation: true
   });
 
   const oTab_bestDish = new Tab({
     wrapperElem: document.querySelector('#best-seller .tab-box'),
-    dom: lumiUtil.dom,
+    helpers: helpers,    
     reqUrlItemAll: urlInfo.domain + urlInfo.bestDish
   });
   const oTabRenderer_bestDish = new TemplateRenderer({
@@ -41,7 +41,7 @@ bmcPage.index = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSli
   ].map((url, i) => {
     return new ListSlider({
       wrapperElem: document.querySelectorAll('.sliding-list-box')[i],
-      dom: lumiUtil.dom,
+      helpers: helpers,
       itemCountPerGroup: 4 - i,
       reqUrlItemAll: url
     });
@@ -68,4 +68,4 @@ bmcPage.index = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSli
   return {
     init: initIndexPage
   }
-})(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSlider);
+})(ajax, animation, helpers, TemplateRenderer, Tab, VisualSlider, ListSlider);

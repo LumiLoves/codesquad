@@ -5,14 +5,12 @@
  */
 
 class Tab {
-  constructor({ wrapperElem, dom, reqUrlItemAll }) {
-    this.dom = dom;
+  constructor({ wrapperElem, helpers, reqUrlItemAll }) {
+    this.helpers = helpers;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
     this.reqUrlItemAll = reqUrlItemAll;
     this.resJSON = null;
-
-    // this.init();
   }
 
   /* data */
@@ -119,7 +117,7 @@ class Tab {
   /* event */
 
   registerEvents() {
-    this.dom.setIndex(this.btnItems, 'a');
+    this.helpers.setIndexToDom(this.btnItems, 'a');
     this.btnBox.addEventListener('click', (e) => e.preventDefault());
     this.btnBox.addEventListener('click', this._onClickBtn.bind(this));
   }

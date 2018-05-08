@@ -4,18 +4,16 @@
  * VisualSlider
  */
 class VisualSlider extends Slider {
-  constructor({ wrapperElem, dom, animation, useJsAnimation, OPACITY_INTERVAL_VALUE }) {
+  constructor({ wrapperElem, helpers, animation, useJsAnimation, OPACITY_INTERVAL_VALUE }) {
     super();
 
-    this.dom = dom;
+    this.helpers = helpers;
     this.animation = animation;
     this.useJsAnimation = useJsAnimation;
     this.FADE_OUT_OPACITY_INTERVAL_VALUE = OPACITY_INTERVAL_VALUE[0] || 0.11;
     this.FADE_IN_OPACITY_INTERVAL_VALUE = OPACITY_INTERVAL_VALUE[1] || 0.08;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
-
-    this.init();
   }
 
   /* data */
@@ -90,8 +88,8 @@ class VisualSlider extends Slider {
   /* event */
   
   registerEvents() {
-    this.dom.setIndex(this.contentItems);
-    this.dom.setIndex(this.dotBtnItems);
+    this.helpers.setIndexToDom(this.contentItems);
+    this.helpers.setIndexToDom(this.dotBtnItems);
     
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
     this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
