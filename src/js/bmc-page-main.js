@@ -7,11 +7,11 @@ bmcPage.index = (function(lumiUtil, TemplateRenderer, Tab, VisualSlider, ListSli
   /* data */
 
   const urlInfo = {
-    domain: 'http://crong.codesquad.kr:8080',
-    bestDish: '/woowa/best',
-    sideDish: '/woowa/side',    
-    mainDish: '/woowa/main',
-    soup: '/woowa/soup'
+    domain: 'https://github.com/lumiloves/javascript-food/blob/master/src/data',
+    bestDish: '/best.json',
+    sideDish: '/side.json',
+    mainDish: '/main.json',
+    soup: '/soup.json'
   };
 
 

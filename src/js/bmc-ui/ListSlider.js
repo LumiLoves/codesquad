@@ -80,7 +80,7 @@ class ListSlider extends Slider {
   }
   // 공통
   async _getRequestData(reqUrl) {
-    const res = await fetch(reqUrl, { type : "cors" });
+    const res = await fetch(reqUrl);
     let resJSON = await res.json();
     if (typeof this._remodelRenderData === 'function') {
       resJSON = this._remodelRenderData(resJSON);
