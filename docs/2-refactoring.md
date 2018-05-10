@@ -2,7 +2,7 @@
 
 
 
-## 1. ClientRenderer 호출영역과 정의영역
+## 1. Renderer 호출영역과 정의영역
 
 ```javascript
 /* ClientRenderer 호출 */
@@ -39,11 +39,11 @@ class ClientRenderer {
     * => X. 의존성을 전제로 하고 클래스 내부에 정해진 코드를 두자.
     * => 외부에서 주입하는 코드 삭제. Tab Class에 코드 작성
     * => Tab Class에서 데이터를 받아 Renderer에 넘겨주는 형식으로 변경
-* ClientRenderer에서 Data를 받아서 템플레이팅 하는 기능만 집중
+* Renderer에서 Data를 받아서 템플레이팅 하는 기능만 집중
   * => 이름 변경 (ClientRenderer => TemplateRenerer)
   * => 필요없는 것 삭제
   * => 템플릿 기능 강화 (util의 template을 이쪽으로 옮기고 util에서 삭제)
-* ClientRenderer의 인스턴스를 클래스의 매개변수로 보내는 방식이 괜찮나?
+* Renderer의 인스턴스를 클래스의 매개변수로 보내는 방식이 괜찮나?
   * => ClientRenderer 주입방식을 수정
     * => 생성과 호출을 분리하도록 수정.
     * **렌더러 주입방식**
@@ -59,7 +59,7 @@ class ClientRenderer {
 
 
 
-## 2. 코드일관성 
+## 2. 코드일관성
 
 (지난번)엔 클래스 내부끼리의 규칙이나 네이밍에 대한 코드일관성을 생각하여 개발
 
@@ -110,6 +110,23 @@ class ClientRenderer {
 >
 > 찾아보면 블로그나 서비스마다 정의하는 내용이나 경계가 명확하지 않으나, <br>
 > 중요한 것은 내가 만든 코드에서 내가 어떤 이유때문에 이렇게 정의했다는 생각을 가지고 있는게 중요한 것 같음.
+
+
+
+
+
+|      구분       |        이름        | 역할                                       | 정의 (코드로 됨?!)           | 구조   |
+| :-------------: | :----------------: | ------------------------------------------ | ---------------------------- | ------ |
+|  UI Component   |       Slider       | 모든 슬라이드의 부모 슬라이더 컴포넌트     | 동적                         | Class  |
+|  UI Component   |     ListSlider     | 가로로 나열된 목록 슬라이더 컴포넌트       | 동적                         | Class  |
+|  UI Component   |    VisualSlider    | 이미지 슬라이더 컴포넌트                   | 동적                         | Class  |
+|  UI Component   |        Tab         | 탭 컴포넌트                                | 동적                         | Class  |
+| 비 UI Component |  TemplateRenderer  | 렌더링 컴포넌트                            | 동적                         | Class  |
+|      Util       |      ajax.js       | 모듈                                       | 정적 / 객체리터럴            | Object |
+|      Util       |    animation.js    |                                            | 정적 / 객체리터럴            | Object |
+|      Util       |     helpers.js     |                                            | 정적 / 객체리터럴            | Object |
+|   호스트 코드   |   bmc-page-**.js   | 페이지별 init 정의 (인스턴스 생성 및 사용) | 정적 / 즉시실행함수.모듈패턴 | Module |
+|   호스트 코드   | bmc-page-global.js |                                            | 정적 / 즉시실행함수.모듈패턴 | Module |
 
 
 
