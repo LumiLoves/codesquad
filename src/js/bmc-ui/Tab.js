@@ -4,8 +4,9 @@
  * Tab
  */
 
-class Tab {
+class Tab extends UI {
   constructor({ wrapperElem, helpers, reqUrlItemAll }) {
+    super();
     this.helpers = helpers;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
@@ -54,7 +55,7 @@ class Tab {
     const randomIndex = this._getRandomIndex();
 
     if (needTemplateRendering && hasTemplateRenderer) {
-      this.resJSON = await this._getRequestData(this.reqUrlItemAll);
+      this.resJSON = await this._requestTemplateData(this.reqUrlItemAll);
       this._renderItemAll();
       this._bindPropsAfterRender();
     }
@@ -68,22 +69,6 @@ class Tab {
       data: data,
       appendFn: (resultHTML) => { this.contentBox.innerHTML = resultHTML; }
     });
-  }
-  // 공통
-  async _getRequestData(reqUrl) {
-    const res = await fetch(reqUrl);
-    let resJSON = await res.json();
-    if (typeof this._remodelRenderData === 'function') {
-      resJSON = this._remodelRenderData(resJSON);
-    }
-    return resJSON;
-  }
-  // 공통
-  addModule(name, value) {
-    const hasModule = !!this[name];
-    if (hasModule) { return false; }
-    this[name] = value;
-    return true;
   }
 
   /* ui */

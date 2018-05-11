@@ -11,7 +11,7 @@
 
   function mapInitByPage(pathname) {
     const fileName = getFileName(pathname);
-    return bmcPage[fileName].init;
+    return (fileName)? bmcPage[fileName].init : bmcPage.index.init;
   }
 
   document.addEventListener('DOMContentLoaded', mapInitByPage(location.pathname)());

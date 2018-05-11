@@ -2,7 +2,7 @@
 
 window.bmcPage || (window.bmcPage = {});
 
-bmcPage.index = (function(ajax, animation, helpers, TemplateRenderer, Tab, VisualSlider, ListSlider) {
+bmcPage.index = (function(ajax, animation, helpers, TemplateRenderer, UI, Tab, VisualSlider, ListSlider) {
 
   /* data */
 
@@ -30,7 +30,7 @@ bmcPage.index = (function(ajax, animation, helpers, TemplateRenderer, Tab, Visua
     helpers: helpers,    
     reqUrlItemAll: urlInfo.domain + urlInfo.bestDish
   });
-  const oTabRenderer_bestDish = new TemplateRenderer({
+  const oTab_bestDish_renderer = new TemplateRenderer({
     templateHTML: document.querySelector('[data-template-html="best-seller__tab-content-item"]').innerHTML
   });
 
@@ -46,21 +46,21 @@ bmcPage.index = (function(ajax, animation, helpers, TemplateRenderer, Tab, Visua
       reqUrlItemAll: url
     });
   });
-  const oListSliderRenderer_dish = new TemplateRenderer({
+  const oListSlider_dish_renderer = new TemplateRenderer({
     templateHTML: document.querySelector('[data-template-html="side-dish__content-box"]').innerHTML
   });
 
-  
+
   /* initIndexPage */
 
   function initIndexPage() {
     oVisualSlider_promotion.init();
 
-    oTab_bestDish.addModule('renderer', oTabRenderer_bestDish);
+    oTab_bestDish.addModule({ renderer: oTab_bestDish_renderer });
     oTab_bestDish.init();
 
     oListSliderArr_dish.forEach((oListSlider_dish) => {
-      oListSlider_dish.addModule('renderer', oListSliderRenderer_dish);
+      oListSlider_dish.addModule({ renderer: oListSlider_dish_renderer });
       oListSlider_dish.init();
     });
   }
@@ -68,4 +68,4 @@ bmcPage.index = (function(ajax, animation, helpers, TemplateRenderer, Tab, Visua
   return {
     init: initIndexPage
   }
-})(ajax, animation, helpers, TemplateRenderer, Tab, VisualSlider, ListSlider);
+})(ajax, animation, helpers, TemplateRenderer, UI, Tab, VisualSlider, ListSlider);

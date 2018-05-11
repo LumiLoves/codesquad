@@ -7,7 +7,6 @@
 class ListSlider extends Slider {
   constructor({ wrapperElem, helpers, itemCountPerGroup, reqUrlItemAll }) {
     super();
-
     this.helpers = helpers;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
@@ -61,7 +60,7 @@ class ListSlider extends Slider {
     const hasTemplateRenderer = (typeof this.renderer === 'object');
 
     if (needTemplateRendering && hasTemplateRenderer) {
-      this.resJSON = await this._getRequestData(this.reqUrlItemAll);
+      this.resJSON = await this._requestTemplateData(this.reqUrlItemAll);
       this._renderItemAll();
       this._bindPropsAfterRender();
     }
@@ -75,22 +74,6 @@ class ListSlider extends Slider {
       data: data,
       appendFn: (resultHTML) => { this.contentBox.innerHTML = resultHTML; }
     });
-  }
-  // 공통
-  async _getRequestData(reqUrl) {
-    const res = await fetch(reqUrl);
-    let resJSON = await res.json();
-    if (typeof this._remodelRenderData === 'function') {
-      resJSON = this._remodelRenderData(resJSON);
-    }
-    return resJSON;
-  }
-  // 공통
-  addModule(name, value) {
-    const hasModule = !!this[name];
-    if (hasModule) { return false; }
-    this[name] = value;
-    return true;
   }
 
   /* ui */

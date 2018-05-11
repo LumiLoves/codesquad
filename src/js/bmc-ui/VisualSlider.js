@@ -6,12 +6,11 @@
 class VisualSlider extends Slider {
   constructor({ wrapperElem, helpers, animation, useJsAnimation, OPACITY_INTERVAL_VALUE }) {
     super();
-
     this.helpers = helpers;
     this.animation = animation;
     this.useJsAnimation = useJsAnimation;
-    this.FADE_OUT_OPACITY_INTERVAL_VALUE = OPACITY_INTERVAL_VALUE[0] || 0.11;
-    this.FADE_IN_OPACITY_INTERVAL_VALUE = OPACITY_INTERVAL_VALUE[1] || 0.08;
+    this.FADE_OUT_OPACITY_INTERVAL_VALUE = (OPACITY_INTERVAL_VALUE && OPACITY_INTERVAL_VALUE[0]) || 0.11;
+    this.FADE_IN_OPACITY_INTERVAL_VALUE = (OPACITY_INTERVAL_VALUE && OPACITY_INTERVAL_VALUE[1]) || 0.08;
     this._bindElemProps(wrapperElem);
     this._bindUIProps();
   }

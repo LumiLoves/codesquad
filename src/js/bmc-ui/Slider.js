@@ -5,8 +5,9 @@
  * - 모든 슬라이더의 부모 클래스
  */
 
-class Slider {
+class Slider extends UI {
   constructor() {
+    super();
     this.activeIndex = 0;
     this.direction = '';
     this.activeOld = '';
