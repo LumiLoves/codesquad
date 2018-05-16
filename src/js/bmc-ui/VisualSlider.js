@@ -3,6 +3,7 @@
 /**
  * VisualSlider
  */
+
 class VisualSlider extends Slider {
   constructor({ wrapperElem, helpers, animation, useJsAnimation, OPACITY_INTERVAL_VALUE }) {
     super();

@@ -23,6 +23,7 @@ class ListSlider extends Slider {
     this.contentItems = wrapperElem.querySelectorAll('.content-group > li');
     this.directionBtnBox = wrapperElem.querySelector('.direction-btn-box');          
   }
+
   _bindUIProps() {
     this.maxIndex = this.contentItems && this.contentItems.length;      
   }
@@ -48,6 +49,7 @@ class ListSlider extends Slider {
 
     return resultData;
   }
+  
   _bindPropsAfterRender() {
     this.contentItems = this.wrapperElem.querySelectorAll('.content-group > li');
     this.maxIndex = this.contentItems.length;
