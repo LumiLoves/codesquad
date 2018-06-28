@@ -5,13 +5,12 @@
  */
 
 class TemplateRenderer {
-  constructor({ templateHTML }) {
-    this.templateHTML = templateHTML;
-  }
-  renderDOM({ data, appendFn }) {
+  renderDOM({ templateHTML, data, appendFn }) {
+    if (!templateHTML || !data) { throw new Error('[TemplateRenderer] templateHTML이나 data가 없음'); }
+
     const dataArr = (toString.call(data) === '[object Object]')? [].push(data) : data;
     const resultHTML = dataArr.reduce((accumulator, currentData) => {
-      let currentHTML = this.templateHTML;
+      let currentHTML = templateHTML;
 
       currentHTML = this._replaceData(currentHTML, currentData); // 단순 치환
       currentHTML = this._handleEachHelper(currentHTML, currentData); // each(반복) 치환
@@ -40,6 +39,8 @@ class TemplateRenderer {
     const eachArr = html.match(regexAllEachTemplate);
       // ==> 결과값 [ "{{#each foo}}<p>{{this}}</p>{{/each}}", "{{#each doo}}<p>{{this}}</p>{{/each}}" ]
 
+    if (!eachArr) { return html; }
+
     eachArr.forEach((eachStr) => {
       const keyAndTemplate = eachStr.match(regexEachWithGroup); 
         // ==> 결과값 [ "{{#each foo}}<p>{{this}}</p>{{/each}}", " foo", "<p>{{this}}</p>" ] 
@@ -63,6 +64,8 @@ class TemplateRenderer {
     const regexIfWithGroup = /\{\{#if([^\}]+)\}\}([^\#]+)\{\{\/if\}\}/;
     const ifArr = html.match(regexAllIfTemplate);
 
+    if (!ifArr) { return html; }
+    
     ifArr.forEach((ifStr) => {
       const keyAndTemplate = ifStr.match(regexIfWithGroup);
       const key = keyAndTemplate[1].trim();

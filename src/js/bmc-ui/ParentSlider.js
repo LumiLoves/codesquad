@@ -1,23 +1,25 @@
 'use strict';
 
 /**
- * Slider
+ * ParentSlider
  * - 모든 슬라이더의 부모 클래스
  */
 
-class Slider extends UI {
+class ParentSlider extends ParentUI {
   constructor() {
+    if (new.target === ParentSlider) {
+      throw new TypeError('Slider 인스턴스를 직접 생성할 수 없음');
+    }
     super();
+
+    // ui state data   
     this.activeIndex = 0;
     this.direction = '';
     this.activeOld = '';
   }
 
-  /* data */
+  /* state data */
 
-  _updateActiveIndexProp(i = 0) {
-    this.activeIndex = i;
-  }
   _updateDirection(direction) {
     this.direction = direction || this._getDirection();
   }

@@ -69,14 +69,14 @@
   display: flex; padding: 15px 0;
 
   .search-form {
-    position: relative; margin: 14px 10px 14px 40px;
+    position: relative; margin: 14px 10px 14px 40px; width: 210px;
 
     input[type="text"] {
-      padding: 0 38px 0 15px; width: 210px; height: 40px;
+      padding: 0 38px 0 15px; width: 100%; height: 40px;
       border: 1px solid #cfd0d2; color: #888;
-      font-family: Verdana, 나눔고딕, "Nanum", "Malgun Gothic", sans-serif;
+      font-family: Verdana, "나눔고딕", "Nanum", "Malgun Gothic", sans-serif;
       
-      &:hover, &:focus { border-color: $color-bm-green; }
+      &:hover, &:focus { border-color: $color-bm-green; outline: none; }
     }
     button[type="submit"] {
       position: absolute; top: 1px; right: 1px;
@@ -86,20 +86,36 @@
 
       &:hover, &:focus { background-position: center -38px; }
     }
+    .search-result-box {
+      position: relative;
+      border: 1px solid #cfd0d2; border-top: none; width: 100%;
+      box-shadow: 0 6px 10px -3px rgba(0,0,0,0.3); background: #fff;
+      line-height: 37px; color: rgb(20, 13, 13); z-index: 1; cursor: pointer;
+      opacity: 0; visibility: hidden;
+
+      &.open { opacity: 1; visibility: visible; }
+
+      li {        
+        a { 
+          display: block; padding: 0 15px; overflow: hidden;
+          color: inherit; text-overflow: ellipsis; white-space: nowrap;
+          
+          &.on { background-color: #efefef; }
+        }
+        em { color: $color-bm-green; font-weight: bold; }
+      }
+    }
   }
 
   .favorite-menu { 
     display: flex; margin: 0 0 0 auto;
 
-    a {
-      margin-left: 50px; padding: 10px 0; 
-    }
+    a { margin-left: 50px; padding: 10px 0; }
   }
 }
 
 #gnb {
   grid-area: gnb; background: #483f35;
-
 
   .menu {
     display: flex;
@@ -111,7 +127,7 @@
         display: block; height: $gnb-height - 5px;
         line-height: $gnb-height - 5px;
         color: #fff; font-size: 16px;
-        font-family: "NanumBold", 맑은고딕, "Malgun Gothic", sans-serif;
+        font-family: "NanumBold", "맑은고딕", "Malgun Gothic", sans-serif;
         text-align: center;
       
         &:focus {

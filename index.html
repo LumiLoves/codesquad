@@ -53,9 +53,38 @@
       </a>
       
       <form class="search-form" action="/" method="get">
-        <label for="searching_text" class="blind">검색</label>
-        <input type="text" name="searching_text" id="searching_text" />
+        <label for="search-keyword" class="blind">검색</label>
+        <input type="text" name="search-keyword" id="search-keyword" autocomplete="off" />
         <button type="submit"><span>검색</span></button>
+
+        <ul class="search-result-box"></ul>
+        <script type="text/template" data-template-html="auto-complete-result-list">
+          <li>
+            <a data-index="{{index}}" data-value="{{value}}" href="">
+              {{valueWithHTML}}
+            </a>
+          </li>
+        </script>
+
+        <!--
+          <ul class="search-result-box">
+            <li>
+              <a href="" data-index="0" data-value="애플"><em>애플</em></a>
+            </li>
+            <li>
+              <a href="" data-index="1" data-value="애플 모니터"><em>애플</em> 모니터</a>
+            </li>
+            <li>
+              <a href="" data-index="2" data-value="txt tt"><em>애플</em> 키보드</a>
+            </li>
+            <li>
+              <a href="" data-index="3" data-value="txt tt"><em>애플</em> 또 뭐있지</a>
+            </li>
+            <li>
+              <a href="" data-index="4" data-value="txt tt"><em>애플</em> 또 뭐있지 뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지</a>
+            </li>
+          </ul>
+        -->
       </form>
 
       <ul class="favorite-menu">
@@ -176,7 +205,7 @@
   </section>
   <!-- // header -->
 
-  <!-- main-container -->
+  <!-- # main -->
   <main id="main">
     <section id="main-visual" class="main-visual-section visual-slider-box">
       <h2 class="blind">주요 프로모션</h2>
@@ -241,6 +270,53 @@
           </ul>
   
           <ul class="tab-content-group-box">
+            <script type="text/template" data-template-html="best-seller__tab-content-item">
+              {{#if isGroupStart}}
+              <li>
+                <ul class="tab-content-box">
+                {{/if}}
+              
+                  <li class="tab-content-item">
+                    <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
+                      <div class="thumbnail">
+                        <img src="{{image}}" alt="{{alt}}" />
+
+                        <div class="badge-wrapper">
+                          {{#each badge}}
+                            <i class="bm-icon badge-event">{{this}}</i>
+                          {{/each}}
+                        </div>
+
+                        <div class="overlay">
+                          {{#each delivery_type}}
+                            <p class="txt">{{this}}</p>
+                          {{/each}}
+                        </div>  
+                      </div>
+
+                      <dl class="content">
+                        <dt class="title">{{title}}</dt>
+                        <dd class="desc">{{description}}</dd>
+
+                        <dd class="price-wrapper">
+                          {{#if n_price}}
+                            <span class="original-price">{{this}}</span>
+                          {{/if}}
+                          <span class="final-price">
+                            <span class="number">{{s_price}}</span>
+                            <!-- <span class="unit">원</span> -->
+                          </span>
+                        </dd>
+                      </dl>
+                    </a>
+                  </li>
+            
+                {{#if isGroupEnd}}
+                </ul>
+              </li>
+              {{/if}}
+            </script>
+
             <!--
             <li class="on">
               <ul class="tab-content-box">
@@ -412,53 +488,6 @@
               </ul>
             </li>
             -->
-
-            <script type="text/template" data-template-html="best-seller__tab-content-item">
-              {{#if isGroupStart}}
-              <li>
-                <ul class="tab-content-box">
-                {{/if}}
-              
-                  <li class="tab-content-item">
-                    <a class="thumbnail-box" href="#" data-detail-hash="{{detail_hash}}">
-                      <div class="thumbnail">
-                        <img src="{{image}}" alt="{{alt}}" />
-
-                        <div class="badge-wrapper">
-                          {{#each badge}}
-                            <i class="bm-icon badge-event">{{this}}</i>
-                          {{/each}}
-                        </div>
-
-                        <div class="overlay">
-                          {{#each delivery_type}}
-                            <p class="txt">{{this}}</p>
-                          {{/each}}
-                        </div>  
-                      </div>
-
-                      <dl class="content">
-                        <dt class="title">{{title}}</dt>
-                        <dd class="desc">{{description}}</dd>
-
-                        <dd class="price-wrapper">
-                          {{#if n_price}}
-                            <span class="original-price">{{this}}</span>
-                          {{/if}}
-                          <span class="final-price">
-                            <span class="number">{{s_price}}</span>
-                            <!-- <span class="unit">원</span> -->
-                          </span>
-                        </dd>
-                      </dl>
-                    </a>
-                  </li>
-            
-                {{#if isGroupEnd}}
-                </ul>
-              </li>
-              {{/if}}
-            </script>
 
           </ul><!-- .tab-content-group-box -->
         </div><!-- .tab-box -->
@@ -810,7 +839,7 @@
       <a href="#" class="more">국,찌개 전체보기 <i class="bm-icon btn-arrow-more"></i></a>      
     </section>
   </main>
-  <!-- // main-container -->
+  <!-- // # main -->
   
   <!-- footer -->
   <footer id="footer">
@@ -937,14 +966,19 @@
 
   <script src="src/js/lib/polyfill.js"></script>
   <script src="src/js/lib/fetch.js"></script>
-  <script src="src/js/util/helpers.js"></script>
-  <script src="src/js/util/ajax.js"></script>
+
+  <script src="src/js/util/fns.js"></script>
   <script src="src/js/util/animation.js"></script>
 
-  <script src="src/js/bmc-ui/Renderer.js"></script>
-  <script src="src/js/bmc-ui/UI.js"></script>  
+  <script src="src/js/bmc-function/TemplateRenderer.js"></script>
+  <script src="src/js/bmc-function/ParentRequest.js"></script>
+  <script src="src/js/bmc-function/CustomFetch.js"></script>
+  <script src="src/js/bmc-function/ParentStorage.js"></script>
+  <script src="src/js/bmc-function/CustomLocalStorage.js"></script>
+
+  <script src="src/js/bmc-ui/ParentUI.js"></script>  
   <script src="src/js/bmc-ui/Tab.js"></script>
-  <script src="src/js/bmc-ui/Slider.js"></script>
+  <script src="src/js/bmc-ui/ParentSlider.js"></script>
   <script src="src/js/bmc-ui/VisualSlider.js"></script>
   <script src="src/js/bmc-ui/ListSlider.js"></script>
   <script src="src/js/bmc-ui/PageScroller.js"></script>

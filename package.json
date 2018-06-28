@@ -4,7 +4,8 @@
   "description": "javascript level3",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "node-sass -w src/css/scss/main.scss src/css/compiled/main.css  --source-map true --source-map-contents src/css/scss"
   },
   "repository": {
     "type": "git",

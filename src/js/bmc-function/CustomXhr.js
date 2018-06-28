@@ -1,9 +1,23 @@
+'use strict';
 
 /**
- * Ajax
+ * CustomXhr
  */
 
-const ajax = {
+class CustomXhr extends ParentRequest {
+  constructor() {
+    super();
+  }
+  getData({ url, data, success, error, isAsync }) {
+    this.request({
+      url, data, success, error, isAsync, method: 'GET'
+    });
+  }
+  postJSON({ url, data, success, error, isAsync }) {
+    this.request({
+      url, data, success, error, isAsync, method: 'POST', reqContentType: 'application/json'
+    });
+  }
   request({ url, method, data, reqContentType, success, error, isAsync }) {
     const xhr = new XMLHttpRequest();
     method = method.toUpperCase();
@@ -39,16 +53,7 @@ const ajax = {
     };
 
     xhr.send(data);
-  },
-  getData({ url, data, success, error, isAsync }) {
-    this.request({
-      url, data, success, error, isAsync, method: 'GET'
-    });
-  },
-  postJSON({ url, data, success, error, isAsync }) {
-    this.request({
-      url, data, success, error, isAsync, method: 'POST', reqContentType: 'application/json'
-    });
-  }
-};
 
+    return resData;
+  }
+}

@@ -229,16 +229,18 @@ a {
   padding: 15px 0; }
   #header .search-form {
     position: relative;
-    margin: 14px 10px 14px 40px; }
+    margin: 14px 10px 14px 40px;
+    width: 210px; }
     #header .search-form input[type="text"] {
       padding: 0 38px 0 15px;
-      width: 210px;
+      width: 100%;
       height: 40px;
       border: 1px solid #cfd0d2;
       color: #888;
-      font-family: Verdana, 나눔고딕, "Nanum", "Malgun Gothic", sans-serif; }
+      font-family: Verdana, "나눔고딕", "Nanum", "Malgun Gothic", sans-serif; }
       #header .search-form input[type="text"]:hover, #header .search-form input[type="text"]:focus {
-        border-color: #2ac1bc; }
+        border-color: #2ac1bc;
+        outline: none; }
     #header .search-form button[type="submit"] {
       position: absolute;
       top: 1px;
@@ -251,6 +253,34 @@ a {
       cursor: pointer; }
       #header .search-form button[type="submit"]:hover, #header .search-form button[type="submit"]:focus {
         background-position: center -38px; }
+    #header .search-form .search-result-box {
+      position: relative;
+      border: 1px solid #cfd0d2;
+      border-top: none;
+      width: 100%;
+      box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.3);
+      background: #fff;
+      line-height: 37px;
+      color: #140d0d;
+      z-index: 1;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden; }
+      #header .search-form .search-result-box.open {
+        opacity: 1;
+        visibility: visible; }
+      #header .search-form .search-result-box li a {
+        display: block;
+        padding: 0 15px;
+        overflow: hidden;
+        color: inherit;
+        text-overflow: ellipsis;
+        white-space: nowrap; }
+        #header .search-form .search-result-box li a.on {
+          background-color: #efefef; }
+      #header .search-form .search-result-box li em {
+        color: #2ac1bc;
+        font-weight: bold; }
   #header .favorite-menu {
     display: flex;
     margin: 0 0 0 auto; }
@@ -273,7 +303,7 @@ a {
         line-height: 47px;
         color: #fff;
         font-size: 16px;
-        font-family: "NanumBold", 맑은고딕, "Malgun Gothic", sans-serif;
+        font-family: "NanumBold", "맑은고딕", "Malgun Gothic", sans-serif;
         text-align: center; }
         #gnb .menu > li > a:focus {
           background: #fff;
@@ -1053,3 +1083,5 @@ a {
   #page-template .thumbnail-box {
     width: 250px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); }
+
+/*# sourceMappingURL=main.css.map */

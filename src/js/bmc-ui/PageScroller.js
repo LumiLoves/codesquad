@@ -4,21 +4,20 @@
  * PageScroller
  */
 
-class PageScroller extends UI {
-  constructor({ wrapperElem, startPositionForDisplay = 150 }) {
+class PageScroller extends ParentUI {
+  constructor({ wrapperElem, userOption = {} }) {
     super();
-    this._bindElemProps(wrapperElem);
-    this._bindUIProps();
-    this.startPositionForDisplay = startPositionForDisplay;
-  }
 
-  /* data */
-
-  _bindElemProps(wrapperElem) {
+    // dom
     this.wrapperElem = wrapperElem;
-  }
-  _bindUIProps() {
-    this.docHeight = document.scrollingElement.offsetHeight;
+    
+    // ui state data
+    this.START_SCROLL_POSITION = 0;
+    this.END_SCROLL_POSITION = document.scrollingElement.offsetHeight - window.innerHeight;
+
+    // option
+    this.TRIGGER_POSITION = userOption.TRIGGER_POSITION || 150;
+    this.INTERVAL_VALUE = userOption.INTERVAL_VALUE || 5; // 가속도 주기 위한 값
   }
 
   /* init */
@@ -41,40 +40,36 @@ class PageScroller extends UI {
     this.wrapperElem.classList.remove('on');
   }
   scrollUp() {
-    const SCROLL_START_POSITION = 0;
-    const INTERVAL_VALUE = 5; // 가속도 주기 위한 값
-    let decreaseValue = 1;
+    let accumulatedDecreaseValue = 1;
 
-    function decrease() {
-      const currentScrollY = window.scrollY;
-      const nextScrollY = currentScrollY - (decreaseValue += INTERVAL_VALUE);
+    const decreasePosition = () => {
+      const currentPosition = window.scrollY;
+      const nextPosition = currentPosition - (accumulatedDecreaseValue += this.INTERVAL_VALUE);
 
-      if (currentScrollY > SCROLL_START_POSITION) {
-        window.scrollTo(0, nextScrollY);
-        requestAnimationFrame(decrease);
+      if (currentPosition > this.START_SCROLL_POSITION) {
+        window.scrollTo(0, nextPosition);
+        requestAnimationFrame(decreasePosition);
       }
     }
-    decrease();
+    decreasePosition();
   }
   scrollDown() {
-    const SCROLL_END_POSITION = this.docHeight - window.innerHeight;
-    const INTERVAL_VALUE = 5; // 가속도 주기 위한 값
-    let increaseValue = 1;
+    let accumulatedIncreaseValue = 1;
 
-    function increase() {
-      const currentScrollY = window.scrollY;
-      const nextScrollY = currentScrollY + (increaseValue += INTERVAL_VALUE);
+    const increasePosition = () => {
+      const currentPosition = window.scrollY;
+      const nextPosition = currentPosition + (accumulatedIncreaseValue += this.INTERVAL_VALUE);
 
-      if (nextScrollY < SCROLL_END_POSITION) {
-        window.scrollTo(0, nextScrollY);
-        requestAnimationFrame(increase);
+      if (nextPosition < this.END_SCROLL_POSITION) {
+        window.scrollTo(0, nextPosition);
+        requestAnimationFrame(increasePosition);
       }
     }
-    increase();
+    increasePosition();
   }
   _needToShow() {
     const currentPosition = window.scrollY;
-    return this.startPositionForDisplay < currentPosition;
+    return this.TRIGGER_POSITION < currentPosition;
   }
 
   /* event */

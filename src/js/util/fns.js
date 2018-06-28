@@ -1,9 +1,10 @@
+'use strict';
 
 /**
- * Helpers
+ * Fns
  */
 
-const helpers = {
+const fns = {
   setIndexToDom(nodeList, selector) {
     const selectorFlag = selector? 'hasSelector' : 'noSelector';
     const handler = {
@@ -16,5 +17,16 @@ const helpers = {
     }[selectorFlag];
 
     nodeList.forEach(handler);
+  },
+  getStorageData(type, key) {
+    return window[storageType].getItem(storageKey);
+  },
+  async getFetchData(reqUrl, resErrorFn) {
+    let res = null;
+    res = await fetch(reqUrl).catch((data) => {
+      (typeof resErrorFn === 'function') && resErrorFn(data);
+    });
+    res = await res.json();
+    return res;
   }
 };
