@@ -4,7 +4,7 @@
  * VisualSlider
  */
 
-const VisualSlider = (function(animation, fns) {
+const VisualSlider = (function(helpers) {
 
   class VisualSlider extends ParentSlider {
     constructor({ wrapperElem, userOption = {} }) {
@@ -72,21 +72,21 @@ const VisualSlider = (function(animation, fns) {
       const target = this.contentItems.item(i);
 
       target.style.transform = 'translateX(0)';
-      animation.fadeOut(target, this.FADE_OUT_OPACITY_INTERVAL_VALUE);
+      helpers.fadeOutElem(target, this.FADE_OUT_OPACITY_INTERVAL_VALUE);
     }
     _fadeIn(i) {
       const target = this.contentItems.item(i);
 
       target.style.transform = 'translateX(0)';
       target.style.zIndex = 0;
-      animation.fadeIn(target, this.FADE_IN_OPACITY_INTERVAL_VALUE);
+      helpers.fadeInElem(target, this.FADE_IN_OPACITY_INTERVAL_VALUE);
     }
 
     /* event */
-    
+
     registerEvents() {
-      fns.setIndexToDom(this.contentItems);
-      fns.setIndexToDom(this.dotBtnItems);
+      helpers.setIndexToDom(this.contentItems);
+      helpers.setIndexToDom(this.dotBtnItems);
       
       this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
       this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
@@ -107,4 +107,4 @@ const VisualSlider = (function(animation, fns) {
 
   return VisualSlider;
 
-})(animation, fns);
+})(helpers);

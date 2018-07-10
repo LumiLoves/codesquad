@@ -4,7 +4,7 @@
  * Tab
  */
 
-const Tab = (function(fns) {
+const Tab = (function(helpers) {
 
   class Tab extends ParentUI {
     constructor({ wrapperElem, userOption = {}, userModule = {} }) {
@@ -60,7 +60,7 @@ const Tab = (function(fns) {
     async getJSON() {
       let json = null;
       try {
-        json = await fns.getFetchData({ url: this.reqUrl });      
+        json = await helpers.getFetchData({ url: this.reqUrl });      
       } catch (err) {
         if (err instanceof HttpError && err.response.status === 404) {
           console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
@@ -129,7 +129,7 @@ const Tab = (function(fns) {
     /* event */
 
     registerEvents() {
-      fns.setIndexToDom(this.btnItems, 'a');
+      helpers.setIndexToDom(this.btnItems, 'a');
       this.btnBox.addEventListener('click', (e) => e.preventDefault());
       this.btnBox.addEventListener('click', this._onClickBtn.bind(this));
     }
@@ -140,4 +140,4 @@ const Tab = (function(fns) {
 
   return Tab;
 
-})(fns);
+})(helpers);

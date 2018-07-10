@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * Fns
+ * helpers
  */
 
-const fns = (function(HttpError) {
+const helpers = (function(HttpError) {
 
-  const fns = {
+  const helpers = {
     setIndexToDom(nodeList, selector) {
       const selectorFlag = selector? 'hasSelector' : 'noSelector';
       const handler = {
@@ -28,9 +28,33 @@ const fns = (function(HttpError) {
       } else {
         throw new HttpError(response);
       }
+    },
+    fadeOutElem(elem, OPACITY_INTERVAL_VALUE = 0.01) {
+      elem.style.opacity = 1;
+  
+      function decreaseOpacity() {
+        if ((elem.style.opacity -= OPACITY_INTERVAL_VALUE) <= 0) {
+          elem.style.opacity = 0;
+        } else {
+          requestAnimationFrame(decreaseOpacity);
+        }
+      }
+      decreaseOpacity();
+    },
+    fadeInElem(elem, OPACITY_INTERVAL_VALUE = 0.01) {
+      elem.style.opacity = 0;
+  
+      function increaseOpacity() {
+        let opacityVal = parseFloat(elem.style.opacity);
+        if (!((opacityVal += OPACITY_INTERVAL_VALUE) >= 1)) {
+          elem.style.opacity = opacityVal;
+          requestAnimationFrame(increaseOpacity);        
+        }
+      }
+      increaseOpacity();
     }
   };
 
-  return fns;
+  return helpers;
 
 })(HttpError);

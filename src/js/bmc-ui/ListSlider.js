@@ -4,7 +4,7 @@
  * ListSlider
  */
 
-const ListSlider = (function(fns) {
+const ListSlider = (function(helpers) {
 
   class ListSlider extends ParentSlider {
     constructor({ wrapperElem, userOption = {}, userModule = {} }) {
@@ -59,7 +59,7 @@ const ListSlider = (function(fns) {
     async getJSON() {
       let json = null;
       try {
-        json = await fns.getFetchData({ url: this.reqUrl });
+        json = await helpers.getFetchData({ url: this.reqUrl });
       } catch (err) {
         if (err instanceof HttpError && err.response.status === 404) {
           console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
@@ -121,7 +121,7 @@ const ListSlider = (function(fns) {
     /* event */
     
     registerEvents() {
-      fns.setIndexToDom(this.contentItems);    
+      helpers.setIndexToDom(this.contentItems);    
       this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
       this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
     }
@@ -138,4 +138,4 @@ const ListSlider = (function(fns) {
 
   return ListSlider;
 
-})(fns);
+})(helpers);
