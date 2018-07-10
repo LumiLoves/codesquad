@@ -29,10 +29,8 @@ const ListSlider = (function(fns) {
       this.ITEM_COUNT_PER_GROUP = userOption.ITEM_COUNT_PER_GROUP || 1;
 
       // module
-      this.userModule = userModule;
-      this.oRequest = null;
-      this.oStorage = null;
-      this.oRenderer = null;
+      this.oStorage = userModule.Storage || this.DefaultStorage;
+      this.oRenderer = this.DefaultRenderer;
     }
   
     /* init */
@@ -45,29 +43,30 @@ const ListSlider = (function(fns) {
       this.activeElements(0, true);
       this.registerEvents();
     }
-    _checkRequestModule() {
-      if (!this.oRequest) {
-        const TargetClass = this.userModule.Request || this.DefaultRequest;
-        this.oRequest = new TargetClass();
-      }
-    }
     _checkStorageModule() {
-      if (!this.oStorage) {
-        const TargetClass = this.userModule.Storage || this.DefaultStorage;
-        this.oStorage = new TargetClass();
+      if (toString.call(this.oStorage) !== '[object Object]') {
+        this.oStorage = new this.oStorage();
       }
     }
     _checkRendererModule() {
-      if (!this.oRenderer) {
-        this.oRenderer = new this.DefaultRenderer();
+      if (toString.call(this.oRenderer) !== '[object Object]') {
+        this.oRenderer = new this.oRenderer();
       }
     }
 
     /* render */
 
     async getJSON() {
-      this._checkRequestModule();
-      const json = await this.oRequest.getData({ url: this.reqUrl });
+      let json = null;
+      try {
+        json = await fns.getFetchData({ url: this.reqUrl });
+      } catch (err) {
+        if (err instanceof HttpError && err.response.status === 404) {
+          console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
+        } else {
+          throw err; // 정의되지 않은 에러는 rethrow
+        }
+      }
       return json;
     }
     render(json) {

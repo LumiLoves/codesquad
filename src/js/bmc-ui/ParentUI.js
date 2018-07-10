@@ -4,7 +4,7 @@
  * ParentUI
  */
 
-const ParentUI = (function(CustomFetch, CustomLocalStorage, TemplateRenderer) {
+const ParentUI = (function(CustomLocalStorage, TemplateRenderer) {
 
   class ParentUI {
     constructor() {
@@ -14,7 +14,6 @@ const ParentUI = (function(CustomFetch, CustomLocalStorage, TemplateRenderer) {
       }
 
       // default class 지정
-      this.DefaultRequest = CustomFetch;
       this.DefaultStorage = CustomLocalStorage;
       this.DefaultRenderer = TemplateRenderer;
 
@@ -43,5 +42,5 @@ const ParentUI = (function(CustomFetch, CustomLocalStorage, TemplateRenderer) {
 
   return ParentUI;
 
-})(CustomFetch, CustomLocalStorage, TemplateRenderer);
+})(CustomLocalStorage, TemplateRenderer);
 

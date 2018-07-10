@@ -23,17 +23,13 @@ const Tab = (function(fns) {
       // option
       this.reqUrl = userOption.reqUrl;
       this.templateHTML = userOption.templateHTML;
-      
+
       this.useStorage = userOption.useStorage || false;
       this.storageName = userOption.storageName;
 
-      this.ITEM_NUMBER_PER_GROUP = userOption.ITEM_NUMBER_PER_GROUP || 1;
-
       // module
-      this.userModule = userModule;
-      this.oRequest = null;
-      this.oStorage = null;
-      this.oRenderer = null;
+      this.oStorage = userModule.Storage || this.DefaultStorage;
+      this.oRenderer = this.DefaultRenderer;
     }
 
     /* init */
@@ -48,34 +44,34 @@ const Tab = (function(fns) {
       this.activeElements(randomIndex, true);
       this.registerEvents();
     }
-    _checkRequestModule() {
-      if (!this.oRequest) {
-        const TargetClass = this.userModule.Request || this.DefaultRequest;
-        this.oRequest = new TargetClass();
-      }
-    }
     _checkStorageModule() {
-      if (!this.oStorage) {
-        const TargetClass = this.userModule.Storage || this.DefaultStorage;
-        this.oStorage = new TargetClass();
+      if (toString.call(this.oStorage) !== '[object Object]') {
+        this.oStorage = new this.oStorage();
       }
     }
     _checkRendererModule() {
-      if (!this.oRenderer) {
-        this.oRenderer = new this.DefaultRenderer();
+      if (toString.call(this.oRenderer) !== '[object Object]') {
+        this.oRenderer = new this.oRenderer();
       }
     }
 
     /* render */
 
     async getJSON() {
-      this._checkRequestModule();
-      const json = await this.oRequest.getData({ url: this.reqUrl });      
+      let json = null;
+      try {
+        json = await fns.getFetchData({ url: this.reqUrl });      
+      } catch (err) {
+        if (err instanceof HttpError && err.response.status === 404) {
+          console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
+        } else {
+          throw err; // 정의되지 않은 에러는 rethrow
+        }
+      }
       return json;
     }
     render(json) {
       const viewData = this._makeViewData(json);
-
       this._checkRendererModule();
       this.oRenderer.renderDOM({
         templateHTML: this.templateHTML,
@@ -88,12 +84,12 @@ const Tab = (function(fns) {
       return !this.contentItems.length;
     }
     _makeViewData(data) {
+      // 서버 응답데이터 구조: [ { category_id: '..', name: '..', items: [ {..}, {..}, ... ] }, {..}, ... ]
       return data.reduce((accumulator, currentObject) => {
-        const ITEM_START_ORDER = 0;
-        const ITEM_END_ORDER = this.ITEM_NUMBER_PER_GROUP - 1;
+        const lastItemIndex = currentObject.items.length - 1;
 
-        currentObject.items[ITEM_START_ORDER].isGroupStart = true;
-        currentObject.items[ITEM_END_ORDER].isGroupEnd = true;
+        currentObject.items[0].isGroupStart = true;
+        currentObject.items[lastItemIndex].isGroupEnd = true;
         return accumulator.concat(currentObject.items);
       }, []);
     }

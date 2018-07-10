@@ -12,7 +12,7 @@ class ParentSlider extends ParentUI {
     }
     super();
 
-    // ui state data   
+    // ui state data
     this.activeIndex = 0;
     this.direction = '';
     this.activeOld = '';

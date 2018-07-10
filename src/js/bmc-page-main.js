@@ -53,8 +53,7 @@ window.bmcPage.index = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSl
     wrapperElem: document.querySelector('#best-seller .tab-box'),
     userOption: {
       reqUrl: urlInfo.BASE_URL + urlInfo.BEST_DISH,
-      templateHTML: document.querySelector('[data-template-html="best-seller__tab-content-item"]').innerHTML,
-      ITEM_NUMBER_PER_GROUP: 3
+      templateHTML: document.querySelector('[data-template-html="best-seller__tab-content-item"]').innerHTML
     }
   });
 
@@ -79,18 +78,13 @@ window.bmcPage.index = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSl
     wrapperElem: document.querySelector('#scroll-btns')
   });
 
-  
-  /* initIndexPage */
-
-  function initIndexPage() {
-    oAutoCompleteSearcher.init();
-    oVisualSlider_promotion.init();
-    oTab_bestDish.init();
-    oListSlider_dishes.forEach((oListSlider_dish) => oListSlider_dish.init());
-    oPageScroller.init();
-  }
-
   return {
-    init: initIndexPage
+    init: () => {
+      oAutoCompleteSearcher.init();
+      oVisualSlider_promotion.init();
+      oTab_bestDish.init();
+      oListSlider_dishes.forEach((oListSlider_dish) => oListSlider_dish.init());
+      oPageScroller.init();
+    }
   }
 })(AutoCompleteSearcher, VisualSlider, Tab, ListSlider, PageScroller);

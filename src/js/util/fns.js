@@ -4,29 +4,33 @@
  * Fns
  */
 
-const fns = {
-  setIndexToDom(nodeList, selector) {
-    const selectorFlag = selector? 'hasSelector' : 'noSelector';
-    const handler = {
-      noSelector(elem, i) {
-        elem.index = i;        
-      },
-      hasSelector(elem, i) {
-        elem.querySelector(selector).index = i;
-      }
-    }[selectorFlag];
+const fns = (function(HttpError) {
 
-    nodeList.forEach(handler);
-  },
-  getStorageData(type, key) {
-    return window[storageType].getItem(storageKey);
-  },
-  async getFetchData(reqUrl, resErrorFn) {
-    let res = null;
-    res = await fetch(reqUrl).catch((data) => {
-      (typeof resErrorFn === 'function') && resErrorFn(data);
-    });
-    res = await res.json();
-    return res;
-  }
-};
+  const fns = {
+    setIndexToDom(nodeList, selector) {
+      const selectorFlag = selector? 'hasSelector' : 'noSelector';
+      const handler = {
+        noSelector(elem, i) {
+          elem.index = i;        
+        },
+        hasSelector(elem, i) {
+          elem.querySelector(selector).index = i;
+        }
+      }[selectorFlag];
+  
+      nodeList.forEach(handler);
+    },
+    async getFetchData({ url }) {
+      const response = await fetch(url);
+  
+      if (response.status === 200) {
+        return await response.json();
+      } else {
+        throw new HttpError(response);
+      }
+    }
+  };
+
+  return fns;
+
+})(HttpError);
