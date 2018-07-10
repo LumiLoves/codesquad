@@ -4,7 +4,7 @@
  * AutoCompleteSearcher 
  */
 
-const AutoCompleteSearcher = (function(fns) {
+const AutoCompleteSearcher = (function(helpers) {
 
   class AutoCompleteSearcher extends ParentUI {
     constructor({ wrapperElem, userOption = {}, userModule = {} }) {
@@ -71,7 +71,7 @@ const AutoCompleteSearcher = (function(fns) {
       let json = null;
 
       try {
-        json = await fns.getFetchData({ url: reqUrl });
+        json = await helpers.getFetchData({ url: reqUrl });
       } catch (err) {
         if (err instanceof HttpError && err.response.status === 404) {
           console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
@@ -285,12 +285,12 @@ const AutoCompleteSearcher = (function(fns) {
       this.renderResult(keyword, resJSON);
       this.openResultBox();
     }
-    _onMouseleaveResultBox({ target: { nodeName: targetNodeName } }) {
-      if (targetNodeName !== 'UL') { return; }
+    _onMouseleaveResultBox({ target }) {
+      if (target.nodeName !== 'UL') { return; }
       this.inactiveResultItem();
     }
-    _onMouseoverResultBox({ target: { nodeName: targetNodeName } }) {
-      if (targetNodeName !== 'A') { return; }
+    _onMouseoverResultBox({ target }) {
+      if (target.nodeName !== 'A') { return; }
       const newIndex = target.dataset.index;
       this.activeResultItem(newIndex);
     }
@@ -298,4 +298,4 @@ const AutoCompleteSearcher = (function(fns) {
 
   return AutoCompleteSearcher;
 
-})(fns);
+})(helpers);
