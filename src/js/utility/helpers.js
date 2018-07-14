@@ -7,7 +7,7 @@
 const helpers = (function(HttpError) {
 
   const helpers = {
-    setIndexToDom(nodeList, selector) {
+    attachIndexToDom(nodeList, selector) {
       const selectorFlag = selector? 'hasSelector' : 'noSelector';
       const handler = {
         noSelector(elem, i) {

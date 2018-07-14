@@ -130,7 +130,7 @@ const Tab = (function(helpers) {
     /* event */
 
     registerEvents() {
-      helpers.setIndexToDom(this.btnItems, '.tab-btn');
+      helpers.attachIndexToDom(this.btnItems, '.tab-btn');
       this.btnBox.addEventListener('click', (e) => e.preventDefault());
       this.btnBox.addEventListener('click', this._onClickBtn.bind(this));
     }

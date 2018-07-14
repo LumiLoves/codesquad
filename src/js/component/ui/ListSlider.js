@@ -121,7 +121,7 @@ const ListSlider = (function(helpers) {
     /* event */
     
     registerEvents() {
-      helpers.setIndexToDom(this.contentItems);    
+      helpers.attachIndexToDom(this.contentItems);    
       this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
       this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
     }
