@@ -15,7 +15,7 @@ const VisualSlider = (function(helpers) {
       this.contentItems = this.contentBox.querySelectorAll('.img-item');
       this.directionBtnBox = wrapperElem.querySelector('.direction-btn-box');
       this.dotBtnBox = wrapperElem.querySelector('.dot-btn-box');
-      this.dotBtnItems = this.dotBtnBox.querySelectorAll('a');
+      this.dotBtnItems = this.dotBtnBox.querySelectorAll('.dot');
 
       // ui state data      
       this.maxIndex = this.contentItems && this.contentItems.length;      
@@ -95,13 +95,14 @@ const VisualSlider = (function(helpers) {
       this.dotBtnBox.addEventListener('click', this._onClickDotBtn.bind(this));
     }
     _onClickDirectionBtn({ target }) {
+      if (!target.classList.contains('direction-btn')) { return; }
       const oldIndex = this.activeIndex;
       const newIndex = (this._isPrevBtn(target))? oldIndex - 1 : oldIndex + 1;
-
-      if (target && target.nodeName === 'A') { this.activeElements(newIndex); }
+      this.activeElements(newIndex);
     }
     _onClickDotBtn({ target }) {
-      if (target && target.nodeName === 'A') { this.activeElements(target.index); }
+      if (!target.classList.contains('dot')) { return; }
+      this.activeElements(target.index);
     }
   }
 

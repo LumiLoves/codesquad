@@ -7,9 +7,9 @@
 class PageScroller extends ParentUI {
   constructor({ wrapperElem, userOption = {} }) {
     super();
-    const d = document;
-    const SCROLL_HEIGHT = d.documentElement.scrollHeight || d.body.scrollHeight || 0;
-    const CLIENT_HEIGHT = d.documentElement.clientHeight || d.body.clientHeight || 0;
+    const { documentElement: docElem, body } = document;
+    const SCROLL_HEIGHT = docElem.scrollHeight || body.scrollHeight || 0;
+    const CLIENT_HEIGHT = docElem.clientHeight || body.clientHeight || 0;
 
     // dom
     this.wrapperElem = wrapperElem;
@@ -92,8 +92,9 @@ class PageScroller extends ParentUI {
     this.wrapperElem.addEventListener('click', (e) => e.preventDefault());
     this.wrapperElem.addEventListener('click', this._onClickBtn.bind(this));
   }
-  _onClickBtn({ target: { nodeName: targetNodeName, classList: targetClassList } }) {
-    if (targetNodeName !== 'BUTTON') { return; }
+  _onClickBtn({ target: { classList: targetClassList } }) {
+    if (!targetClassList.contains('scroll-btn')) { return; }
+
     const isUpBtn = targetClassList.contains('up');
     const isDownBtn = targetClassList.contains('down');
 

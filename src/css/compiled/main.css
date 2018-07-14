@@ -598,7 +598,7 @@ a {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s, visibility 0.1s ease 0.6s; }
-  #scroll-btns button {
+  #scroll-btns .scroll-btn {
     position: relative;
     display: block;
     width: 45px;
@@ -606,13 +606,13 @@ a {
     border: 2px solid #e3e3e3;
     border-radius: 3px;
     cursor: pointer; }
-    #scroll-btns button:first-child {
+    #scroll-btns .scroll-btn:first-child {
       margin-bottom: 5px; }
-    #scroll-btns button:hover {
+    #scroll-btns .scroll-btn:hover {
       background-color: #efefef; }
-    #scroll-btns button:focus {
+    #scroll-btns .scroll-btn:focus {
       outline: none; }
-    #scroll-btns button::before, #scroll-btns button::after {
+    #scroll-btns .scroll-btn::before, #scroll-btns .scroll-btn::after {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -623,13 +623,13 @@ a {
       border-radius: 10px;
       background-color: #999;
       transform-origin: center center; }
-    #scroll-btns button.up::before {
+    #scroll-btns .scroll-btn.up::before {
       transform: translate(-84%, -100%) rotateZ(-45deg); }
-    #scroll-btns button.up::after {
+    #scroll-btns .scroll-btn.up::after {
       transform: translate(-14%, -100%) rotateZ(45deg); }
-    #scroll-btns button.down::before {
+    #scroll-btns .scroll-btn.down::before {
       transform: translate(-84%, -100%) rotateZ(45deg); }
-    #scroll-btns button.down::after {
+    #scroll-btns .scroll-btn.down::after {
       transform: translate(-14%, -100%) rotateZ(-45deg); }
   #scroll-btns.on {
     opacity: 1;
@@ -823,7 +823,7 @@ a {
     .tab-box .tab-btn-box li {
       flex-grow: 1;
       height: 48px; }
-      .tab-box .tab-btn-box li a {
+      .tab-box .tab-btn-box li .tab-btn {
         display: block;
         margin-right: 1px;
         padding-top: 17px;
@@ -831,7 +831,7 @@ a {
         background: #fff;
         font-size: 15px;
         font-family: "NanumBold", sans-serif; }
-      .tab-box .tab-btn-box li.on a, .tab-box .tab-btn-box li:hover a {
+      .tab-box .tab-btn-box li.on .tab-btn, .tab-box .tab-btn-box li:hover .tab-btn {
         margin-right: 0;
         padding-right: 1px;
         background: #2ac1bc;
@@ -883,7 +883,7 @@ a {
     right: 0;
     top: 0;
     bottom: 0; }
-    .sliding-list-box .direction-btn-box .btn {
+    .sliding-list-box .direction-btn-box .direction-btn {
       position: absolute;
       top: 58px;
       display: block;
@@ -1048,15 +1048,14 @@ a {
     margin: 0 auto;
     width: 980px;
     height: 100%; }
-    #main-visual .direction-btn-box .prev {
+    #main-visual .direction-btn-box .direction-btn {
       position: absolute;
+      top: 50%; }
+    #main-visual .direction-btn-box .prev {
       left: -80px;
-      top: 50%;
       transform: translateY(-50%); }
     #main-visual .direction-btn-box .next {
-      position: absolute;
       right: -80px;
-      top: 50%;
       transform: translateY(-50%); }
   #main-visual .dot-btn-box {
     position: absolute;

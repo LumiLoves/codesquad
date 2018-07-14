@@ -70,8 +70,8 @@ const ListSlider = (function(helpers) {
       return json;
     }
     render(json) {
-      const viewData = this._makeViewData(json);
       this._checkRendererModule();
+      const viewData = this._makeViewData(json);
       
       this.oRenderer.renderDOM({
         templateHTML: this.templateHTML,        
@@ -126,13 +126,11 @@ const ListSlider = (function(helpers) {
       this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
     }
     _onClickDirectionBtn({ target }) {
+      if (!target.classList.contains('direction-btn') && !target.closest('.direction-btn')) { return; }
       const oldIndex = this.activeIndex;
       const newIndex = (this._isPrevBtn(target))? oldIndex - 1 : oldIndex + 1;
-  
-      if (target && target.nodeName === 'A' || target.nodeName === 'I') {
-        this._updateDirection();
-        this.activeElements(newIndex);
-      }
+      this._updateDirection();
+      this.activeElements(newIndex);
     }
   }
 

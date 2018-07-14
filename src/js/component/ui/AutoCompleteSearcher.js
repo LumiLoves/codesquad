@@ -286,11 +286,11 @@ const AutoCompleteSearcher = (function(helpers) {
       this.openResultBox();
     }
     _onMouseleaveResultBox({ target }) {
-      if (target.nodeName !== 'UL') { return; }
-      this.inactiveResultItem();
+      if (target !== this.resultBox) { return; }
+      this._checkOpenedResultBox() && this.inactiveResultItem();
     }
     _onMouseoverResultBox({ target }) {
-      if (target.nodeName !== 'A') { return; }
+      if (!target.classList.contains('keyword-item')) { return; }
       const newIndex = target.dataset.index;
       this.activeResultItem(newIndex);
     }

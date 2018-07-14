@@ -192,7 +192,7 @@
     li {
       flex-grow: 1; height: 48px;
 
-      a {
+      .tab-btn {
         display: block;
         margin-right: 1px; padding-top: 17px; height: 100%;
         background: #fff;
@@ -201,7 +201,7 @@
 
       &.on,
       &:hover {
-        a {
+        .tab-btn {
           margin-right: 0; padding-right: 1px;
           background: $color-bm-green; color: #fff;
         }
@@ -252,7 +252,7 @@
   .direction-btn-box {
     position: absolute; left: 0; right: 0; top: 0; bottom: 0;
 
-    .btn { position: absolute; top: 58px; display: block; padding: 30px 10px; }
+    .direction-btn { position: absolute; top: 58px; display: block; padding: 30px 10px; }
     > .prev { 
       left: 0; transform: translateX(-120%);
 

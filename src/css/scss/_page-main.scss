@@ -87,8 +87,9 @@
     position: absolute; left: 0; right: 0; top: 0; bottom: 0;
     margin: 0 auto; width: $main-width; height: 100%;
 
-    .prev { position: absolute; left: -80px; top: 50%; transform: translateY(-50%); }
-    .next { position: absolute; right: -80px; top: 50%; transform: translateY(-50%); }
+    .direction-btn { position: absolute; top: 50%; }
+    .prev { left: -80px; transform: translateY(-50%); }
+    .next { right: -80px; transform: translateY(-50%); }
   }
 
   .dot-btn-box {

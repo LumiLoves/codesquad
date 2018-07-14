@@ -71,8 +71,9 @@ const Tab = (function(helpers) {
       return json;
     }
     render(json) {
-      const viewData = this._makeViewData(json);
       this._checkRendererModule();
+      const viewData = this._makeViewData(json);
+  
       this.oRenderer.renderDOM({
         templateHTML: this.templateHTML,
         data: viewData,
@@ -129,12 +130,13 @@ const Tab = (function(helpers) {
     /* event */
 
     registerEvents() {
-      helpers.setIndexToDom(this.btnItems, 'a');
+      helpers.setIndexToDom(this.btnItems, '.tab-btn');
       this.btnBox.addEventListener('click', (e) => e.preventDefault());
       this.btnBox.addEventListener('click', this._onClickBtn.bind(this));
     }
     _onClickBtn({ target }) {
-      if (target && target.nodeName === 'A') { this.activeElements(target.index); }
+      if (!target.classList.contains('tab-btn')) { return; }
+      this.activeElements(target.index);
     }
   }
 
