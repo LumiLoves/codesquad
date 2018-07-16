@@ -26,9 +26,10 @@ class TemplateRenderer {
   _replaceData(html, obj) {
     let thisValue = null;
 
-    for (var key in obj) {
+    for (const key in obj) {
+      const regex = new RegExp(`{{${key}}}`, 'g');
       thisValue = obj[key];
-      html = html.replace(`{{${key}}}`, thisValue);
+      html = html.replace(regex, thisValue);
     }
 
     return html;
