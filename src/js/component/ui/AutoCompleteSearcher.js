@@ -31,12 +31,19 @@ const AutoCompleteSearcher = (function(helpers) {
       this.mouseIsOverTheList = false;
 
       // option
-      this.reqUrl = userOption.reqUrl;
-      this.templateHTML = userOption.templateHTML;
-      this.templateHTML2 = userOption.templateHTML2;
-
-      // this.useStorage = userOption.useStorage || false;
-      // this.storageName = userOption.storageName;
+      Object.assign(this, {
+        // request
+        reqUrl: undefined,
+        // storage
+        useStorage: false,
+        STORAGE_NAME_SEARCH_RESPONSE_DATA: 'searchResponseData_${keyword}',
+        STORAGE_NAME_RECENT_SEARCH: 'recentSearchKeywords',
+        MAX_RECENT_SEARCH_KEYWORDS: 5,
+        STORAGE_DURATION_TIME: 21600000, // 6시간(ms)
+        // render
+        templateHTMLResultList: undefined,
+        templateHTMLRecentList: undefined
+      }, userOption);
 
       // module
       this.oStorage = userModule.Storage || this.DefaultStorage;
@@ -44,15 +51,13 @@ const AutoCompleteSearcher = (function(helpers) {
 
       // static data
       this.errorMsg = { 'NOT_FOUNT_ITEM': 'not found item' }
-      this.STORAGE_NAME_SEARCH_RESPONSE_DATA = 'searchResponseData_${keyword}';
-      this.STORAGE_NAME_RECENT_SEARCH = 'recentSearchKeywords';
-      this.MAX_KEYWORDS = 5;
     }
-    
+
     /* init */
 
-    init() {
+    init(afterInitFn) {
       this.registerEvents();
+      afterInitFn && afterInitFn();
     }
     _checkStorageModule() {
       if (toString.call(this.oStorage) !== '[object Object]') {
@@ -70,19 +75,30 @@ const AutoCompleteSearcher = (function(helpers) {
     // response data storage
     _getStoredResponseData(keyword) {
       this._checkStorageModule();
-      const stoargeName = this.STORAGE_NAME_SEARCH_RESPONSE_DATA.replace('${keyword}', keyword);
-      const storageData = this.oStorage.checkData(stoargeName);
-      return storageData;
+      const storageName = this.STORAGE_NAME_SEARCH_RESPONSE_DATA.replace('${keyword}', keyword);
+      const storageData = this.oStorage.getData(storageName, true);
+      if (!storageData) { return false; }
+
+      const savedTime = storageData.savedTime;
+      const isValid = !this.oStorage.isExpiredData(savedTime, this.STORAGE_DURATION_TIME);
+      return (isValid)? storageData.value : false;
     }
-    _storeResponseData(data) {
+    _storeResponseData(keyword, resData) {
       this._checkStorageModule();
+      const currentTime = +new Date();
+      const storageName = this.STORAGE_NAME_SEARCH_RESPONSE_DATA.replace('${keyword}', keyword);
+      const storageData = {
+        'savedTime': currentTime,
+        'value': resData
+      };
+      this.oStorage.setData(storageName, storageData, true);
     }
 
     // recent keyword storage
     _getRecentKeyword() {
       this._checkStorageModule();
-      const keywords = this.oStorage.getData(this.STORAGE_NAME_RECENT_SEARCH);
-      return (keywords)? JSON.parse(keywords) : [];
+      const keywords = this.oStorage.getData(this.STORAGE_NAME_RECENT_SEARCH, true);
+      return (keywords)? keywords : [];
     }
     _storeRecentKeyword(newKeyword) {
       this._checkStorageModule();
@@ -92,9 +108,9 @@ const AutoCompleteSearcher = (function(helpers) {
       keywords = this._removeRecentData(newKeyword, false);
       keywords.unshift(newKeyword);
       // 노출되는 키워드의 최대 갯수만 저장
-      keywords = keywords.slice(0, this.MAX_KEYWORDS);
+      keywords = keywords.slice(0, this.MAX_RECENT_SEARCH_KEYWORDS);
 
-      this.oStorage.setData(this.STORAGE_NAME_RECENT_SEARCH, JSON.stringify(keywords));
+      this.oStorage.setData(this.STORAGE_NAME_RECENT_SEARCH, keywords, true);
     }
     _removeRecentData(keywordForDelete, needToStore = true) {
       this._checkStorageModule();
@@ -112,14 +128,19 @@ const AutoCompleteSearcher = (function(helpers) {
     /* request */
 
     async getSearchData(keyword) {
-      const storageData = this._getStoredResponseData(keyword);
-      if (storageData) { return storageData; }
+      if (this.useStorage) {
+        const storageData = this._getStoredResponseData(keyword);
+        if (storageData) { return storageData; }
+      }
 
-      const json = await this._getRequestData(keyword);
-      const isValidData = this._checkValidResponse(json);    
-      return (isValidData)? json : false;
+      const json = await this._requestSearchData(keyword);
+      const isValidData = this._checkValidResponse(json);
+      if (isValidData) { 
+        this._storeResponseData(keyword, json);
+        return json;
+      }
     }
-    async _getRequestData(keyword) {
+    async _requestSearchData(keyword) {
       const reqUrl = this.reqUrl.replace('${query}', keyword);    
       let json = null;
 
@@ -147,7 +168,7 @@ const AutoCompleteSearcher = (function(helpers) {
       const searchList = json[1]; // API의 약속된 응답 데이터 구조를 따름
       const viewData = this._makeResultViewData(keyword, searchList);
       this.oRenderer.renderDOM({
-        templateHTML: this.templateHTML,
+        templateHTML: this.templateHTMLResultList,
         data: viewData,
         appendFn: (resultHTML) => { this.resultList.innerHTML = resultHTML; }
       });
@@ -171,7 +192,7 @@ const AutoCompleteSearcher = (function(helpers) {
 
       const viewData = this._makeRecentViewData(lists);
       this.oRenderer.renderDOM({
-        templateHTML: this.templateHTML2,
+        templateHTML: this.templateHTMLRecentList,
         data: viewData,
         appendFn: (resultHTML) => { this.recentList.innerHTML = resultHTML; }
       });
@@ -187,10 +208,6 @@ const AutoCompleteSearcher = (function(helpers) {
     
     /* UI */
 
-    // script dom
-    // _checkScriptDOM() { }
-    // _injectScriptDOM() { }
-
     _resetToOriginalStatus() {
       this.currentKeyword = '';
       
@@ -199,6 +216,9 @@ const AutoCompleteSearcher = (function(helpers) {
 
       this.lastResultIndex = null;
       this.activeResultIndex = null;
+
+      this.recentList.innerHTML = '';
+      this.resultList.innerHTML = '';
 
       this.closeResultList();
       this.closeRecentList();
@@ -310,8 +330,6 @@ const AutoCompleteSearcher = (function(helpers) {
 
     registerEvents() {
       this.form.addEventListener('submit', (e) => e.preventDefault());
-      // this.form.addEventListener('submit', this.submitForm.bind(this));
-
       this.input.addEventListener('focus', this._onFocusInput.bind(this));
       this.input.addEventListener('blur', this._onBlurInput.bind(this));
       
@@ -328,19 +346,9 @@ const AutoCompleteSearcher = (function(helpers) {
       this.resultList.addEventListener('mouseleave', this._onMouseleaveResultList.bind(this));
     }
     _onFocusInput({ target }) {
-      // const hasScriptDOM = this._checkScriptDOM();
-      // if (hasScriptDOM) { return; }
-      // this._injectScriptDOM();
-      // this._onLoadScript();
-      
-      const isEmptyValue = target.value.trim() === '';
+      const isEmptyValue = (target.value.trim() === '');
       isEmptyValue && this.openRecentList();
     }
-    /*
-    _onLoadScript() {
-      this.input.removeEventListener('focus', this._onFocusInput);
-    }
-    */
     _onBlurInput() {
       !this.mouseIsOverTheList && this._resetToOriginalStatus();
     }
@@ -373,9 +381,9 @@ const AutoCompleteSearcher = (function(helpers) {
     }
     _handleEnterKey(targetKeyword) {
       const activeItem = this._findToActiveResultItem();
-      const hitOverActiveItem = !!activeItem;
-      
-      if (hitOverActiveItem) {
+      const hitEnterKeyWithActiveItem = !!activeItem;
+
+      if (hitEnterKeyWithActiveItem) {
         const selectedKeyword = activeItem.dataset.value;
         this._showSelectedKeyword(selectedKeyword);
         this._resetToOriginalStatus();
@@ -397,13 +405,15 @@ const AutoCompleteSearcher = (function(helpers) {
       if (keyCode === KEY_ARROW_DOWN) { this._handleArrowDownKey(); return; }
     }
     _onKeyupEnterKey(e) {
-      const KEY_ENTER = 13;
       const keyCode = e.keyCode;
+      const KEY_ENTER = 13;
       const targetKeyword = e.target.value.trim();
       const hasNoKeyword = (targetKeyword === '');
 
       if (hasNoKeyword) { return; }
-      if (keyCode === KEY_ENTER) { this._handleEnterKey(targetKeyword); return; }
+      if (keyCode === KEY_ENTER) { 
+        this._handleEnterKey(targetKeyword);
+      }
     }
     async _onInputVisibleKey({ target: { value: keyword } }) {
       (keyword === '') ? this.openRecentList() : this.closeRecentList();

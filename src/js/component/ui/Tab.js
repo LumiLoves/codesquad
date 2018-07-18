@@ -43,7 +43,7 @@ const Tab = (function(helpers) {
       const randomIndex = this._getRandomIndex();
 
       if (this._hasNoDOM()) {
-        const json = await this.getJSON(); 
+        const json = await this.getTabData(); 
         this.render(json);
       }
       this.activeElements(randomIndex, true);
@@ -60,10 +60,44 @@ const Tab = (function(helpers) {
       }
     }
 
+    /* storage */
+
+    _getStoredResponseData() {
+      this._checkStorageModule();
+      const storageName = this.STORAGE_NAME_RESPONSE_DATA;
+      const storageData = this.oStorage.getData(storageName, true);
+      if (!storageData) { return false; }
+
+      const savedTime = storageData.savedTime;
+      const isValid = !this.oStorage.isExpiredData(savedTime, this.STORAGE_DURATION_TIME)
+      return (isValid)? storageData.value : false;
+    }
+    _storeResponseData(resData) {
+      this._checkStorageModule();
+      const currentTime = +new Date();
+      const storageName = this.STORAGE_NAME_RESPONSE_DATA;
+      const storageData = {
+        'savedTime': currentTime,
+        'value': resData
+      };
+      this.oStorage.setData(storageName, storageData, true);
+    }
+
     /* render */
 
-    async getJSON() {
+    async getTabData() {
+      if (this.useStorage) {
+        const storageData = this._getStoredResponseData();
+        if (storageData) { return storageData; }  
+      }
+
+      const json = await this._requestTabData();
+      if (json) { this._storeResponseData(json); }
+      return json;
+    }
+    async _requestTabData() {
       let json = null;
+
       try {
         json = await helpers.getFetchData({ url: this.reqUrl });      
       } catch (err) {

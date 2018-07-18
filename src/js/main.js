@@ -2,7 +2,7 @@
 
 window.bmcPage || (window.bmcPage = {});
 
-window.bmcPage.main = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSlider, PageScroller) {
+window.bmcPage.main = (function(VisualSlider, Tab, ListSlider, PageScroller, helpers) {
 
   /* data */
 
@@ -28,23 +28,11 @@ window.bmcPage.main = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSli
 
   /* UI instance */
 
-  // 자동완성검색
-  const oAutoCompleteSearcher = new AutoCompleteSearcher({
-    wrapperElem: document.querySelector('#header .search-box'),
-    userOption: {
-      reqUrl: urlInfo.BASE_URL + urlInfo.SEARCH_FOOD,
-      // useStorage: true,
-      // storageName: 'search-history',
-      templateHTML: document.querySelector('[data-template-html="auto-complete-result-list"]').innerHTML,
-      templateHTML2: document.querySelector('[data-template-html="auto-complete-recent-list"]').innerHTML
-    }
-  });
-
   // 비주얼 슬라이더
   const oVisualSlider_promotion = new VisualSlider({
     wrapperElem: document.querySelector('#main-visual'),
     userOption: {
-      OPACITY_INTERVAL_VALUE: [ 0.11, 0.08 ],
+      OPACITY_INTERVAL_VALUE: [ 0.09, 0.12 ],
       useJsAnimation: true
     }
   });
@@ -54,6 +42,7 @@ window.bmcPage.main = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSli
     wrapperElem: document.querySelector('#best-seller .tab-box'),
     userOption: {
       reqUrl: urlInfo.BASE_URL + urlInfo.BEST_DISH,
+      useStorage: true,
       templateHTML: document.querySelector('[data-template-html="best-seller__tab-content-item"]').innerHTML
     }
   });
@@ -81,11 +70,34 @@ window.bmcPage.main = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSli
 
   return {
     init: () => {
-      oAutoCompleteSearcher.init();
+      const searchInput = document.querySelector('#header .search-input');
+      const searchScriptSrc = 'src/js/component/ui/AutoCompleteSearcher.js';
+      const handleSearchInput = () => {
+        searchInput.removeEventListener('focus', handleSearchInput);
+
+        helpers.injectScriptDOM(searchScriptSrc, () => {
+          const oAutoCompleteSearcher = new AutoCompleteSearcher({
+            wrapperElem: document.querySelector('#header .search-box'),
+            userOption: {
+              reqUrl: urlInfo.BASE_URL + urlInfo.SEARCH_FOOD,
+              useStorage: true,
+              templateHTMLResultList: document.querySelector('[data-template-html="auto-complete-result-list"]').innerHTML,
+              templateHTMLRecentList: document.querySelector('[data-template-html="auto-complete-recent-list"]').innerHTML
+            }
+          });
+
+          oAutoCompleteSearcher.init(() => {
+            const focusEvent = new Event('focus');
+            searchInput.dispatchEvent(focusEvent);
+          });
+        });
+      };
+      searchInput.addEventListener('focus', handleSearchInput);
+
       oVisualSlider_promotion.init();
       oTab_bestDish.init();
       oListSlider_dishes.forEach((oListSlider_dish) => oListSlider_dish.init());
       oPageScroller.init();
     }
   }
-})(AutoCompleteSearcher, VisualSlider, Tab, ListSlider, PageScroller);
+})(VisualSlider, Tab, ListSlider, PageScroller, helpers);

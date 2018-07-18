@@ -7,11 +7,19 @@
 const helpers = (function(HttpError) {
 
   const helpers = {
+    injectScriptDOM(src, afterInjectionFn) {
+      const scriptElem = document.createElement('script');
+      scriptElem.src = src;
+      scriptElem.addEventListener('load', () => {
+        afterInjectionFn && afterInjectionFn();
+      });
+      document.body.appendChild(scriptElem);
+    },
     attachIndexToDom(nodeList, selector) {
       const selectorFlag = selector? 'hasSelector' : 'noSelector';
       const handler = {
         noSelector(elem, i) {
-          elem.index = i;        
+          elem.index = i;
         },
         hasSelector(elem, i) {
           elem.querySelector(selector).index = i;
