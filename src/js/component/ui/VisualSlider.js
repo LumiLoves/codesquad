@@ -17,13 +17,14 @@ const VisualSlider = (function(helpers) {
       this.dotBtnBox = wrapperElem.querySelector('.dot-btn-box');
       this.dotBtnItems = this.dotBtnBox.querySelectorAll('.dot');
 
-      // ui state data      
+      // ui state data
       this.maxIndex = this.contentItems && this.contentItems.length;      
       
       // option
-      this.useJsAnimation = userOption.useJsAnimation || false;
-      this.FADE_OUT_OPACITY_INTERVAL_VALUE = (userOption.OPACITY_INTERVAL_VALUE && userOption.OPACITY_INTERVAL_VALUE[0]) || 0.11;
-      this.FADE_IN_OPACITY_INTERVAL_VALUE = (userOption.OPACITY_INTERVAL_VALUE && userOption.OPACITY_INTERVAL_VALUE[1]) || 0.08;
+      Object.assign(this, {
+        useJsAnimation: false,
+        OPACITY_INTERVAL_VALUE: [ 0.08, 0.11 ]
+      }, userOption);
     }
 
     /* init */
@@ -72,14 +73,14 @@ const VisualSlider = (function(helpers) {
       const target = this.contentItems.item(i);
 
       target.style.transform = 'translateX(0)';
-      helpers.fadeOutElem(target, this.FADE_OUT_OPACITY_INTERVAL_VALUE);
+      helpers.fadeOutElem(target, this.OPACITY_INTERVAL_VALUE[1]);
     }
     _fadeIn(i) {
       const target = this.contentItems.item(i);
 
       target.style.transform = 'translateX(0)';
       target.style.zIndex = 0;
-      helpers.fadeInElem(target, this.FADE_IN_OPACITY_INTERVAL_VALUE);
+      helpers.fadeInElem(target, this.OPACITY_INTERVAL_VALUE[0]);
     }
 
     /* event */

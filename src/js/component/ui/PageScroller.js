@@ -20,8 +20,10 @@ class PageScroller extends ParentUI {
     this.MAX_SCROLL_TOP = SCROLL_HEIGHT - CLIENT_HEIGHT - 100; // 버퍼값 100 추가
  
     // option
-    this.TRIGGER_SCROLL_TOP = userOption.TRIGGER_SCROLL_TOP || 150;
-    this.INTERVAL_VALUE = userOption.INTERVAL_VALUE || 5; // 가속도 주기 위한 값
+    Object.assign(this, {
+      TRIGGER_SCROLL_TOP: 150,
+      INTERVAL_VALUE: 5 // 가속도 주기 위한 값
+    }, userOption);
   }
 
   /* init */

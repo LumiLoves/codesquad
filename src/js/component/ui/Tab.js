@@ -21,11 +21,16 @@ const Tab = (function(helpers) {
       this.activeIndex = 0;
 
       // option
-      this.reqUrl = userOption.reqUrl;
-      this.templateHTML = userOption.templateHTML;
-
-      this.useStorage = userOption.useStorage || false;
-      this.storageName = userOption.storageName;
+      Object.assign(this, {
+        // request
+        reqUrl: undefined,
+        // storage
+        useStorage: false,
+        STORAGE_NAME_RESPONSE_DATA: 'tabResponseData',
+        STORAGE_DURATION_TIME: 21600000, // 6시간(ms)
+        // render
+        templateHTML: undefined
+      }, userOption);
 
       // module
       this.oStorage = userModule.Storage || this.DefaultStorage;

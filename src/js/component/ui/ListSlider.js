@@ -20,13 +20,17 @@ const ListSlider = (function(helpers) {
       this.maxIndex = this.contentItems && this.contentItems.length;      
 
       // option
-      this.reqUrl = userOption.reqUrl;
-      this.templateHTML = userOption.templateHTML;
-
-      this.useStorage = userOption.useStorage || false;
-      this.storageName = userOption.storageName;
-
-      this.ITEM_COUNT_PER_GROUP = userOption.ITEM_COUNT_PER_GROUP || 1;
+      Object.assign(this, {
+        // request
+        reqUrl: undefined,
+        // storage
+        useStorage: false,
+        storageName: 'listSliderResponseData',
+        // render
+        templateHTML: undefined,
+        // ui
+        ITEM_COUNT_PER_GROUP: 1
+      }, userOption);
 
       // module
       this.oStorage = userModule.Storage || this.DefaultStorage;
