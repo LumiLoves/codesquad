@@ -52,41 +52,36 @@
       <a class="logo" href="#">
         <img src="src/img/logo-main.png" alt="배민찬 - 모바일 넘버원 반찬가게" />
       </a>
-      
-      <form class="search-form" action="/" method="get">
-        <label for="search-keyword" class="blind">검색</label>
-        <input type="text" name="search-keyword" id="search-keyword" autocomplete="off" />
-        <button type="submit"><span>검색</span></button>
 
-        <ul class="search-result-box"></ul>
-        <script type="text/template" data-template-html="auto-complete-result-list">
-          <li>
-            <a data-index="{{index}}" data-value="{{value}}" href="">
-              {{valueWithHTML}}
-            </a>
-          </li>
-        </script>
+      <div class="search-box">
+        <form class="search-form-box" action="/" method="get">
+          <label for="search-input" class="blind">검색</label>
+          <input type="text" id="search-input" class="search-input" name="search-keyword" autocomplete="off" />
+          <button type="submit"><span>검색</span></button>
+        </form>
 
-        <!--
-          <ul class="search-result-box">
+        <div class="search-list-box-wrapper">
+          <ul class="search-list-box recent"></ul>
+          <ul class="search-list-box result"></ul>
+
+          <script type="text/template" data-template-html="auto-complete-recent-list">
             <li>
-              <a href="" data-index="0" data-value="애플"><em>애플</em></a>
+              <a class="search-list-item" data-index="{{index}}" data-value="{{value}}" href="#">
+                {{value}}
+                <button type="button" class="delete-btn"></button>
+              </a>
             </li>
+          </script>
+
+          <script type="text/template" data-template-html="auto-complete-result-list">
             <li>
-              <a href="" data-index="1" data-value="애플 모니터"><em>애플</em> 모니터</a>
+              <a class="search-list-item" data-index="{{index}}" data-value="{{value}}" href="#">
+                {{valueWithHTML}}
+              </a>
             </li>
-            <li>
-              <a href="" data-index="2" data-value="txt tt"><em>애플</em> 키보드</a>
-            </li>
-            <li>
-              <a href="" data-index="3" data-value="txt tt"><em>애플</em> 또 뭐있지</a>
-            </li>
-            <li>
-              <a href="" data-index="4" data-value="txt tt"><em>애플</em> 또 뭐있지 뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지뭐있지</a>
-            </li>
-          </ul>
-        -->
-      </form>
+          </script>
+        </div>
+      </div>
 
       <ul class="favorite-menu">
         <li>

@@ -126,7 +126,8 @@ const ListSlider = (function(helpers) {
       this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
     }
     _onClickDirectionBtn({ target }) {
-      if (!target.classList.contains('direction-btn') && !target.closest('.direction-btn')) { return; }
+      const dirctionBtn = target.closest('.direction-btn');
+      if (!dirctionBtn) { return; }
       const oldIndex = this.activeIndex;
       const newIndex = (this._isPrevBtn(target))? oldIndex - 1 : oldIndex + 1;
       this._updateDirection();

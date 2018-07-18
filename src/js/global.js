@@ -14,7 +14,7 @@
 
   function getPageInitFn(pathname) {
     const fileName = getFileName(pathname);
-    return (fileName)? bmcPage[fileName].init : bmcPage.index.init;
+    return (fileName)? bmcPage[fileName].init : bmcPage.main.init;
   }
 
   const currentPageInitFn = getPageInitFn(location.pathname);

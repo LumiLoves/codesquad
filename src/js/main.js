@@ -2,7 +2,7 @@
 
 window.bmcPage || (window.bmcPage = {});
 
-window.bmcPage.index = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSlider, PageScroller) {
+window.bmcPage.main = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSlider, PageScroller) {
 
   /* data */
 
@@ -30,12 +30,13 @@ window.bmcPage.index = (function(AutoCompleteSearcher, VisualSlider, Tab, ListSl
 
   // 자동완성검색
   const oAutoCompleteSearcher = new AutoCompleteSearcher({
-    wrapperElem: document.querySelector('#header .search-form'),
+    wrapperElem: document.querySelector('#header .search-box'),
     userOption: {
       reqUrl: urlInfo.BASE_URL + urlInfo.SEARCH_FOOD,
-      useStorage: true,
-      storageName: 'search-history',
-      templateHTML: document.querySelector('[data-template-html="auto-complete-result-list"]').innerHTML
+      // useStorage: true,
+      // storageName: 'search-history',
+      templateHTML: document.querySelector('[data-template-html="auto-complete-result-list"]').innerHTML,
+      templateHTML2: document.querySelector('[data-template-html="auto-complete-recent-list"]').innerHTML
     }
   });
 
