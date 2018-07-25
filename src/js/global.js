@@ -1,23 +1,35 @@
-'use strict';
+/**
+ * page initializer (by url)
+ */
 
-(function(bmcPage) {
-  function getFileName(url) {
-    const isNotSupportedProtocol = location.protocol !== ('https:' || 'http:');
-    if (isNotSupportedProtocol) { return null; }
+// 다른 여러 페이지들이 있다고 가정
+const pageScriptSrcMap = {
+  main: './main.js',
+  sub: './sub.js',
+  // ...
+};
 
-    let resultUrl = url.substring(url.lastIndexOf('/')+1);
-    resultUrl = resultUrl.split('?')[0];
-    resultUrl = resultUrl.split('#')[0];
-    resultUrl = resultUrl.split('.')[0];    
-    return resultUrl;
-  }
+function getPageName() {
+  const { protocol, pathname } = location;
+  const isNotSupportedProtocol = (protocol !== ('https:' || 'http:'));
+  if (isNotSupportedProtocol) { return null; }
 
-  function getPageInitFn(pathname) {
-    const fileName = getFileName(pathname);
-    return (fileName)? bmcPage[fileName].init : bmcPage.main.init;
-  }
+  let pageName = pathname.substring(pathname.lastIndexOf('/') + 1);
+  pageName = pageName.split('?')[0];
+  pageName = pageName.split('#')[0];
+  pageName = pageName.split('.')[0];    
+  return pageName;
+}
 
-  const currentPageInitFn = getPageInitFn(location.pathname);
-  document.addEventListener('DOMContentLoaded', currentPageInitFn());
+function runPage() {
+  const pageName = getPageName() || 'main';
+  const scriptSrc = pageScriptSrcMap[pageName];
 
-})(window.bmcPage);
+  import(scriptSrc)
+  .then(({ default: initPage }) => initPage())
+  .catch((error) => {
+    throw new Error('해당 페이지의 script file import 중 에러발생', error);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', runPage);

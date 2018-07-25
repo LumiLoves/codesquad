@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * PageScroller
  */
 
-class PageScroller extends ParentUI {
+import ParentUI from './core/ParentUI.js';
+
+export default class PageScroller extends ParentUI {
   constructor({ wrapperElem, userOption = {} }) {
     super();
     const { documentElement: docElem, body } = document;

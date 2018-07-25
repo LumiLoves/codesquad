@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * CustomSessionStorages
  */
 
-class CustomSessionStorages extends ParentStorage {
+import ParentStorage from './core/ParentStorage.js';
+
+export default class CustomSessionStorages extends ParentStorage {
   constructor() {
     super();
   }

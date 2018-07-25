@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * CustomLocalStorage
  */
 
-class CustomLocalStorage extends ParentStorage {
+import ParentStorage from './core/ParentStorage.js';
+
+export default class CustomLocalStorage extends ParentStorage {
   constructor() {
     super();
   }

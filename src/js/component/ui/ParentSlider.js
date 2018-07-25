@@ -1,11 +1,11 @@
-'use strict';
-
 /**
  * ParentSlider
  * - 모든 슬라이더의 부모 클래스
  */
 
-class ParentSlider extends ParentUI {
+import ParentUI from './core/ParentUI.js';
+
+export default class ParentSlider extends ParentUI {
   constructor() {
     if (new.target === ParentSlider) {
       throw new TypeError('Slider 인스턴스를 직접 생성할 수 없음');

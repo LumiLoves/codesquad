@@ -1,10 +1,8 @@
-'use strict';
-
 /**
  * TemplateRenderer
  */
 
-class TemplateRenderer {
+export default class TemplateRenderer {
   renderDOM({ templateHTML, data, appendFn }) {
     if (!templateHTML || !data) { throw new Error('[TemplateRenderer] templateHTML이나 data가 없음'); }
 

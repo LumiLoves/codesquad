@@ -1,10 +1,8 @@
-'use strict';
-
 /**
  * ParentStorage
  */
 
-class ParentStorage {
+export default class ParentStorage {
   constructor() {
     if (new.target === ParentStorage) {
       throw new TypeError('ParentStorage 인스턴스를 직접 생성할 수 없음');
@@ -19,7 +17,7 @@ class ParentStorage {
     }
   }
 
-  // 훅 메서드 (자식이 구현해도 되고, 이걸 써도 됨.)
+  // (인스턴스에서 호출할 수 없음. 상속받는 자식클래스에서 super를 통해 사용한다.)
   _isExpiredData(savedTime, savingDuration) {
     const currentTime = +new Date();
     const gap = currentTime - savedTime;
