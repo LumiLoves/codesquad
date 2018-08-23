@@ -96,16 +96,16 @@ export default function init() {
     searchInput.removeEventListener('focus', handleSearchInput);
     
     import(searchModuleSrc)
-    .then(({ default: AutoCompleteSearcher }) => {
-      const oAutoCompleteSearcher = makeAutoCompleteSearchInstance(AutoCompleteSearcher);
-      oAutoCompleteSearcher.init(() => {
-        const focusEvent = new Event('focus');
-        searchInput.dispatchEvent(focusEvent);
+      .then(({ default: AutoCompleteSearcher }) => {
+        const oAutoCompleteSearcher = makeAutoCompleteSearchInstance(AutoCompleteSearcher);
+        oAutoCompleteSearcher.init(() => {
+          const focusEvent = new Event('focus');
+          searchInput.dispatchEvent(focusEvent);
+        });
+      })
+      .catch((error) => {
+        throw new Error('AutoCompleteSearcher 모듈을 가져오지 못함', error);
       });
-    })
-    .catch((error) => {
-      throw new Error('AutoCompleteSearcher 모듈을 가져오지 못함', error);
-    });
   });
 
   oVisualSlider_promotion.init();

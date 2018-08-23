@@ -247,9 +247,6 @@ export default class AutoCompleteSearcher extends ParentUI {
   }
 
   // recent list
-  _checkOpenedRecentList() {
-    return this.recentList.classList.contains('open');
-  }
   openRecentList() {
     const recentKeywords = this._getRecentKeywords();
     const isOpen = this._checkOpenedRecentList();
@@ -265,6 +262,9 @@ export default class AutoCompleteSearcher extends ParentUI {
   closeRecentList() {
     const isOpen = this._checkOpenedRecentList();    
     isOpen && this.recentList.classList.remove('open');
+  }
+  _checkOpenedRecentList() {
+    return this.recentList.classList.contains('open');
   }
 
   // recent item
@@ -287,9 +287,6 @@ export default class AutoCompleteSearcher extends ParentUI {
   }
 
   // result list
-  _checkOpenedResultList() {
-    return this.resultList.classList.contains('open');
-  }
   openResultList() {
     const isOpen = this._checkOpenedResultList();
     !isOpen && this.resultList.classList.add('open');
@@ -297,6 +294,9 @@ export default class AutoCompleteSearcher extends ParentUI {
   closeResultList() {
     const isOpen = this._checkOpenedResultList();    
     isOpen && this.resultList.classList.remove('open');
+  }
+  _checkOpenedResultList() {
+    return this.resultList.classList.contains('open');
   }
 
   // result item
