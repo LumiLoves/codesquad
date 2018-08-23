@@ -778,12 +778,14 @@ describe('[UI Component] AutoCompleteSearcher', () => {
     // keyup - enter key
 
     context('검색창에 검색어가 입력되어 있을 때 Enter Key를 누르면', () => {
+      // given (공통)
+      const KEY_ENTER = 13;
+      const keyupEnterEvent = new KeyboardEvent('keyup', { keyCode: KEY_ENTER });
+      const DUMMY_CURRENT_KEYWORD = '테스트용 검색어';
+
       it('검색목록에서 선택중인 목록아이템이 있을 때, 선택된 아이템이 검색창에 입력되고 목록이 닫힌다.', () => {
         // given
-        const DUMMY_CURRENT_KEYWORD = '테스트용 검색어';
         const DUMMY_SELECTED_KEYWORD = '테스트용 선택된 아이템 이름';
-        const KEY_ENTER = 13;
-        const keyupEnterEvent = new KeyboardEvent('keyup', { keyCode: KEY_ENTER });
         const fakeSelectedListItem = document.createElement('li');
         
         sinon.stub(oSearcher, '_findToActiveResultItem').callsFake(() => fakeSelectedListItem);
@@ -803,18 +805,15 @@ describe('[UI Component] AutoCompleteSearcher', () => {
   
       it('검색목록에서 선택중인 목록아이템이 없을 때, form submit handler가 실행되고 최근 검색어로 저장된다.', () => {
         // given
-        const DUMMY_CURRENT_KEYWORD = '테스트용 검색어';
-        const KEY_ENTER = 13;
-        const keyupEnterEvent = new KeyboardEvent('keyup', { keyCode: KEY_ENTER });
+        const DUMMY_SELECTED_KEYWORD = '';
         const fakeSelectedListItem = null;
         
         sinon.stub(oSearcher, '_findToActiveResultItem').callsFake(() => fakeSelectedListItem);
-        const spyHandleEnterKey = sinon.spy(oSearcher, '_handleEnterKey');
         const spyStoreRecentKeyword = sinon.spy(oSearcher, '_storeRecentKeyword');
         const spySubmitForm = sinon.spy(oSearcher, 'submitForm');
-        const spyCloseResultList = sinon.spy(oSearcher, 'closeResultList');
   
         oSearcher.input.value = DUMMY_CURRENT_KEYWORD;
+        fakeSelectedListItem.dataset.value = DUMMY_SELECTED_KEYWORD;
   
         // when
         oSearcher.input.dispatchEvent(keyupEnterEvent);
