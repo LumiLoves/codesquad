@@ -1,34 +1,26 @@
-# 개발 과정 보기
+# javascript-food
 
-[프로젝트 진행상황별 이슈보드 보기](https://github.com/LumiLoves/javascript-food/projects/1)
+ L3 project  
 
-----
 
 ## 1. 기본기능 구현
 
-[리뷰 피드백](https://github.com/code-squad/javascript-food/pull/18)
-[리뷰 피드백2](https://github.com/code-squad/javascript-food/pull/19)
+* [리뷰 피드백](https://github.com/code-squad/javascript-food/pull/18)  
+* [리뷰 피드백2](https://github.com/code-squad/javascript-food/pull/19)
 
 
+## 2. 리팩토링 - 객체의 역할과 정의 세우기, 범용성 개선
 
-## 2. 리팩토링 1차 - 객체의 역할과 정의 세우기, 범용성 개선
-
-[정리한 글](docs/1-refactoring.md)
-
-[리뷰 피드백](https://github.com/code-squad/javascript-food/pull/20)
-
-관련 소스코드
+* [리뷰 피드백](https://github.com/code-squad/javascript-food/pull/20)
 
 
+## 3. 리팩토링 - Renderer 객체 개선
 
-## 3. 리팩토링 2차 - Renderer 객체 개선 (진행중)
+* [리뷰 피드백](https://github.com/code-squad/javascript-food/pull/21)
 
-[정리한 글](docs/2-refactoring.md)
-
-[리뷰 피드백](https://github.com/code-squad/javascript-food/pull/21)
-
-관련 소스코드
-
+## 4. 테스트코드
+* [정리글](https://lumiloves.github.io/2018/08/21/my-first-frontend-test-code-experience)  
+* [리뷰 피드백](https://github.com/code-squad/javascript-food/pull/43)
 
 
 
