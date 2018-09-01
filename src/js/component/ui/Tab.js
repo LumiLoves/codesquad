@@ -25,11 +25,12 @@ export default class Tab extends ParentUI {
       reqUrl: undefined,
       // storage
       useStorage: false,
-      STORAGE_NAME_RESPONSE_DATA: 'tabResponseData',
+      STORAGE_NAME: 'defaultTabStorage',
       STORAGE_DURATION_TIME: 21600000, // 6시간(ms)
       // render
       templateHTML: undefined
     }, userOption);
+    this.STORAGE_NAME_RESPONSE_DATA = this.STORAGE_NAME + '_responseData';
 
     // module
     this.oStorage = userModule.Storage || this.DefaultStorage;

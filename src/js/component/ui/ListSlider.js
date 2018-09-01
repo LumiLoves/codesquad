@@ -24,12 +24,14 @@ export default class ListSlider extends ParentSlider {
       reqUrl: undefined,
       // storage
       useStorage: false,
-      storageName: 'listSliderResponseData',
+      STORAGE_NAME: 'defaultSliderStorage',
+      STORAGE_DURATION_TIME: 21600000, // 6시간(ms)
       // render
       templateHTML: undefined,
       // ui
       ITEM_COUNT_PER_GROUP: 1
     }, userOption);
+    this.STORAGE_NAME_RESPONSE_DATA = this.STORAGE_NAME + '_responseData';
 
     // module
     this.oStorage = userModule.Storage || this.DefaultStorage;
@@ -40,7 +42,7 @@ export default class ListSlider extends ParentSlider {
 
   async init() {
     if (this._hasNoDOM()) {
-      const json = await this.getJSON();
+      const json = await this.getSliderData();
       this.render(json);
     }
     this.activeElements(0, true);
@@ -57,10 +59,44 @@ export default class ListSlider extends ParentSlider {
     }
   }
 
+  /* storage */
+
+  _getStoredResponseData() {
+    this._checkStorageModule();
+    const storageName = this.STORAGE_NAME_RESPONSE_DATA;
+    const storageData = this.oStorage.getData(storageName, true);
+    if (!storageData) { return false; }
+
+    const savedTime = storageData.savedTime;
+    const isValid = !this.oStorage.isExpiredData(savedTime, this.STORAGE_DURATION_TIME)
+    return (isValid)? storageData.value : false;
+  }
+  _storeResponseData(resData) {
+    this._checkStorageModule();
+    const currentTime = +new Date();
+    const storageName = this.STORAGE_NAME_RESPONSE_DATA;
+    const storageData = {
+      'savedTime': currentTime,
+      'value': resData
+    };
+    this.oStorage.setData(storageName, storageData, true);
+  }
+
   /* render */
 
-  async getJSON() {
+  async getSliderData() {
+    if (this.useStorage) {
+      const storageData = this._getStoredResponseData();
+      if (storageData) { return storageData; }  
+    }
+
+    const json = await this._requestSliderData();
+    if (json) { this._storeResponseData(json); }
+    return json;
+  }
+  async _requestSliderData() {
     let json = null;
+
     try {
       json = await getFetchData({ url: this.reqUrl });
     } catch (err) {
