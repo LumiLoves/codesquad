@@ -19,7 +19,8 @@ export default class ParentSlider extends ParentUI {
   }
 
   /* state data */
-  _updateDirection(oldIndex, newIndex) {
+
+  updateDirection(oldIndex, newIndex) {
     this.direction = this._getDirection(oldIndex, newIndex);
   }
   _getDirection(oldIndex, newIndex) {
@@ -29,7 +30,7 @@ export default class ParentSlider extends ParentUI {
 
   /* ui */
 
-  _activeContent(oldIndex, newIndex) {
+  activeContent(oldIndex, newIndex) {
     const oldIndexSet = this._calcSlideIndexSet(oldIndex);
     const newIndexSet = this._calcSlideIndexSet(newIndex);
 
@@ -63,10 +64,10 @@ export default class ParentSlider extends ParentUI {
 
   /* event */
 
-  _isPrevBtn(elem) {
+  isPrevBtn(elem) {
     return elem.classList.contains('prev');
   }
-  _isNextBtn(elem) {
+  isNextBtn(elem) {
     return elem.classList.contains('next');
   }
 }

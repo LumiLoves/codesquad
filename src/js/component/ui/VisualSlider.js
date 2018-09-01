@@ -38,7 +38,6 @@ export default class VisualSlider extends ParentSlider {
   }
 
   /* ui */
-  
   activeElements(i, isForceActive = false) {
     const oldIndex = this.activeIndex;
     const newIndex = this._calcSlideIndex(i || 0);
@@ -56,6 +55,10 @@ export default class VisualSlider extends ParentSlider {
     this.dotBtnItems.item(oldIndex).classList.remove('on');
     this.dotBtnItems.item(newIndex).classList.add('on');  
   }
+  _activeContent(oldIndex, newIndex) {
+    super.activeContent(oldIndex, newIndex);
+  }
+
   _activeContentByJS(oldIndex, newIndex) {
     this._resetAnimationCSS();
     this._fadeOut(oldIndex);
@@ -81,6 +84,11 @@ export default class VisualSlider extends ParentSlider {
     target.style.zIndex = 0;
     fadeInElem(target, this.OPACITY_INTERVAL_VALUE[0]);
   }
+
+  _isPrevBtn(target) {
+    return super.isPrevBtn(target);
+  }
+
 
   /* event */
 

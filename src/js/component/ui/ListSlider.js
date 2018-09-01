@@ -110,7 +110,6 @@ export default class ListSlider extends ParentSlider {
   }
 
   /* ui */
-
   activeElements(i, isForceActive = false) {
     const oldIndex = this.activeIndex;
     const newIndex = this._calcSlideIndex(i || 0);
@@ -118,6 +117,17 @@ export default class ListSlider extends ParentSlider {
 
     this.activeIndex = newIndex;      
     this._activeContent(oldIndex, newIndex);
+  }
+  _activeContent(oldIndex, newIndex) {
+    super.activeContent(oldIndex, newIndex);
+  }
+
+  _isPrevBtn(target) {
+    return super.isPrevBtn(target);
+  }
+
+  _updateDirection(oldIndex, newIndex) {
+    super.updateDirection(oldIndex, newIndex);
   }
 
   /* event */
