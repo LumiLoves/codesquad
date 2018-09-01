@@ -497,17 +497,7 @@
       </header>
 
       <div class="sliding-list-box">
-        <div class="direction-btn-box">
-          <a class="direction-btn prev" href="#" title="이전 리스트 보기">
-            <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
-          </a>          
-          <a class="direction-btn next" href="#" title="다음 리스트 보기">
-            <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
-          </a>
-        </div>
-
-
-        <ul class="content-group">
+        <ul class="content-group" data-group-style="" data-direction="">
           <script type="text/template" data-template-html="side-dish__content-box">
             {{#if isGroupStart}}        
             <li>
@@ -778,6 +768,15 @@
           </li>
         -->
         </ul><!-- .content-group -->
+
+        <div class="direction-btn-box">
+          <a class="direction-btn prev" href="#" title="이전 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
+          </a>          
+          <a class="direction-btn next" href="#" title="다음 리스트 보기">
+            <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
+          </a>
+        </div>
       </div><!-- .sliding-list-box -->
 
       <a href="#" class="more">밑반찬 전체보기 <i class="bm-icon btn-arrow-more"></i></a>
@@ -794,6 +793,8 @@
       </header>
 
       <div class="sliding-list-box">
+        <ul class="content-group"></ul>
+
         <div class="direction-btn-box">
           <a class="direction-btn prev" href="#" title="이전 리스트 보기">
             <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
@@ -802,8 +803,6 @@
             <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
           </a>
         </div>
-
-        <ul class="content-group"></ul>
       </div><!-- .sliding-list-box -->
 
       <a href="#" class="more">메인반찬 전체보기 <i class="bm-icon btn-arrow-more"></i></a>
@@ -820,6 +819,8 @@
       </header>
 
       <div class="sliding-list-box">
+        <ul class="content-group"></ul>
+
         <div class="direction-btn-box">
           <a class="direction-btn prev" href="#" title="이전 리스트 보기">
             <i class="bm-icon spr-btn-arrow-sliding-list prev"></i>
@@ -828,8 +829,6 @@
             <i class="bm-icon spr-btn-arrow-sliding-list next"></i>            
           </a>
         </div>
-
-        <ul class="content-group"></ul>
       </div><!-- .sliding-list-box -->
 
       <a href="#" class="more">국,찌개 전체보기 <i class="bm-icon btn-arrow-more"></i></a>      

@@ -19,9 +19,12 @@ export default class ParentSlider extends ParentUI {
   }
 
   /* state data */
-
-  _updateDirection(direction) {
-    this.direction = direction || this._getDirection();
+  _updateDirection(oldIndex, newIndex) {
+    this.direction = this._getDirection(oldIndex, newIndex);
+  }
+  _getDirection(oldIndex, newIndex) {
+    const gap = newIndex - oldIndex;
+    return (gap === 1 || gap < -1)? 'next' : 'prev';
   }
 
   /* ui */
@@ -31,8 +34,7 @@ export default class ParentSlider extends ParentUI {
     const newIndexSet = this._calcSlideIndexSet(newIndex);
 
     this._removeDirectionClass(oldIndexSet);      
-    // this._addDirectionClass(newIndexSet, direction);
-    this._addDirectionClass(newIndexSet, 'next');    
+    this._addDirectionClass(newIndexSet, this.direction);
   }
   _calcSlideIndex(i) {
     return (this.maxIndex + i) % this.maxIndex;
@@ -43,10 +45,6 @@ export default class ParentSlider extends ParentUI {
       current: this._calcSlideIndex(i),
       next: this._calcSlideIndex(i + 1)
     }
-  }
-  _getDirection(oldIndex, newIndex) {
-    const gap = newIndex - oldIndex;
-    return (gap === 1 || gap < -1)? 'next' : 'prev';
   }
   _removeDirectionClass(indexSet) {
     ['prev', 'current', 'next'].forEach((dir) => {

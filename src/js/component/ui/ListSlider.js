@@ -75,24 +75,23 @@ export default class ListSlider extends ParentSlider {
   render(json) {
     this._checkRendererModule();
     const viewData = this._makeViewData(json);
-    
+    const groupCount = Math.ceil(viewData.length / this.ITEM_COUNT_PER_GROUP);
+    const groupStyle = (groupCount > 2)? 'default' : (groupCount === 2)? 'two' : 'one'; 
+
     this.oRenderer.renderDOM({
       templateHTML: this.templateHTML,        
       data: viewData,
-      appendFn: (resultHTML) => { this.contentBox.innerHTML = resultHTML; }
+      appendFn: (resultHTML) => { 
+        this.contentBox.dataset.groupStyle = groupStyle;
+        this.contentBox.innerHTML = resultHTML; 
+      }
     });
     this._setStateDataAfterRender();
   }
   _hasNoDOM() {
     return !this.contentItems.length;
   }
-  _makeViewData(originData) {
-    // 삭제예정) 그룹이 3개 이하 (1,2개)로는 동작이 고장나서 일단 갯수를 4개로 늘려놓음.
-    let resultData = [...originData, ...originData];
-    resultData = JSON.parse(JSON.stringify(resultData));
-    // resultData.pop();
-    // resultData.pop();
-
+  _makeViewData(resultData) {
     const itemStartOrder = 0;
     const itemEndOrder = this.ITEM_COUNT_PER_GROUP - 1;
     const lastItemIndex = resultData.length - 1;
@@ -131,9 +130,10 @@ export default class ListSlider extends ParentSlider {
   _onClickDirectionBtn({ target }) {
     const dirctionBtn = target.closest('.direction-btn');
     if (!dirctionBtn) { return; }
+
     const oldIndex = this.activeIndex;
     const newIndex = (this._isPrevBtn(target))? oldIndex - 1 : oldIndex + 1;
-    this._updateDirection();
+    this._updateDirection(oldIndex, newIndex);
     this.activeElements(newIndex);
   }
 }
