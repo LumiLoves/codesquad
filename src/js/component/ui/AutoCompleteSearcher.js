@@ -331,26 +331,26 @@ export default class AutoCompleteSearcher extends ParentUI {
 
   registerEvents() {
     this.form.addEventListener('submit', (e) => e.preventDefault());
-    this.input.addEventListener('focus', this._onFocusInput.bind(this));
-    this.input.addEventListener('blur', this._onBlurInput.bind(this));
+    this.input.addEventListener('focus', (e) => this._onFocusInput(e));
+    this.input.addEventListener('blur', (e) => this._onBlurInput(e));
 
     // 문자 내용이 변경될 때
     this.input.addEventListener('input', debounceEventListener({
       listenerFn: this._onInputVisibleKey.bind(this),
       delayTime: this.debounceTime
     }));
-    this.input.addEventListener('keydown', this._onKeydownArrowKey.bind(this)); // 누르는 동안 계속 트리거
-    this.input.addEventListener('keyup', this._onKeyupEnterKey.bind(this)); // 띌 때 한번만 발생
+    this.input.addEventListener('keydown', (e) => this._onKeydownArrowKey(e)); // 누르는 동안 계속 트리거
+    this.input.addEventListener('keyup', (e) => this._onKeyupEnterKey(e)); // 띌 때 한번만 발생
 
-    this.recentList.addEventListener('mouseover', this._onMouseoverRecentList.bind(this));
-    this.recentList.addEventListener('mouseleave', this._onMouseleaveRecentList.bind(this));
+    this.recentList.addEventListener('mouseover', (e) => this._onMouseoverRecentList(e));
+    this.recentList.addEventListener('mouseleave', (e) => this._onMouseleaveRecentList(e));
     this.recentList.addEventListener('click', (e) => e.preventDefault());
-    this.recentList.addEventListener('click', this._onClickRecentList.bind(this));
+    this.recentList.addEventListener('click', (e) => this._onClickRecentList(e));
 
-    this.resultList.addEventListener('mouseover', this._onMouseoverResultList.bind(this));
-    this.resultList.addEventListener('mouseleave', this._onMouseleaveResultList.bind(this));
+    this.resultList.addEventListener('mouseover', (e) => this._onMouseoverResultList(e));
+    this.resultList.addEventListener('mouseleave', (e) => this._onMouseleaveResultList(e));
     this.resultList.addEventListener('click', (e) => e.preventDefault());
-    this.resultList.addEventListener('click', this._onClickResultList.bind(this));
+    this.resultList.addEventListener('click', (e) => this._onClickResultList(e));
   }
 
   // focus,blur - input

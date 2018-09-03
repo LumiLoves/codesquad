@@ -100,10 +100,10 @@ export default class VisualSlider extends ParentSlider {
     attachIndexToDom(this.dotBtnItems);
     
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
-    this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
+    this.directionBtnBox.addEventListener('click', (e) => this._onClickDirectionBtn(e));
 
     this.dotBtnBox.addEventListener('click', (e) => e.preventDefault());
-    this.dotBtnBox.addEventListener('click', this._onClickDotBtn.bind(this));
+    this.dotBtnBox.addEventListener('click', (e) => this._onClickDotBtn(e));
   }
   _onClickDirectionBtn({ target }) {
     const isDirectionBtn = target.classList.contains('direction-btn');

@@ -91,9 +91,9 @@ export default class PageScroller extends ParentUI {
   /* event */
 
   registerEvent() {
-    window.addEventListener('scroll', this._onScroll.bind(this));
+    window.addEventListener('scroll', (e) => this._onScroll(e));
     this.wrapperElem.addEventListener('click', (e) => e.preventDefault());
-    this.wrapperElem.addEventListener('click', this._onClickBtn.bind(this));
+    this.wrapperElem.addEventListener('click', (e) => this._onClickBtn(e));
   }
   _onClickBtn({ target: { classList: targetClassList } }) {
     const isScrollBtn = targetClassList.contains('scroll-btn');

@@ -172,10 +172,10 @@ export default class ListSlider extends ParentSlider {
   
   registerEvents() {
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
-    this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
+    this.directionBtnBox.addEventListener('click', (e) => this._onClickDirectionBtn(e));
 
     [ 'transitionend', 'animationend' ].forEach((eventName) => {
-      this.contentBox.addEventListener(eventName, this._onCssAnimationsEnd.bind(this));
+      this.contentBox.addEventListener(eventName, (e) => this._onCssAnimationsEnd(e));
     });
   }
   _onClickDirectionBtn({ target }) {

@@ -171,7 +171,7 @@ export default class Tab extends ParentUI {
   registerEvents() {
     attachIndexToDom(this.btnItems, '.tab-btn');
     this.btnBox.addEventListener('click', (e) => e.preventDefault());
-    this.btnBox.addEventListener('click', this._onClickBtn.bind(this));
+    this.btnBox.addEventListener('click', (e) => this._onClickBtn(e));
   }
   _onClickBtn({ target }) {
     if (!target.classList.contains('tab-btn')) { return; }
