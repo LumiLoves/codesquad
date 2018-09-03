@@ -18,7 +18,7 @@ export default class PageScroller extends ParentUI {
     this.isScrolling = false;
     this.MIN_SCROLL_TOP = 0;
     this.MAX_SCROLL_TOP = SCROLL_HEIGHT - CLIENT_HEIGHT - 100; // 버퍼값 100 추가
- 
+
     // option
     Object.assign(this, {
       TRIGGER_SCROLL_TOP: 150,
@@ -29,13 +29,13 @@ export default class PageScroller extends ParentUI {
   /* init */
 
   init() {
-    this.activeElements();
+    this.checkToShow();
     this.registerEvent();
   }
 
   /* ui */
 
-  activeElements() {
+  checkToShow() {
     const haveToshow = this._haveToShow();
     (haveToshow)? this.show() : this.hide();
   }
@@ -58,6 +58,7 @@ export default class PageScroller extends ParentUI {
         requestAnimationFrame(decreaseScrollTop);
       } else {
         this.isScrolling = false;
+        this.hide();
       }
     }
     decreaseScrollTop();
@@ -95,7 +96,8 @@ export default class PageScroller extends ParentUI {
     this.wrapperElem.addEventListener('click', this._onClickBtn.bind(this));
   }
   _onClickBtn({ target: { classList: targetClassList } }) {
-    if (!targetClassList.contains('scroll-btn')) { return; }
+    const isScrollBtn = targetClassList.contains('scroll-btn');
+    if (!isScrollBtn || this.isScrolling) { return; }
 
     const isUpBtn = targetClassList.contains('up');
     const isDownBtn = targetClassList.contains('down');
@@ -104,8 +106,7 @@ export default class PageScroller extends ParentUI {
     isDownBtn && this.scrollDown();
   }
   _onScroll() {
-    !this.isScrolling && this.activeElements();
+    if (this.isScrolling) { return; }
+    this.checkToShow();
   }
 }
-
-

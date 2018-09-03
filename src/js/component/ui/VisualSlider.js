@@ -19,7 +19,8 @@ export default class VisualSlider extends ParentSlider {
     // ui state data
     this.activeIndex = 0;
     this.maxIndex = this.contentItems && this.contentItems.length;      
-    
+    this.isMoving = false;
+
     // option
     Object.assign(this, {
       useJsAnimation: false,
@@ -83,7 +84,9 @@ export default class VisualSlider extends ParentSlider {
 
     target.style.transform = 'translateX(0)';
     target.style.zIndex = 0;
-    fadeInElem(target, this.OPACITY_INTERVAL_VALUE[0]);
+    fadeInElem(target, this.OPACITY_INTERVAL_VALUE[0]).then(() => {
+      this.isMoving = false;
+    });
   }
 
   _isPrevBtn(target) {
@@ -103,13 +106,17 @@ export default class VisualSlider extends ParentSlider {
     this.dotBtnBox.addEventListener('click', this._onClickDotBtn.bind(this));
   }
   _onClickDirectionBtn({ target }) {
-    if (!target.classList.contains('direction-btn')) { return; }
+    const isDirectionBtn = target.classList.contains('direction-btn');
+    if (!isDirectionBtn || this.isMoving) { return; }
+
     const oldIndex = this.activeIndex;
     const newIndex = (this._isPrevBtn(target))? oldIndex - 1 : oldIndex + 1;
     this.activeElements(newIndex);
   }
   _onClickDotBtn({ target }) {
-    if (!target.classList.contains('dot')) { return; }
+    const isDotBtn = target.classList.contains('dot'); 
+    if (!isDotBtn || this.isMoving) { return; }
+
     this.activeElements(target.index);
   }
 }

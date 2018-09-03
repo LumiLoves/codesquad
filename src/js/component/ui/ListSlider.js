@@ -18,6 +18,7 @@ export default class ListSlider extends ParentSlider {
     // ui state data
     this.activeIndex = 0;
     this.maxIndex = this.contentItems && this.contentItems.length;      
+    this.isMoving = false;
 
     // option
     Object.assign(this, {
@@ -172,14 +173,26 @@ export default class ListSlider extends ParentSlider {
   registerEvents() {
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
     this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
+
+    [ 'transitionend', 'animationend' ].forEach((eventName) => {
+      this.contentBox.addEventListener(eventName, this._onCssAnimationsEnd.bind(this));
+    });
   }
   _onClickDirectionBtn({ target }) {
-    const dirctionBtn = target.closest('.direction-btn');
-    if (!dirctionBtn) { return; }
+    const isDirectionBtn = target.closest('.direction-btn');
+    if (!isDirectionBtn || this.isMoving) { return; }
 
     const oldIndex = this.activeIndex;
     const newIndex = (this._isPrevBtn(target))? oldIndex - 1 : oldIndex + 1;
+
+    this.isMoving = true;
     this._updateDirection(oldIndex, newIndex);
     this.activeElements(newIndex);
+  }
+  _onCssAnimationsEnd({ target }) {
+    const isCurrentItem = target.classList.contains('current');
+    if (!isCurrentItem) { return; }
+
+    this.isMoving = false;
   }
 }
