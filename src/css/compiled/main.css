@@ -206,7 +206,7 @@ a {
   #header .search-box {
     position: relative;
     margin: 14px 10px 14px 40px;
-    width: 210px; }
+    width: 220px; }
     #header .search-box .search-input {
       padding: 0 32px 0 15px;
       width: 100%;
@@ -214,10 +214,21 @@ a {
       border: 1px solid #cfd0d2;
       color: #888;
       font-size: 14px;
-      font-family: Verdana, "나눔고딕", "Nanum", "Malgun Gothic", sans-serif; }
+      font-family: Verdana, "나눔고딕", "Nanum", "Malgun Gothic", sans-serif;
+      /* Internet Explorer 10-11 */
+      /* Microsoft Edge */ }
       #header .search-box .search-input:hover, #header .search-box .search-input:focus {
         border-color: #2ac1bc;
         outline: none; }
+      #header .search-box .search-input::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #ddd;
+        opacity: 1;
+        /* Firefox */ }
+      #header .search-box .search-input:-ms-input-placeholder {
+        color: #ddd; }
+      #header .search-box .search-input::-ms-input-placeholder {
+        color: #ddd; }
     #header .search-box button[type="submit"] {
       position: absolute;
       top: 1px;
