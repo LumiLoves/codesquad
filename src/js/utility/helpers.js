@@ -62,3 +62,16 @@ export function fadeInElem(elem, OPACITY_INTERVAL_VALUE = 0.01) {
     increaseOpacity();
   });
 }
+
+export function debounceEventListener({ listenerFn, delayTime }) {
+  let timerId = null; // event listener로 등록된 후, 클로저로 접근되는 변수
+
+  return (...arg) => {
+    if (timerId) { clearTimeout(timerId); }
+
+    timerId = setTimeout(async () => {
+      timerId = null;
+      await listenerFn(...arg);
+    }, delayTime);
+  }
+}

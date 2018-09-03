@@ -4,7 +4,7 @@
 
 import ParentUI from './core/ParentUI.js';
 import ParentStorage from './../storage/core/ParentStorage.js'
-import { getFetchData } from './../../utility/helpers.js';
+import { getFetchData, debounceEventListener } from './../../utility/helpers.js';
 
 export default class AutoCompleteSearcher extends ParentUI {
   constructor({ wrapperElem, userOption = {}, userModule = {} }) {
@@ -52,7 +52,8 @@ export default class AutoCompleteSearcher extends ParentUI {
     this.oRenderer = this.DefaultRenderer;
 
     // static data
-    this.errorMsg = { 'NOT_FOUNT_ITEM': 'not found item' }
+    this.errorMsg = { 'NOT_FOUNT_ITEM': 'not found item' };
+    this.debounceTime = 220; // ms단위
   }
 
   /* init */
@@ -292,7 +293,7 @@ export default class AutoCompleteSearcher extends ParentUI {
     !isOpen && this.resultList.classList.add('open');
   }
   closeResultList() {
-    const isOpen = this._checkOpenedResultList();    
+    const isOpen = this._checkOpenedResultList();
     isOpen && this.resultList.classList.remove('open');
   }
   _checkOpenedResultList() {
@@ -333,15 +334,19 @@ export default class AutoCompleteSearcher extends ParentUI {
     this.input.addEventListener('focus', this._onFocusInput.bind(this));
     this.input.addEventListener('blur', this._onBlurInput.bind(this));
 
-    this.input.addEventListener('input', this._onInputVisibleKey.bind(this)); // 문자 내용이 변경될 때
+    // 문자 내용이 변경될 때
+    this.input.addEventListener('input', debounceEventListener({
+      listenerFn: this._onInputVisibleKey.bind(this),
+      delayTime: this.debounceTime
+    }));
     this.input.addEventListener('keydown', this._onKeydownArrowKey.bind(this)); // 누르는 동안 계속 트리거
     this.input.addEventListener('keyup', this._onKeyupEnterKey.bind(this)); // 띌 때 한번만 발생
-    
+
     this.recentList.addEventListener('mouseover', this._onMouseoverRecentList.bind(this));
     this.recentList.addEventListener('mouseleave', this._onMouseleaveRecentList.bind(this));
     this.recentList.addEventListener('click', (e) => e.preventDefault());
     this.recentList.addEventListener('click', this._onClickRecentList.bind(this));
-    
+
     this.resultList.addEventListener('mouseover', this._onMouseoverResultList.bind(this));
     this.resultList.addEventListener('mouseleave', this._onMouseleaveResultList.bind(this));
     this.resultList.addEventListener('click', (e) => e.preventDefault());
@@ -365,8 +370,11 @@ export default class AutoCompleteSearcher extends ParentUI {
       return;
     }
     if (!this._isValidKeyword(keyword)) { return; }
-    this.closeRecentList();
 
+    this.closeRecentList();
+    await this._handleVisibleKey(keyword);
+  }
+  async _handleVisibleKey(keyword) {
     const searchResult = await this.getSearchData(keyword);
     if (!searchResult) {
       this.closeResultList();
