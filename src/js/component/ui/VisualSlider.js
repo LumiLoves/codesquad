@@ -17,6 +17,7 @@ export default class VisualSlider extends ParentSlider {
     this.dotBtnItems = this.dotBtnBox.querySelectorAll('.dot');
 
     // ui state data
+    this.activeIndex = 0;
     this.maxIndex = this.contentItems && this.contentItems.length;      
     
     // option
@@ -93,7 +94,6 @@ export default class VisualSlider extends ParentSlider {
   /* event */
 
   registerEvents() {
-    attachIndexToDom(this.contentItems);
     attachIndexToDom(this.dotBtnItems);
     
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());

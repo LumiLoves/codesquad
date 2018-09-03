@@ -13,9 +13,7 @@ export default class ParentSlider extends ParentUI {
     super();
 
     // ui state data
-    this.activeIndex = 0;
     this.direction = '';
-    this.activeOld = '';
   }
 
   /* state data */

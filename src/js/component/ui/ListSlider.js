@@ -3,7 +3,7 @@
  */
 
 import ParentSlider from './ParentSlider.js';
-import { getFetchData, attachIndexToDom } from './../../utility/helpers.js';
+import { getFetchData } from './../../utility/helpers.js';
 
 export default class ListSlider extends ParentSlider {
   constructor({ wrapperElem, userOption = {}, userModule = {} }) {
@@ -15,7 +15,8 @@ export default class ListSlider extends ParentSlider {
     this.contentItems = wrapperElem.querySelectorAll('.content-group > li');
     this.directionBtnBox = wrapperElem.querySelector('.direction-btn-box');          
 
-    // ui state data      
+    // ui state data
+    this.activeIndex = 0;
     this.maxIndex = this.contentItems && this.contentItems.length;      
 
     // option
@@ -169,7 +170,6 @@ export default class ListSlider extends ParentSlider {
   /* event */
   
   registerEvents() {
-    attachIndexToDom(this.contentItems);    
     this.directionBtnBox.addEventListener('click', (e) => e.preventDefault());
     this.directionBtnBox.addEventListener('click', this._onClickDirectionBtn.bind(this));
   }
