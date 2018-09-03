@@ -1,7 +1,7 @@
 export default `
 {{#if isGroupStart}}
 <li>
-  <ul class="tab-content-box">
+  <ul class="tab-content-group-item">
   {{/if}}
 
     <li class="tab-content-item">

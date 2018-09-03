@@ -769,9 +769,12 @@ a {
  * (사진, 사진호버오버레이, 타이틀, 디스크, (말줄임) 원래가격, 할인가격)
  */
 .thumbnail-box {
-  display: block; }
+  display: block;
+  height: 347px; }
   .thumbnail-box .thumbnail {
-    position: relative; }
+    position: relative;
+    height: calc(100% - 130px);
+    background-color: #ddd; }
     .thumbnail-box .thumbnail img {
       display: block;
       width: 100%; }
@@ -885,7 +888,7 @@ a {
     position: relative;
     display: flex;
     width: 100%;
-    height: 433px; }
+    height: 430px; }
     .tab-box .tab-content-group-box > li {
       position: absolute;
       left: 0;
@@ -897,14 +900,20 @@ a {
       .tab-box .tab-content-group-box > li.on {
         opacity: 1;
         visibility: visible; }
-  .tab-box .tab-content-box {
+  .tab-box .tab-content-group-item,
+  .tab-box .tab-content-item,
+  .tab-box .thumbnail-box {
+    height: 100%; }
+  .tab-box .tab-content-group-item {
     display: grid;
     grid-template-columns: 304px 304px 304px;
     grid-column-gap: 24px; }
-    .tab-box .tab-content-box > li {
+    .tab-box .tab-content-group-item > li {
       border-bottom: 1px solid #d7d7d7;
       overflow: hidden;
       text-overflow: ellipsis; }
+  .tab-box .thumbnail {
+    height: calc(100% - 125px); }
   .tab-box .content {
     height: 125px;
     background: #fff;
@@ -932,8 +941,7 @@ a {
       position: absolute;
       top: 58px;
       display: block;
-      padding: 30px 10px;
-      z-index: 1; }
+      padding: 30px 10px; }
     .sliding-list-box .direction-btn-box > .prev {
       left: 0;
       transform: translateX(-120%); }
@@ -944,11 +952,15 @@ a {
       transform: translateX(120%); }
       .sliding-list-box .direction-btn-box > .next:hover i, .sliding-list-box .direction-btn-box > .next:focus i {
         background-position: -50px -52px; }
+  .sliding-list-box .content-group,
+  .sliding-list-box .content-box,
+  .sliding-list-box .thumbnail-box {
+    height: 100%; }
   .sliding-list-box .content-group {
     position: relative;
     display: flex;
-    height: 100%;
-    overflow: hidden; }
+    overflow: hidden;
+    z-index: 1; }
     .sliding-list-box .content-group > li {
       position: absolute;
       left: 0;
@@ -1010,9 +1022,12 @@ a {
         margin-right: 0; }
   .sliding-list-box .thumbnail {
     border-radius: 500px;
-    overflow: hidden; }
-  .sliding-list-box .badge-wrapper i {
-    margin: 0 1px; }
+    overflow: hidden;
+    height: calc(100% - 130px); }
+  .sliding-list-box .content {
+    height: 130px; }
+    .sliding-list-box .content .badge-wrapper i {
+      margin: 0 1px; }
 
 /**
  *  기타

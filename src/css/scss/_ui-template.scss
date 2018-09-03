@@ -102,10 +102,14 @@
  */
 
 .thumbnail-box {
-  display: block;
+  $thumbnail-box-height: 347px;
+  $content-height: 130px;
+  $thumbnail-height: calc(100% - #{$content-height});
+
+  display: block; height: $thumbnail-box-height;
 
   .thumbnail {
-    position: relative;
+    position: relative; height: $thumbnail-height; background-color: #ddd;
 
     img { display: block; width: 100%; }
     .badge-wrapper { 
@@ -136,7 +140,7 @@
   }
 
   .content {
-    padding: 18px 20px 15px; height: 130px;
+    padding: 18px 20px 15px; height: $content-height;
 
     * { text-align: center; }
     .title,
@@ -184,13 +188,17 @@
 
 .tab-box {
   overflow: hidden;
-  
+
+  $btn-height: 48px;
+  $content-group-height: 430px;
+  $thumbnail-content-height: 125px;
+
   .tab-btn-box {
     display: flex;
     margin-bottom: 23px;
 
     li {
-      flex-grow: 1; height: 48px;
+      flex-grow: 1; height: $btn-height;
 
       .tab-btn {
         display: block;
@@ -211,7 +219,7 @@
 
   .tab-content-group-box {
     position: relative; display: flex;
-    width: 100%; height: 433px;
+    width: 100%; height: $content-group-height;
 
     > li {
       position: absolute; left: 0; top: 0; right: 0; bottom: 0;
@@ -220,7 +228,13 @@
     }
   }
 
-  .tab-content-box {
+  .tab-content-group-item,
+  .tab-content-item,
+  .thumbnail-box {
+    height: 100%;
+  }
+
+  .tab-content-group-item {
     display: grid;
     grid-template-columns: 304px 304px 304px;
     grid-column-gap: 24px;
@@ -231,9 +245,13 @@
     }
   }
 
-  // .thumbnail-box 커스텀
+  // thumbnail-box 템플릿 커스텀
+  .thumbnail {
+    height: calc(100% - #{$thumbnail-content-height});
+  }
   .content {
-    height: 125px; background: #fff; text-align: left;
+    height: $thumbnail-content-height; 
+    background: #fff; text-align: left;
 
     * { text-align: left; }
     .price-wrapper { margin-top: 20px; text-align: right; }
@@ -247,14 +265,15 @@
  */
 
 .sliding-list-box {
-  position: relative; height: 346px;
+  $sliding-list-box-height: 346px;
+
+  position: relative; height: $sliding-list-box-height;
 
   .direction-btn-box {
     position: absolute; left: 0; right: 0; top: 0; bottom: 0;
 
     .direction-btn {
       position: absolute; top: 58px; display: block; padding: 30px 10px;
-      z-index: 1;
     }
     > .prev { 
       left: 0; transform: translateX(-120%);
@@ -268,8 +287,15 @@
     }
   }
 
+  .content-group,
+  .content-box,
+  .thumbnail-box {
+    height: 100%;
+  }
+
   .content-group {
-    position: relative; display: flex; height: 100%; overflow: hidden;
+    position: relative; display: flex;
+    overflow: hidden; z-index: 1;
 
     > li {
       position: absolute; left: 0; right: 0; top: 0; bottom: 0;
@@ -324,12 +350,18 @@
     }
   }
 
-  .thumbnail { // .thumbnail-box 커스텀
+  // thumbnail-box 템플릿 커스텀
+  $content-height: 130px;
+  $thumbnail-height: calc(100% - #{$content-height});
+
+  .thumbnail { 
     border-radius: 500px;
     overflow: hidden;
+    height: $thumbnail-height; 
   }
-
-  .badge-wrapper i { margin: 0 1px; }
+  .content { height: $content-height; 
+    .badge-wrapper i { margin: 0 1px; }
+  }
 }
 
 
