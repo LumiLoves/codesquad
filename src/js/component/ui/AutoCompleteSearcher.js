@@ -4,6 +4,7 @@
 
 import ParentUI from './core/ParentUI.js';
 import ParentStorage from './../storage/core/ParentStorage.js'
+import HttpError from './../http/HttpError.js';
 import { getFetchData, debounceEventListener } from './../../utility/helpers.js';
 
 export default class AutoCompleteSearcher extends ParentUI {

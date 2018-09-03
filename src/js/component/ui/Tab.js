@@ -3,6 +3,7 @@
  */
 
 import ParentUI from './core/ParentUI.js';
+import HttpError from './../http/HttpError.js';
 import { getFetchData, attachIndexToDom } from './../../utility/helpers.js';
 
 export default class Tab extends ParentUI {

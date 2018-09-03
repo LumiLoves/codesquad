@@ -3,6 +3,7 @@
  */
 
 import ParentSlider from './ParentSlider.js';
+import HttpError from './../http/HttpError.js';
 import { getFetchData } from './../../utility/helpers.js';
 
 export default class ListSlider extends ParentSlider {
