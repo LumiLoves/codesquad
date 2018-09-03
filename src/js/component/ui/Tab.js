@@ -151,14 +151,14 @@ export default class Tab extends ParentUI {
   _activeBtn(oldIndex, newIndex = 0) {
     // const index = newIndex || 0;
 
-    this.btnItems.item(oldIndex).classList.remove('on');
-    this.btnItems.item(newIndex).classList.add('on');
+    this.btnItems[oldIndex].classList.remove('on');
+    this.btnItems[newIndex].classList.add('on');
   }
   _activeContent(oldIndex, newIndex = 0) {
     // const index = newIndex || 0;
 
-    this.contentItems.item(oldIndex).classList.remove('on');
-    this.contentItems.item(newIndex).classList.add('on');      
+    this.contentItems[oldIndex].classList.remove('on');
+    this.contentItems[newIndex].classList.add('on');      
   }
   _getRandomIndex() {
     const min = 0;

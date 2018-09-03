@@ -50,7 +50,7 @@ export default class ParentSlider extends ParentUI {
   _removeDirectionClass(indexSet) {
     ['prev', 'current', 'next'].forEach((dir) => {
       const dirIndex = indexSet[dir];
-      this.contentItems.item(dirIndex).classList.remove(dir);    
+      this.contentItems[dirIndex].classList.remove(dir);    
     });
   }
   _addDirectionClass(indexSet, direction) {
@@ -58,7 +58,7 @@ export default class ParentSlider extends ParentUI {
 
     ['prev', 'current', 'next'].forEach((dir) => {
       const dirIndex = indexSet[dir];
-      this.contentItems.item(dirIndex).classList.add(dir);    
+      this.contentItems[dirIndex].classList.add(dir);    
     });
   }
 

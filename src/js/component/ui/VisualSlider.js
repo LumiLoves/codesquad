@@ -52,8 +52,8 @@ export default class VisualSlider extends ParentSlider {
     }
   }
   _activeDotBtn(oldIndex, newIndex) {
-    this.dotBtnItems.item(oldIndex).classList.remove('on');
-    this.dotBtnItems.item(newIndex).classList.add('on');  
+    this.dotBtnItems[oldIndex].classList.remove('on');
+    this.dotBtnItems[newIndex].classList.add('on');  
   }
   _activeContent(oldIndex, newIndex) {
     super.activeContent(oldIndex, newIndex);
@@ -71,14 +71,14 @@ export default class VisualSlider extends ParentSlider {
       elem.style.zIndex = -1;
     });
   }
-  _fadeOut(i) {
-    const target = this.contentItems.item(i);
+  _fadeOut(itemIndex) {
+    const target = this.contentItems[itemIndex];
 
     target.style.transform = 'translateX(0)';
     fadeOutElem(target, this.OPACITY_INTERVAL_VALUE[1]);
   }
-  _fadeIn(i) {
-    const target = this.contentItems.item(i);
+  _fadeIn(itemIndex) {
+    const target = this.contentItems[itemIndex];
 
     target.style.transform = 'translateX(0)';
     target.style.zIndex = 0;
