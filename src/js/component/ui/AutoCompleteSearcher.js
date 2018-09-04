@@ -5,7 +5,7 @@
 import ParentUI from './core/ParentUI.js';
 import ParentStorage from './../storage/core/ParentStorage.js'
 import HttpError from './../http/HttpError.js';
-import { getFetchData, debounceEventListener } from './../../utility/helpers.js';
+import { getJSONPData, debounceEventListener } from './../../utility/helpers.js';
 
 export default class AutoCompleteSearcher extends ParentUI {
   constructor({ wrapperElem, userOption = {}, userModule = {} }) {
@@ -142,18 +142,18 @@ export default class AutoCompleteSearcher extends ParentUI {
     }
 
     const json = await this._requestSearchData(keyword);
-    const isValidData = this._checkValidResponse(json);
-    if (isValidData) {
+    if (json.length) {
       this._storeResponseData(keyword, json);
       return json;
     }
   }
   async _requestSearchData(keyword) {
-    const reqUrl = this.reqUrl.replace('${query}', keyword);    
+    const reqUrl = this.reqUrl.replace('${keyword}', keyword);    
     let json = null;
 
     try {
-      json = await getFetchData({ url: reqUrl });
+      json = await getJSONPData(reqUrl);
+      json = json[1]; // wiki API interface에 따름
     } catch (err) {
       if (err instanceof HttpError && err.response.status === 404) {
         console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
@@ -163,20 +163,13 @@ export default class AutoCompleteSearcher extends ParentUI {
     }
     return json;
   }
-  _checkValidResponse(json) {
-    const hasNoData = !json;
-    const hasErrorMsg = !!json.error;
-    return (hasNoData || hasErrorMsg)? false : true;
-  }
 
   /* render */
 
-  renderResultList(keyword, json) {
-    // json 구조 : [ 'keyword', [["오리고기"], ["오징어"], ...] ]     
+  renderResultList(keyword, resultArr) {
     this._checkRendererModule();
 
-    const searchList = json[1]; // API의 약속된 응답 데이터 구조를 따름
-    const viewData = this._makeResultViewData(keyword, searchList);
+    const viewData = this._makeResultViewData(keyword, resultArr);
     this.oRenderer.renderDOM({
       templateHTML: this.templateHTMLResultList,
       data: viewData,
@@ -184,14 +177,12 @@ export default class AutoCompleteSearcher extends ParentUI {
     });
   }
   _makeResultViewData(keyword, searchList) {
-    // searchList 구조 : [ ["오리고기"], ["오징어"], ... ] 
     return searchList.map((searchItem, i) => {
-      const resultTxt = searchItem[0];
+      const keywordRegExp = new RegExp('('+ keyword +')', 'gi');
       const obj = {};
-
       obj.index = i;
-      obj.value = resultTxt;
-      obj.valueWithHTML = resultTxt.replace(keyword, `<em>${keyword}</em>`);
+      obj.value = searchItem;
+      obj.valueWithHTML = searchItem.replace(keywordRegExp, '<em>$1</em>');
       return obj;
     });
   }
@@ -383,7 +374,7 @@ export default class AutoCompleteSearcher extends ParentUI {
     }
 
     this.currentKeyword = keyword;
-    this.lastResultIndex = searchResult[1].length - 1;
+    this.lastResultIndex = searchResult.length - 1;
     this.renderResultList(keyword, searchResult);
     this.openResultList();
   }
@@ -489,7 +480,7 @@ export default class AutoCompleteSearcher extends ParentUI {
   _onMouseleaveResultList({ target }) {
     // 마우스 이동해서 나갈 때 -> 안닫히고 && inactive
     // 목록이 닫혀서 나갈 때 -> 닫히고,리셋 && 플래그 false바꿔주기
-    // event 순서 : blur -> click -> mouseleave (blur순서는 왜 항상 먼저 일어나는가?)
+    // event 순서 : blur -> click -> mouseleave
     if (target !== this.resultList) { return; }
     this.mouseHoverOverTheList = false;
     this.inactiveResultItem();

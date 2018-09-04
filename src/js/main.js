@@ -10,23 +10,17 @@ import PageScroller from './component/ui/PageScroller.js';
 
 /* data */
 
-const urlInfo = {
-  BASE_URL: 'http://crong.codesquad.kr:8080',
+const searchUrl = { // [참고 API] https://www.mediawiki.org/wiki/API:Opensearch
+  BASE_URL: 'https://ko.wikipedia.org/w/api.php',
+  QUERY_STRING: 'action=opensearch&format=json&search=${keyword}'
+};
 
-  // search
-  SEARCH_FOOD: '/ac/${query}',
-
-  // list slider 
-  BEST_DISH: '/woowa/best',
-  SIDE_DISH: '/woowa/side',
-  MAIN_DISH: '/woowa/main',
-  SOUP: '/woowa/soup'
-
-  // BASE_URL: 'https://github.com/lumiloves/javascript-food/blob/master/src/data',
-  // BEST_DISH: '/best.json',
-  // SIDE_DISH: '/side.json',
-  // MAIN_DISH: '/main.json',
-  // SOUP: '/soup.json'
+const templateUrl = {
+  BASE_URL: 'https://raw.githubusercontent.com/LumiLoves/javascript-food/kimally/src/data',
+  BEST_DISH: '/best.json',
+  SIDE_DISH: '/side.json',
+  MAIN_DISH: '/main.json',
+  SOUP: '/soup.json'
 };
 
 
@@ -45,7 +39,7 @@ const oVisualSlider_promotion = new VisualSlider({
 const oTab_bestDish = new Tab({
   wrapperElem: document.querySelector('#best-seller .tab-box'),
   userOption: {
-    reqUrl: urlInfo.BASE_URL + urlInfo.BEST_DISH,
+    reqUrl: templateUrl.BASE_URL + templateUrl.BEST_DISH,
     useStorage: true,
     templateHTML: document.querySelector('[data-template-html="best-seller__tab-content-item"]').innerHTML
   }
@@ -53,14 +47,14 @@ const oTab_bestDish = new Tab({
 
 // 비동기 렌더링 목록슬라이더
 const oListSlider_dishes = [
-  urlInfo.BASE_URL + urlInfo.SIDE_DISH,
-  urlInfo.BASE_URL + urlInfo.MAIN_DISH,
-  urlInfo.BASE_URL + urlInfo.SOUP
+  templateUrl.BASE_URL + templateUrl.SIDE_DISH,
+  templateUrl.BASE_URL + templateUrl.MAIN_DISH,
+  templateUrl.BASE_URL + templateUrl.SOUP
 ].map((thisUrl, i) => {
   return new ListSlider({
     wrapperElem: document.querySelectorAll('.sliding-list-box')[i],
     userOption: {
-      ITEM_COUNT_PER_GROUP: 4 - i,
+      ITEM_COUNT_PER_GROUP: 4,
       reqUrl: thisUrl,
       templateHTML: document.querySelector('[data-template-html="side-dish__content-box"]').innerHTML
     }
@@ -77,7 +71,7 @@ const makeAutoCompleteSearchInstance = (AutoCompleteSearcher) => {
   return new AutoCompleteSearcher({
     wrapperElem: document.querySelector('#header .search-box'),
     userOption: {
-      reqUrl: urlInfo.BASE_URL + urlInfo.SEARCH_FOOD,
+      reqUrl: searchUrl.BASE_URL + '?' + searchUrl.QUERY_STRING,
       useStorage: true,
       templateHTMLResultList: document.querySelector('[data-template-html="auto-complete-result-list"]').innerHTML,
       templateHTMLRecentList: document.querySelector('[data-template-html="auto-complete-recent-list"]').innerHTML
@@ -94,7 +88,7 @@ export default function init() {
   
   searchInput.addEventListener('focus', function handleSearchInput() {
     searchInput.removeEventListener('focus', handleSearchInput);
-    
+
     import(searchModuleSrc)
       .then(({ default: AutoCompleteSearcher }) => {
         const oAutoCompleteSearcher = makeAutoCompleteSearchInstance(AutoCompleteSearcher);

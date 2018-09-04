@@ -18,9 +18,9 @@ export function attachIndexToDom(nodeList, selector) {
   nodeList.forEach(handler);
 }
 
-export async function getFetchData({ url }) {
+export async function getFetchData({ url, option }) {
   const successCodeRange = '2[0-9][0-9]';
-  const response = await fetch(url);
+  const response = await fetch(url, option);
   
   if (RegExp(successCodeRange).test(response.status)) {
     return await response.json();
@@ -28,6 +28,29 @@ export async function getFetchData({ url }) {
     throw new HttpError(response);
   }
 }
+
+export const getJSONPData = (() => {
+  let uid = 0;
+
+  return (url) => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      const callbackName = `jsonpCallback_${uid++}`;
+      const hasQueryString = url.match(/\?/);
+      
+      url += (hasQueryString)? '&' : '?';
+      url += `callback=${callbackName}`;
+      script.src = url;
+  
+      window[callbackName] = (json) => {
+        resolve(json);
+        script.remove();
+        delete window[callbackName];
+      }
+      document.body.appendChild(script);
+    });
+  }
+})();
 
 export function fadeOutElem(elem, OPACITY_INTERVAL_VALUE = 0.01) {
   return new Promise((resolve) => {
