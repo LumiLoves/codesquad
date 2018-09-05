@@ -49,7 +49,7 @@ describe('[Utility] helpers', () => {
     });
   });
 
-  describe('# getFetchData()', () => {
+  describe.skip('# getFetchData()', () => {
     it('유효한 url 요청 시, 응답으로 올바른 데이터를 받아온다.', async () => {
       // given
       const testUrl = '/test-success';
