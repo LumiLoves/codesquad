@@ -569,6 +569,14 @@ describe('[UI Component] AutoCompleteSearcher', () => {
     // input - visible keys
 
     context('검색창의 값이 변경될 때', () => {
+
+      beforeEach(() => {
+        // debounce 기능 해제 후 테스트
+        oSearcher.debounceTime = 0;
+        oSearcher.input.removeEventListener('input', oSearcher.debounceEventListener);
+        oSearcher.init();
+      });
+
       it('검색어가 입력되고 검색결과가 있으면, 결과를 렌더링하고 검색목록이 노출된다.', (done) => {
         // given
         const DUMMY_SEARCH_KEYWORD = '검';

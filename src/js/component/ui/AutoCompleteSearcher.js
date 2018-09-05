@@ -43,7 +43,9 @@ export default class AutoCompleteSearcher extends ParentUI {
       STORAGE_DURATION_TIME: 21600000, // 6시간(ms)
       // render
       templateHTMLResultList: undefined,
-      templateHTMLRecentList: undefined
+      templateHTMLRecentList: undefined,
+      // etc
+      debounceTime: 220 // ms단위
     }, userOption);
     this.STORAGE_NAME_RECENT_SEARCH = `${this.STORAGE_NAME}__search-recent-keywords`;
     this.STORAGE_NAME_SEARCH_RESPONSE_DATA = `${this.STORAGE_NAME}__search-result-resdata__\$\{keyword\}`;
@@ -54,7 +56,6 @@ export default class AutoCompleteSearcher extends ParentUI {
 
     // static data
     this.errorMsg = { 'NOT_FOUNT_ITEM': 'not found item' };
-    this.debounceTime = 220; // ms단위
   }
 
   /* init */
@@ -337,10 +338,16 @@ export default class AutoCompleteSearcher extends ParentUI {
     this.input.addEventListener('blur', (e) => this._onBlurInput(e));
 
     // 문자 내용이 변경될 때
-    this.input.addEventListener('input', debounceEventListener({
-      listenerFn: this._onInputVisibleKey.bind(this),
-      delayTime: this.debounceTime
-    }));
+    if (this.debounceTime) {
+      this.debounceEventListener = debounceEventListener({
+        listenerFn: this._onInputVisibleKey.bind(this),
+        delayTime: this.debounceTime
+      });
+      this.input.addEventListener('input', this.debounceEventListener);
+    } else {
+      this.input.addEventListener('input', (e) => this._onInputVisibleKey(e));
+    }
+
     this.input.addEventListener('keydown', (e) => this._onKeydownArrowKey(e)); // 누르는 동안 계속 트리거
     this.input.addEventListener('keyup', (e) => this._onKeyupEnterKey(e)); // 띌 때 한번만 발생
 
