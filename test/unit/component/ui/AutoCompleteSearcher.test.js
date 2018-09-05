@@ -27,14 +27,6 @@ const makeSearchBoxDOM = () => {
   return templateElem.content.childNodes[1];
 };
 
-// default 데이터를 가지고 있음
-// 필수데이터 주입안받으면 에러남
-// 옵션 데이터를 주입받으면 그 데이터를 가지고 있음
-// ParentUI의 구조에 맞게 필수메서드, 옵션메서드, 구조가 잘 생성되었는지 확인. (undefined가 아닌지 확인)
-
-// 메서드 실행시 필수 파라미터가 없으면 expect.to.throw(Error); 아니면 예상되는 return
-// 주요 목적에 대한 테스트
-
 describe('[UI Component] AutoCompleteSearcher', () => {
   let oSearcher;
 
@@ -95,7 +87,8 @@ describe('[UI Component] AutoCompleteSearcher', () => {
       // given
       const elemNames = [ 'searchBox', 'form', 'input', 'submitBtn', 'recentList', 'resultList' ];
 
-      // when (beforeEach에서 instance 생성)
+      // when
+      // (beforeEach에서 instance 생성)
       // then
       elemNames.forEach((elemName) => {
         const isElement = (oSearcher[elemName] instanceof Element);
@@ -116,7 +109,8 @@ describe('[UI Component] AutoCompleteSearcher', () => {
         mouseHoverOverTheList: false
       };
 
-      // when (beforeEach에서 instance 생성)
+      // when 
+      // (beforeEach에서 instance 생성)
       // then
       expect(oSearcher).to.include(uiStateData);
     });
@@ -318,7 +312,7 @@ describe('[UI Component] AutoCompleteSearcher', () => {
     const fakeStoredData = '테스트용 저장 데이터';
     const fakeEmptyStoredData = '';
     const fakeValidJSON = { value: '유효한 테스트 데이터' };
-    const fakeErrorJSON = { error: '에러메시지' };
+    const fakeErrorJSON = {};
 
     context('useStorage 옵션 속성이', () => {
       it('true일 경우, 저장된 데이터가 있으면 http 요청을 하지 않고 해당 데이터를 반환한다.', async () => {
@@ -352,7 +346,7 @@ describe('[UI Component] AutoCompleteSearcher', () => {
       });
     });
 
-    context('저장된 데이터가 없어서 http 요청 성공 후 받은 응답 데이터가', () => {
+    context('캐쉬된 데이터가 없어서 http 요청을 한 후, 응답 데이터가', () => {
       it('유효하지 않을 경우 반환 값이 없다.', async () => {
         // given
         const stubGetStoredResponseData = sinon.stub(oSearcher, '_getStoredResponseData').callsFake(() => fakeEmptyStoredData);
@@ -428,18 +422,17 @@ describe('[UI Component] AutoCompleteSearcher', () => {
     it('검색결과를 렌더링한다.', () => {
       // given
       const DUMMY_SEARCH_KEYWORD = '검';
-      const dummyResultList = [ ['검색결과_01'], ['검색결과_02'] ];
-      const dummyResultJSON = [ DUMMY_SEARCH_KEYWORD, dummyResultList ];
+      const dummyResultList = [ '검색결과_01', '검색결과_02' ];
       const dummyResultViewData = oSearcher._makeResultViewData(DUMMY_SEARCH_KEYWORD, dummyResultList);
       let resultListItems  = null;
       
       // when
-      oSearcher.renderResultList(DUMMY_SEARCH_KEYWORD, dummyResultJSON);
+      oSearcher.renderResultList(DUMMY_SEARCH_KEYWORD, dummyResultList);
       // then
       resultListItems = oSearcher.resultList.querySelectorAll('.search-list-item');
       expect(resultListItems.length).to.equal(dummyResultList.length);
       expect(resultListItems[0].dataset.index).to.equal('0');
-      expect(resultListItems[0].dataset.value).to.equal(dummyResultList[0][0]);
+      expect(resultListItems[0].dataset.value).to.equal(dummyResultList[0]);
       expect(resultListItems[0].innerHTML.trim()).to.equal(dummyResultViewData[0].valueWithHTML);
     });
   });
@@ -579,12 +572,11 @@ describe('[UI Component] AutoCompleteSearcher', () => {
       it('검색어가 입력되고 검색결과가 있으면, 결과를 렌더링하고 검색목록이 노출된다.', (done) => {
         // given
         const DUMMY_SEARCH_KEYWORD = '검';
-        const dummyResultList = [ ['검색결과_01'], ['검색결과_02'] ];
-        const dummyResultJSON = [ DUMMY_SEARCH_KEYWORD, dummyResultList ];
+        const dummyResultList = [ '검색결과_01', '검색결과_02' ];
         const inputEvent = new InputEvent('input', { data: DUMMY_SEARCH_KEYWORD });
         let resultListItems  = null;
 
-        sinon.stub(oSearcher, 'getSearchData').callsFake(() => dummyResultJSON);
+        sinon.stub(oSearcher, 'getSearchData').callsFake(() => dummyResultList);
         oSearcher.input.value = DUMMY_SEARCH_KEYWORD;
         
         // when
@@ -601,10 +593,10 @@ describe('[UI Component] AutoCompleteSearcher', () => {
       it('검색어가 입력됐으나 검색결과가 없으면, 결과를 렌더링하지 않고 검색목록이 노출되지 않는다.', (done) => {
         // given
         const DUMMY_SEARCH_KEYWORD = '검';
-        const dummyResultJSON = undefined;
+        const dummyResultList = [];
         const inputEvent = new InputEvent('input', { data: DUMMY_SEARCH_KEYWORD });
 
-        sinon.stub(oSearcher, 'getSearchData').callsFake(() => dummyResultJSON);
+        sinon.stub(oSearcher, 'getSearchData').callsFake(() => dummyResultList);
         oSearcher.input.value = DUMMY_SEARCH_KEYWORD;
         oSearcher.resultList.classList.add('open');
 
@@ -615,7 +607,7 @@ describe('[UI Component] AutoCompleteSearcher', () => {
         expect(oSearcher.resultList.classList.contains('open')).to.be.false;
       });
 
-      it('검색창이 비어있으면, 검색결과를 찾지 않고 검색목록이 닫히며 최근검색어 목록이 노출된다.', () => {
+      it('검색어가 없으면, 검색결과를 찾지 않고 검색목록이 닫히며 최근검색어 목록이 노출된다.', () => {
         // given
         const DUMMY_SEARCH_KEYWORD = '';
         const dummyRecentKeywords = [ '최근검색어_01', '최근검색어_02', '최근검색어_03' ];
@@ -694,14 +686,13 @@ describe('[UI Component] AutoCompleteSearcher', () => {
       let searchListItems = null;
 
       const DUMMY_SEARCH_KEYWORD = '검';
-      const dummyResultList = [ ['검색결과_01'], ['검색결과_02'], ['검색결과_03'] ];
-      const dummyResultJSON = [ DUMMY_SEARCH_KEYWORD, dummyResultList ];      
+      const dummyResultList = [ '검색결과_01', '검색결과_02', '검색결과_03' ];
       const LAST_RESULT_INDEX = dummyResultList.length - 1;
 
       beforeEach(() => {
         // 검색결과목록 생성
         oSearcher.lastResultIndex = LAST_RESULT_INDEX;
-        oSearcher.renderResultList(DUMMY_SEARCH_KEYWORD, dummyResultJSON);
+        oSearcher.renderResultList(DUMMY_SEARCH_KEYWORD, dummyResultList);
         oSearcher.openResultList();
         searchListItems = oSearcher.resultList.querySelectorAll('.search-list-item');
       });
@@ -805,7 +796,6 @@ describe('[UI Component] AutoCompleteSearcher', () => {
   
       it('검색목록에서 선택중인 목록아이템이 없을 때, form submit handler가 실행되고 최근 검색어로 저장된다.', () => {
         // given
-        const DUMMY_SELECTED_KEYWORD = '';
         const fakeSelectedListItem = null;
         
         sinon.stub(oSearcher, '_findToActiveResultItem').callsFake(() => fakeSelectedListItem);
@@ -813,7 +803,6 @@ describe('[UI Component] AutoCompleteSearcher', () => {
         const spySubmitForm = sinon.spy(oSearcher, 'submitForm');
   
         oSearcher.input.value = DUMMY_CURRENT_KEYWORD;
-        fakeSelectedListItem.dataset.value = DUMMY_SELECTED_KEYWORD;
   
         // when
         oSearcher.input.dispatchEvent(keyupEnterEvent);
@@ -823,5 +812,5 @@ describe('[UI Component] AutoCompleteSearcher', () => {
         expect(oSearcher.resultList.classList.contains('open')).to.be.false;
       });
     });
-  });
+  }); // # Event
 }); // AutoCompleteSearcher

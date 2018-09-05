@@ -142,18 +142,21 @@ export default class AutoCompleteSearcher extends ParentUI {
     }
 
     const json = await this._requestSearchData(keyword);
-    if (json.length) {
-      this._storeResponseData(keyword, json);
-      return json;
-    }
+    const isValidData = this._checkValidResponse(json);
+    if (!isValidData) { return; }
+
+    this._storeResponseData(keyword, json);
+    return json;
   }
   async _requestSearchData(keyword) {
     const reqUrl = this.reqUrl.replace('${keyword}', keyword);    
     let json = null;
 
     try {
+      // wiki API interface
+      // => [ 'keyword', [...lists], [...descriptions], [...links] ]
       json = await getJSONPData(reqUrl);
-      json = json[1]; // wiki API interface에 따름
+      json = json[1];
     } catch (err) {
       if (err instanceof HttpError && err.response.status === 404) {
         console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
@@ -163,13 +166,20 @@ export default class AutoCompleteSearcher extends ParentUI {
     }
     return json;
   }
+  _checkValidResponse(json) {
+    const hasNoData = !json;
+    const isValidArray = Array.isArray(json) && json.length;
+    const isValidObject = (toString.call(json) === '[object Object]') && !!Object.keys(json).length;
+    const hasNoContent = !isValidArray && !isValidObject;
+    return (hasNoData || hasNoContent)? false : true;
+  }
 
   /* render */
 
-  renderResultList(keyword, resultArr) {
+  renderResultList(keyword, searchList) {
     this._checkRendererModule();
 
-    const viewData = this._makeResultViewData(keyword, resultArr);
+    const viewData = this._makeResultViewData(keyword, searchList);
     this.oRenderer.renderDOM({
       templateHTML: this.templateHTMLResultList,
       data: viewData,
@@ -356,7 +366,7 @@ export default class AutoCompleteSearcher extends ParentUI {
 
   // input - visible keys
   async _onInputVisibleKey({ target: { value: keyword } }) {
-    if (keyword === '') { 
+    if (keyword === '') {
       this._resetToOriginalStatus();
       this.openRecentList();
       return;
@@ -367,15 +377,15 @@ export default class AutoCompleteSearcher extends ParentUI {
     await this._handleVisibleKey(keyword);
   }
   async _handleVisibleKey(keyword) {
-    const searchResult = await this.getSearchData(keyword);
-    if (!searchResult) {
+    const searchList = await this.getSearchData(keyword);
+    if (!searchList) {
       this.closeResultList();
       return;
     }
 
     this.currentKeyword = keyword;
-    this.lastResultIndex = searchResult.length - 1;
-    this.renderResultList(keyword, searchResult);
+    this.lastResultIndex = searchList.length - 1;
+    this.renderResultList(keyword, searchList);
     this.openResultList();
   }
 
