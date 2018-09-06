@@ -3,7 +3,6 @@
  */
 
 import ParentSlider from './ParentSlider.js';
-import HttpError from './../http/HttpError.js';
 import { getFetchData } from './../../utility/helpers.js';
 
 export default class ListSlider extends ParentSlider {
@@ -103,7 +102,7 @@ export default class ListSlider extends ParentSlider {
     try {
       json = await getFetchData({ url: this.reqUrl });
     } catch (err) {
-      if (err instanceof HttpError && err.response.status === 404) {
+      if (err instanceof this.HttpErrorType && err.response.status === 404) {
         console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
       } else {
         throw err; // 정의되지 않은 에러는 rethrow

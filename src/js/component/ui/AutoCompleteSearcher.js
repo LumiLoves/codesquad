@@ -3,8 +3,6 @@
  */
 
 import ParentUI from './core/ParentUI.js';
-import ParentStorage from './../storage/core/ParentStorage.js'
-import HttpError from './../http/HttpError.js';
 import { getJSONPData, debounceEventListener } from './../../utility/helpers.js';
 
 export default class AutoCompleteSearcher extends ParentUI {
@@ -70,7 +68,7 @@ export default class AutoCompleteSearcher extends ParentUI {
     if (isFunction) { 
       this.oStorage = new this.oStorage();
       
-      const inheritParentStorage = (this.oStorage instanceof ParentStorage);
+      const inheritParentStorage = (this.oStorage instanceof this.StorageType);
       if (!inheritParentStorage) { throw new TypeError('Storage가 ParentStorage를 상속받지 않았습니다.'); }
     }
   }
@@ -159,7 +157,7 @@ export default class AutoCompleteSearcher extends ParentUI {
       json = await getJSONPData(reqUrl);
       json = json[1];
     } catch (err) {
-      if (err instanceof HttpError && err.response.status === 404) {
+      if (err instanceof this.HttpErrorType && err.response.status === 404) {
         console.error(`Error_${err.response.status} : 잘못된 주소로 요청되었습니다.`);
       } else {
         throw err; // 정의되지 않은 에러는 rethrow

@@ -4,6 +4,8 @@
 
 import CustomLocalStorage from './../../storage/CustomLocalStorage.js';
 import TemplateRenderer from './../../renderer/TemplateRenderer.js';
+import HttpError from './../../http/HttpError.js';
+import ParentStorage from './../../storage/core/ParentStorage.js'
 
 export default class ParentUI {
   constructor() {
@@ -16,6 +18,10 @@ export default class ParentUI {
     this.DefaultStorage = CustomLocalStorage;
     this.DefaultRenderer = TemplateRenderer;
 
+    // instance type 지정
+    this.HttpErrorType = HttpError;
+    this.StorageType = ParentStorage;
+    
     // 필수 메서드 (자식 클래스가 무조건 선언해야 하는 메서드) 
     if (typeof this.init !== 'function') {
       throw new Error('[init] method 작성 필수');    
