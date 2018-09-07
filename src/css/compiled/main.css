@@ -766,7 +766,8 @@ html {
   .thumbnail-box .thumbnail {
     position: relative;
     height: calc(100% - 130px);
-    background-color: #ddd; }
+    background-color: #ddd;
+    overflow: hidden; }
     .thumbnail-box .thumbnail img {
       display: block;
       width: 100%; }

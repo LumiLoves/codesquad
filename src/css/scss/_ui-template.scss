@@ -110,6 +110,7 @@
 
   .thumbnail {
     position: relative; height: $thumbnail-height; background-color: #ddd;
+    overflow: hidden;
 
     img { display: block; width: 100%; }
     .badge-wrapper { 

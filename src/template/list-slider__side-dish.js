@@ -40,3 +40,232 @@ export default `
   </ul>
 </li>
 {{/if}}`;
+
+
+/*
+
+<li>
+  <ul class="content-box">
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스 제철박스 제철박스 제철박스 제철박스 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요. 둘이서 한 끼 먹기 딱 좋아요. 둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>                   
+        </dl>
+      </a>
+    </li>
+
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+  </ul>
+</li>
+
+<li>
+  <ul class="content-box">
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+
+    <li>
+      <a class="thumbnail-box" href="#">
+        <div class="thumbnail">
+          <img src="./src/img/img-sub-dish.jpg" alt="[집밥의완성] 1월 제철박스" />
+          <div class="overlay">
+            <p class="txt">새벽배송</p>
+            <p class="txt">전국택배</p>
+          </div>
+        </div>
+
+        <dl class="content">
+          <dt class="title">[집밥의완성] 1월 제철박스</dt>
+          <dd class="desc">둘이서 한 끼 먹기 딱 좋아요</dd>
+          <dd class="price-wrapper">
+            <span class="original-price">22,900</span>
+            <span class="final-price">
+              <span class="number">20,500</span>
+              <span class="unit">원</span>
+            </span>
+          </dd>
+          <dd class="badge-wrapper">
+            <i class="bm-icon badge-event">이벤트특가</i>
+          </dd>
+        </dl>
+      </a>
+    </li>
+  </ul>
+</li>
+
+*/
