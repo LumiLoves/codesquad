@@ -11,7 +11,7 @@ export default class ListSlider extends ParentSlider {
 
     // dom
     this.wrapperElem = wrapperElem;
-    this.contentBox = wrapperElem.querySelector('.content-group'); // TODO 다른데도 바꾸기.
+    this.contentBox = wrapperElem.querySelector('.content-group');
     this.contentItems = wrapperElem.querySelectorAll('.content-group > li');
     this.directionBtnBox = wrapperElem.querySelector('.direction-btn-box');          
 
@@ -148,6 +148,7 @@ export default class ListSlider extends ParentSlider {
   }
 
   /* ui */
+
   activeElements(i, isForceActive = false) {
     const oldIndex = this.activeIndex;
     const newIndex = this._calcSlideIndex(i || 0);

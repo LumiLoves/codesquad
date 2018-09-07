@@ -39,7 +39,7 @@ export default class Tab extends ParentUI {
 
   /* init */
 
-  async init() { // 생성 시 호출할 내부 메서드를 모아놓는 곳
+  async init() {
     const randomIndex = this._getRandomIndex();
 
     if (this._hasNoDOM()) {

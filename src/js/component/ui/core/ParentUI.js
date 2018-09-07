@@ -28,9 +28,7 @@ export default class ParentUI {
     }
   }
 
-  /**
-   * 옵션 메서드 (자식 클래스가 선언가능한 메서드)
-   */
+  // 옵션 메서드 (자식 클래스가 선언가능한 메서드)
 
   /* ui */
   activeElements() {

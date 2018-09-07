@@ -42,6 +42,7 @@ export default class VisualSlider extends ParentSlider {
   }
 
   /* ui */
+  
   activeElements(index) {
     const oldIndex = this.activeIndex;
     const newIndex = this._calcSlideIndex(index || 0);
