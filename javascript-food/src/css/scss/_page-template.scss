@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+#page-template {
+  padding: 30px;
+  background: #ddd;
+
+  // h1 { font-size: 30px; }
+  i { box-shadow: 0 0 10px #aaa; }
+  .thumbnail-box {
+    width: 250px; box-shadow : 0 0 10px rgba(0, 0, 0, 0.4);
+  }
+}

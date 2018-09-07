@@ -1,0 +1,376 @@
+@charset "utf-8";
+
+/** ================================================
+  ui template
+================================================ */
+
+/**
+ *  아이콘류
+ */
+
+.bm-icon {
+  display: inline-block !important; margin: 0; padding: 0;
+  // width: 10px; height: 10px;
+  background-repeat: no-repeat; background-position: 0 0;
+  font-style: normal; vertical-align: middle;
+
+  // 메뉴링크 옆 삼각형 불릿 아이콘
+  &[class*="spr-bullet-arrow-down"] {
+    background-image: url(../../img/spr-bullet-arrow-down.png);
+    width: 10px; height: 6px;
+  
+    &.black { background-position: -4px -4px; }
+    &.green { background-position: -4px -18px; }
+    &.white { background-position: -4px -32px; }
+  }
+  
+  // 메인슬라이드 삼각형 버튼
+  &[class*="spr-btn-arrow-main-slide"] {
+    background-image: url(../../img/spr-btn-arrow-main-slide.png);
+    width: 55px; height: 90px;
+
+    &.prev { background-position: 0 0; }
+    &.next { background-position: -67px 0; }
+  }
+
+  // 슬라이딩리스트 삼각형 버튼 
+  &[class*="spr-btn-arrow-sliding-list"] {
+    background-image: url(../../img/spr-btn-arrow-sliding-list.png);
+    width: 30px; height: 50px;
+
+    &.prev {
+      background-position: 0 0;
+
+      &:hover,
+      &:focus {
+        background-position: 0 -52px;      
+      }
+    }
+    &.next {
+      background-position: -50px 0;
+
+      &:hover,
+      &:focus {
+        background-position: -50px -52px;      
+      }
+    }
+  }
+
+
+  // 섬네일 뱃지
+  &[class*="badge-"] {
+    padding: 0.4em 0.55em 0.3em;
+    color: #fff; font-size: 11px;
+  
+    &.badge-event { background: #a974bf; }
+    &.badge-best { background: #fa6565; }
+  }
+  
+  // 더보기 버튼
+  &.btn-arrow-more {
+    width: 6px; height: 12px;
+    background-image: url(../../img/btn-arrow-more.png);
+    background-position: 0 0;
+  }
+  &.btn-txt-more {
+    width: 48px; height: 23px;  
+    background-image: url(../../img/btn-txt-more.gif);
+    background-position: 0 0;  
+  }
+}
+
+/**
+ *  리스트
+ */
+.bm-list {
+  li {
+    position: relative; padding-left: 10px;
+
+    &::after {
+      position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      content: ""; display: block; width: 5px; height: 5px;
+      background: url(../../img/spr-bullet-square.png) no-repeat -5px -5px;
+    }
+  }
+  
+  &.green li::after { background-position: -5px -36px; }
+}
+
+/**
+ *  섬네일 박스
+ * (사진, 사진호버오버레이, 타이틀, 디스크, (말줄임) 원래가격, 할인가격)
+ */
+
+.thumbnail-box {
+  $thumbnail-box-height: 347px;
+  $content-height: 130px;
+  $thumbnail-height: calc(100% - #{$content-height});
+
+  display: block; height: $thumbnail-box-height;
+
+  .thumbnail {
+    position: relative; height: $thumbnail-height; background-color: #ddd;
+    overflow: hidden;
+
+    img { display: block; width: 100%; }
+    .badge-wrapper { 
+      position: absolute; left: 10px; bottom: 10px;
+      
+      .bm-icon { margin-right: 5px; }
+    }
+    .overlay {
+      opacity: 0;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center;
+      position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+
+      .txt {
+        position: relative;
+        line-height: 2.4;
+        color: #fff; font-size: 20px; font-family: "NanumBold", sans-serif;
+        
+        &::after {
+          content: ""; display: block; 
+          position: absolute; left: 0; right: 0; top: 0;
+          height: 1px; background: rgba(255,255,255,0.4);
+        }
+        &:first-child::after { display: none; }
+      }
+    }
+  }
+
+  .content {
+    padding: 18px 20px 15px; height: $content-height;
+
+    * { text-align: center; }
+    .title,
+    .desc {
+      text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
+    }
+    .title {
+      color: #333; font-size: 17px;
+      font-family: "NanumEB", "Malgun Gothic", sans-serif;
+      letter-spacing: -0.07em;
+    }
+    .desc {
+      margin-top: 6px;
+      font-size: 13px; color: #666; letter-spacing: -0.07em;
+    }
+    .price-wrapper {
+      margin-top: 8px;
+       
+      * { font-family: 'Montserrat', sans-serif; letter-spacing: -0.04em; }
+      .original-price {
+        text-decoration: line-through; color: #888; font-size: 14px;
+      }
+      .final-price {
+        margin-left: 9px; font-size: 0;
+
+        * { color: #2ac1bc; font-weight: bold; vertical-align: super; }
+        .number { font-size: 26px; }
+        .unit { margin-left: 2px; font-size: 14px; }
+      }
+    }
+    .badge-wrapper { margin-top: 10px; }
+  }
+
+  &:hover, 
+  &:focus {
+    .thumbnail .overlay { opacity: 1; }
+  }
+}
+
+
+/** 
+ * 탭 
+ * (디테일한 스타일은 밑에서 하고 구조같은 바뀌어도 변하지 않는 거만 쓰기)
+ */
+
+.tab-box {
+  overflow: hidden;
+
+  $btn-height: 48px;
+  $content-group-height: 430px;
+  $thumbnail-content-height: 125px;
+
+  .tab-btn-box {
+    display: flex;
+    margin-bottom: 23px;
+
+    li {
+      flex-grow: 1; height: $btn-height;
+
+      .tab-btn {
+        display: block;
+        margin-right: 1px; padding-top: 17px; height: 100%;
+        background: #fff;
+        font-size: 15px; font-family: "NanumBold", sans-serif;
+      }
+
+      &.on,
+      &:hover {
+        .tab-btn {
+          margin-right: 0; padding-right: 1px;
+          background: $color-bm-green; color: #fff;
+        }
+      }
+    }
+  }
+
+  .tab-content-group-box {
+    position: relative; display: flex;
+    width: 100%; height: $content-group-height;
+
+    > li {
+      position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+      opacity: 0; visibility: hidden;
+      &.on { opacity: 1; visibility: visible; }
+    }
+  }
+
+  .tab-content-group-item,
+  .tab-content-item,
+  .thumbnail-box {
+    height: 100%;
+  }
+
+  .tab-content-group-item {
+    display: grid;
+    grid-template-columns: 304px 304px 304px;
+    grid-column-gap: 24px;
+  
+    > li {
+      border-bottom: 1px solid #d7d7d7;      
+      overflow: hidden; text-overflow: ellipsis;
+    }
+  }
+
+  // thumbnail-box 템플릿 커스텀
+  .thumbnail {
+    height: calc(100% - #{$thumbnail-content-height});
+  }
+  .content {
+    height: $thumbnail-content-height; 
+    background: #fff; text-align: left;
+
+    * { text-align: left; }
+    .price-wrapper { margin-top: 20px; text-align: right; }
+  }
+}
+
+
+/**
+ * 슬라이딩 리스트 박스
+ * (화살표, 메뉴아이템 레이아웃, 슬라이딩구조)
+ */
+
+.sliding-list-box {
+  $sliding-list-box-height: 346px;
+
+  position: relative; height: $sliding-list-box-height;
+
+  .direction-btn-box {
+    position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+
+    .direction-btn {
+      position: absolute; top: 58px; display: block; padding: 30px 10px;
+    }
+    > .prev { 
+      left: 0; transform: translateX(-120%);
+
+      &:hover i, &:focus i { background-position: 0 -52px; }
+    }
+    > .next {
+      right: 0; transform: translateX(120%);
+
+      &:hover i, &:focus i { background-position: -50px -52px; }      
+    }
+  }
+
+  .content-group,
+  .content-box,
+  .thumbnail-box {
+    height: 100%;
+  }
+
+  .content-group {
+    position: relative; display: flex;
+    overflow: hidden; z-index: 1;
+
+    > li {
+      position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+      transform: translateX(100%); opacity: 0;
+    }
+    .prev,
+    .current,
+    .next { 
+      transition: transform 0.6s; opacity: 1;
+    }
+    .prev { transform: translateX(-100%); }
+    .current { transform: translateX(0); }
+    .next { transform: translateX(100%); }
+
+    // 그룹이 3개 이상
+    &[data-group-style="default"] {
+      &[data-direction="prev"] .prev { transition: unset; }
+      &[data-direction="next"] .next { transition: unset; }
+    }
+
+    // 그룹이 2개일 때
+    &[data-group-style="two"] {
+      .current { transition: unset; }
+      &[data-direction="prev"] .current { animation: twoSlidePrev 0.6s; }
+      &[data-direction="next"] .current { animation: twoSlideNext 0.6s; }
+      &[data-direction="next"] .prev.next { transform: translateX(-100%); }
+    }
+    @keyframes twoSlidePrev {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes twoSlideNext {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    // 그룹이 1개일 때
+    &[data-group-style="one"] {
+      .prev.current.next { transition: unset; transform: translateX(0); }
+      & + .direction-btn-box { display: none; }
+    }
+  }
+
+  .content-box {
+    display: flex; justify-content: center;
+    padding: 0 5px;
+
+    > li {  
+      margin: 0 15px; width: 217px;
+      &:first-child { margin-left: 0; }
+      &:last-child { margin-right: 0; }
+    }
+  }
+
+  // thumbnail-box 템플릿 커스텀
+  $content-height: 130px;
+  $thumbnail-height: calc(100% - #{$content-height});
+
+  .thumbnail { 
+    border-radius: 500px;
+    overflow: hidden;
+    height: $thumbnail-height; 
+  }
+  .content { height: $content-height; 
+    .badge-wrapper i { margin: 0 1px; }
+  }
+}
+
+
+/**
+ *  기타
+ */
+
+// 이미지 헤더
+.image-type-text {  }
+
+

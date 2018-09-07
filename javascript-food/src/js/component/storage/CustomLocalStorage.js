@@ -1,0 +1,23 @@
+/**
+ * CustomLocalStorage
+ */
+
+import ParentStorage from './core/ParentStorage.js';
+
+export default class CustomLocalStorage extends ParentStorage {
+  constructor() {
+    super();
+  }
+  getData(key, useParse = false) {
+    const data = localStorage.getItem(key);
+    return (useParse)? JSON.parse(data) : data; 
+  }
+  setData(key, value, useStringify = false) {
+    if (useStringify) { value = JSON.stringify(value); }
+    localStorage.setItem(key, value);
+  }
+  isExpiredData(savedTime, savingDuration) {
+    return super.isExpiredData(savedTime, savingDuration);
+  }
+}
+

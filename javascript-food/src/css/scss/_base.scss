@@ -1,0 +1,69 @@
+@charset "utf-8";
+
+/** ================================================
+  base style
+================================================ */
+
+/**
+ *  Font Setting
+ */
+ @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+ @font-face {
+   font-family: 'Nanum';
+   font-weight: 400;
+   src: url('../../font/NanumGothic.eot');
+   src: url('../../font/NanumGothic.eot?#iefix') format('embedded-opentype'),
+        url('../../font/NanumGothic.woff') format('woff'),
+        url('../../font/NanumGothic.ttf') format('truetype');
+ }
+ 
+ @font-face {
+   font-family: 'NanumBold';
+   font-weight: 600;
+   src: url('../../font/NanumGothicBold.eot');
+   src: url('../../font/NanumGothicBold.eot?#iefix') format('embedded-opentype'),
+        url('../../font/NanumGothicBold.woff') format('woff'),
+        url('../../font/NanumGothicBold.ttf') format('truetype');
+ }
+ 
+ @font-face {
+   font-family: 'NanumEB';
+   font-weight: 900;
+   src: url('../../font/NanumGothicExtraBold.eot');
+   src: url('../../font/NanumGothicExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('../../font/NanumGothicExtraBold.woff') format('woff'),
+        url('../../font/NanumGothicExtraBold.ttf') format('truetype');
+ }
+
+ 
+ /**
+  *  Style
+  */
+ 
+ body {
+   font-family: 'Nanum', 'Apple Gothic', 'Malgun Gothic', 'Nanum Gothic', 'Dotum', Arial, sans-serif;
+   font-size: 13px; font-weight: normal;
+   background: #fff;
+   color: #333
+ }
+ 
+ a {
+   color: #666; text-decoration: none;
+ 
+   &:hover,
+   &:focus { 
+     color: $color-bm-green;
+   }
+ }
+ 
+ 
+ /**
+  *  Help Class
+  */
+ 
+ .blind {
+   visibility: hidden; overflow: hidden;
+   position: absolute; top: 0; left: 0;
+   width: 1px; height: 1px;
+   font-size: 0; line-height: 0;
+ }

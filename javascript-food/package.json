@@ -1,0 +1,26 @@
+{
+  "name": "javascript-food",
+  "version": "1.0.0",
+  "description": "codesquad frontend level3",
+  "main": "index.js",
+  "scripts": {
+    "e2e": "testcafe chrome test/e2e/**/*.js",
+    "scss": "node-sass -w src/css/scss/main.scss src/css/compiled/main.css  --source-map true --source-map-contents src/css/scss"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lumiloves/javascript-food.git"
+  },
+  "author": "lumiloves",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lumiloves/javascript-food/issues"
+  },
+  "homepage": "https://github.com/lumiloves/javascript-food",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "testcafe": "^0.21.1"
+  }
+}
