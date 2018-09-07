@@ -17,6 +17,6 @@ export default class CustomSessionStorages extends ParentStorage {
     sessionStorage.setItem(key, value);
   }
   isExpiredData(savedTime, savingDuration) {
-    return super._isExpiredData(savedTime, savingDuration);
+    return super.isExpiredData(savedTime, savingDuration);
   }
 }

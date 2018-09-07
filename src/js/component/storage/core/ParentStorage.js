@@ -18,7 +18,7 @@ export default class ParentStorage {
   }
 
   // (인스턴스에서 호출할 수 없음. 상속받는 자식클래스에서 super를 통해 사용한다.)
-  _isExpiredData(savedTime, savingDuration) {
+  isExpiredData(savedTime, savingDuration) {
     const currentTime = +new Date();
     const gap = currentTime - savedTime;
     return gap >= savingDuration;
