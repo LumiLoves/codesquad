@@ -1,9 +1,9 @@
 # UI Component 구조의 Web Site Project
 
 
-
-![demo](docs/demo.gif)
-
+<p style="text-align:center;">
+  <img src="docs/demo.gif" alt="demo">
+</p>
 
 
 ## Demo & Review
@@ -14,7 +14,7 @@
 
 <br>
 
-## Introduction
+## 1. Introduction
 
 ### 소개 및 사용기술
 
@@ -22,7 +22,6 @@
 * 개발 규모를 사이트 전체로 가정하여 구조를 설계했으며, 메인 페이지를 구현
 * Javascript (ES6), CSS3 (SCSS), HTML5
 
-<br>
 
 ### 주요특징
 
@@ -35,11 +34,10 @@
 
 <br>
 
-## 구조설계 및 다이어그램
+## 2. 구조설계 및 다이어그램
 
+### 다이어그램
 ![image-20180906205213493](docs/diagram.png)
-
-<br>
 
 ### 설계 시 고려한 것들과 그 과정 => 일관성과 범용성
 
@@ -62,8 +60,9 @@
 
 <br>
 
-## 프로젝트 공통 규칙
+## 3. 프로젝트 공통 규칙
 
+### 규칙
 * 부모 객체는 (ParentUI, ParentStorage)
   * 구조를 제안하고 검증하는 기능을 메인 역할로 정의 
 * UI Component는 
@@ -87,9 +86,7 @@
   * html selector와 유사한 네이밍 일관성 (Wrapper는 Box로, Wrapper내 자식들은 Item으로)
   * 추상화 수준이 높은 메서드를 상위에 배치
 
-<br>
-
-**실행 Flow**
+### 실행 Flow
 
 1. 접속한 url 정보를 분석하여, 매치되는 페이지의 스크립트를 import
 2. Domcontentloaded시 매치된 페이지 객체 초기화
@@ -97,7 +94,7 @@
 
 <br>
 
-## Component별 주요기능
+## 4. Component별 주요기능
 
 ### UI Component
 
@@ -125,7 +122,6 @@
     * 검색어로 submit이벤트를 날릴 경우 저장되며
     * 값이 비어있을 때 최근검색어가 노출
 
-<br>
 
 ### UI 보조 Component
 
@@ -142,7 +138,7 @@
 
 <br>
 
-## 할 수 있게 된 것
+## 5. 할 수 있게 된 것
 
 * 코딩하기 전에 먼저 설계하는 습관이 생기고, **나만의 설계방식**이 생김
   * 객체의 역할을 먼저 분리해보고, 객체별 메서드 이름으로 수도코드 작성
