@@ -26,13 +26,15 @@ export default class VisualSlider extends ParentSlider {
       useJsAnimation: false,
       OPACITY_INTERVAL_VALUE: [ 0.08, 0.11 ]
     }, userOption);
+
+    this._activeContent = (this.useJsAnimation)? this._activeContentByJS : this._activeContentByCSS;
   }
 
   /* init */
   
   init() {
-    if (this.useJsAnimation) { this._setAnimationTypeIsJs(); }
-    this.activeElements(0);
+    if (this.useJsAnimation) { this._setAnimationTypeIsJs(); }    
+    this._resetContentByJS(0);
     this.registerEvents();
   }
   _setAnimationTypeIsJs() {
@@ -40,38 +42,41 @@ export default class VisualSlider extends ParentSlider {
   }
 
   /* ui */
-  activeElements(i, isForceActive = false) {
+  activeElements(index) {
     const oldIndex = this.activeIndex;
-    const newIndex = this._calcSlideIndex(i || 0);
-    if (!isForceActive && (oldIndex == newIndex)) { return; }
+    const newIndex = this._calcSlideIndex(index || 0);
+    if (oldIndex == newIndex) { return; }
 
     this.activeIndex = newIndex;
     this._activeDotBtn(oldIndex, newIndex);
-    if (this.useJsAnimation) { // ??? 매번 확인하지말고 최초에 activeContent메서드를 할당해서 고정할 수 없나?
-      this._activeContentByJS(oldIndex, newIndex)
-    } else {
-      this._activeContent(oldIndex, newIndex);
-    }
+    this._activeContent(oldIndex, newIndex);
   }
   _activeDotBtn(oldIndex, newIndex) {
     this.dotBtnItems[oldIndex].classList.remove('on');
     this.dotBtnItems[newIndex].classList.add('on');  
   }
-  _activeContent(oldIndex, newIndex) {
+  _activeContentByCSS(oldIndex, newIndex) {
     super.activeContent(oldIndex, newIndex);
   }
 
   _activeContentByJS(oldIndex, newIndex) {
-    this._resetAnimationCSS();
+    this._resetContentByJS();
     this._fadeOut(oldIndex);
     this._fadeIn(newIndex);
   }
-  _resetAnimationCSS() {
+  _resetContentByJS(index) {
     this.contentItems.forEach((elem) => {
       elem.style.transform = 'translateX(100%)';
       elem.style.opacity = 0;
       elem.style.zIndex = -1;
     });
+
+    if (!isNaN(index)) {
+      const target = this.contentItems[index];
+      target.style.transform = 'translateX(0px)';
+      target.style.opacity = 1;
+      target.style.zIndex = 0;
+    }
   }
   _fadeOut(itemIndex) {
     const target = this.contentItems[itemIndex];
