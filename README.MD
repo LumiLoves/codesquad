@@ -1,7 +1,6 @@
 # UI Component 구조의 Web Site Project
 
-
-<p style="text-align:center;">
+<p align="center">
   <img src="docs/demo.gif" alt="demo">
 </p>
 
